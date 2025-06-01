@@ -7,11 +7,11 @@ import {
   MaterialCommunityIcons,
   SimpleLineIcons,
 } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -23,8 +23,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function HomeScreen() {
   const [userName, setUserName] = useState<string | null>(null);
   const [loadingName, setLoadingName] = useState(true);
-  const [loadingContent, setLoadingContent] = useState(true);
-
   const router = useRouter();
 
   useEffect(() => {
@@ -34,8 +32,6 @@ export default function HomeScreen() {
       const name = await getUserName();
       setUserName(name);
       setLoadingName(false);
-
-      setLoadingContent(true);
     };
     loadData();
   }, []);
@@ -62,7 +58,10 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <Text style={styles.greeting}>Olá, {userName || "Usuário"}!</Text>
           <IconButton
-            onPress={() => console.log("Ajustes Pressionado")}
+            onPress={function () {
+              router.push("/settings");
+              console.log("Botão de configurações - Pressionado");
+            }}
             iconElement={
               <Ionicons
                 name="settings-outline"
@@ -79,17 +78,21 @@ export default function HomeScreen() {
           style={styles.startAnalysisCardTouchable}
           onPress={handleStartAnalysis}
           activeOpacity={0.85}>
-          <ImageBackground
-            source={require("@/assets/images/backgroundHomeDashboard.png")}
-            style={styles.startAnalysisCardBackground}
-            imageStyle={styles.startAnalysisCardBackgroundImage}>
+          <LinearGradient
+            colors={[
+              Colors.light.accentPurple || "#8A4DBC",
+              Colors.light.tint || "#6A0DAD",
+            ]}
+            style={styles.startAnalysisCardGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}>
             <Text style={styles.startAnalysisText}>
               Quer começar uma análise?
             </Text>
             <View style={styles.startAnalysisButton}>
               <Text style={styles.startAnalysisButtonText}>SIM</Text>
             </View>
-          </ImageBackground>
+          </LinearGradient>
         </TouchableOpacity>
 
         <View style={styles.usefulSectionsContainer}>
@@ -107,7 +110,7 @@ export default function HomeScreen() {
               labelText="AR Scan"
             />
             <IconButton
-              onPress={() => console.log("Métodos Pressionado")}
+              onPress={() => router.push("/test")}
               iconElement={
                 <MaterialCommunityIcons
                   name="flask-outline"
@@ -115,7 +118,7 @@ export default function HomeScreen() {
                   color={Colors.light.tabActive}
                 />
               }
-              labelText="Métodos"
+              labelText="Test"
             />
             <IconButton
               onPress={() => console.log("Outra Opção Pressionado")}
@@ -193,44 +196,40 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 30,
     borderRadius: 18,
-    elevation: 1,
-    shadowColor: "#efefef",
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
+    elevation: 4,
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
   },
-  startAnalysisCardBackground: {
-    height: 200,
-    paddingVertical: 20,
+  startAnalysisCardGradient: {
+    flex: 1,
+    height: "100%",
+    paddingVertical: 30,
     paddingHorizontal: 25,
     borderRadius: 18,
-    overflow: "hidden",
-  },
-  startAnalysisCardBackgroundImage: {
-    borderRadius: 18,
-    resizeMode: "cover",
+
+    justifyContent: "space-between",
+
+    alignItems: "center",
   },
   startAnalysisText: {
-    fontSize: 28,
-    fontWeight: "600",
-    color: Colors.light.background,
+    fontSize: 30,
+    fontWeight: "bold",
+    color: Colors.light.textWhite,
     flexShrink: 1,
-    paddingBottom: 40,
-    textShadowColor: "rgba(43, 41, 41, 0.5)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    marginBottom: 20,
   },
   startAnalysisButton: {
-    width: 100,
     backgroundColor: Colors.light.background,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
-    borderRadius: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 25,
     elevation: 2,
-    alignItems: "center",
-    justifyContent: "center",
+    alignSelf: "flex-end",
   },
   startAnalysisButtonText: {
-    color: Colors.light.text,
+    color: Colors.light.tint,
     fontWeight: "bold",
     fontSize: 16,
   },

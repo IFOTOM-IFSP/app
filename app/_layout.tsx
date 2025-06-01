@@ -3,11 +3,7 @@ import LottieView from "lottie-react-native";
 import React, { JSX, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Colors } from "../constants/Colors";
-import {
-  clearFirstLaunch,
-  getUserName,
-  isFirstLaunch,
-} from "../storage/userStorage";
+import { getUserName, isFirstLaunch } from "../storage/userStorage";
 
 SplashScreen.preventAutoHideAsync()
   .then(() => {
@@ -175,7 +171,6 @@ export default function RootLayout(): JSX.Element {
     );
   }
 
-  clearFirstLaunch();
   return <Slot />;
 }
 

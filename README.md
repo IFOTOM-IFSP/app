@@ -1,1 +1,2 @@
 - [ ] Modo claro ou escuro
+- [ ] Planejamento das propriedades
