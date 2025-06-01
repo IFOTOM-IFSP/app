@@ -1,0 +1,64 @@
+{
+  "expo": {
+    "name": "iFOTOM",
+    "slug": "iFOTOM",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#A25CC7"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#A25CC7"
+      }
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Permitir que $(PRODUCT_NAME) acesse sua câmera.",
+          "microphonePermission": "Permitir que $(PRODUCT_NAME) acesse seu microfone.",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Permitir que $(PRODUCT_NAME) acesse suas fotos.",
+          "savePhotosPermission": "Permitir que $(PRODUCT_NAME) salve fotos no seu dispositivo.",
+          "isAccessPrivileged": true
+        }
+      ],
+      "expo-sqlite",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#A25CC7",
+          "image": "./assets/splash-icon.png",
+          "dark": {
+            "image": "./assets/splash-icon-dark.png",
+            "backgroundColor": "#A25CC7"
+          },
+          "imageWidth": 500,
+          "imageHeight": 700
+        }
+      ]
+    ],
+    "scheme": "myapp"
+  }
+}
