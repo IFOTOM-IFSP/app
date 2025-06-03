@@ -1,2 +1,2 @@
 - [ ] Modo claro ou escuro
-- [ ] Planejamento das propriedades
+- [ ] Planejamento das propriedades das análises e das notas

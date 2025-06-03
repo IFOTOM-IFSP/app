@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import React, { JSX } from "react";
 import {
   StyleSheet,
@@ -6,7 +7,6 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
-import { Colors } from "../../constants/Colors";
 
 interface IconButtonProps {
   onPress: () => void;

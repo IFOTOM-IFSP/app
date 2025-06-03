@@ -13,6 +13,7 @@ export default function TabLayout() {
         tabBarInactiveTintColor: Colors.light.tabIconDefault,
         tabBarStyle: {
           backgroundColor: Colors.light.background,
+          position: "relative",
         },
         headerShown: false,
       }}>
@@ -39,20 +40,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="education"
-        options={{
-          title: "Aprendendo",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="book-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="notes"
         options={{
           title: "Anotações",
           tabBarIcon: ({ color, size }) => (
             <Feather name="edit-3" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="education"
+        options={{
+          title: "Aprendendo",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="book-outline" size={size} color={color} />
           ),
         }}
       />

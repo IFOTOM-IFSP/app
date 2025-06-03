@@ -31,7 +31,6 @@ export default function RootLayout(): JSX.Element {
   const isNavigatingRef = useRef(false);
   const welcomeScreenPath = "/welcome";
   const mainAppPath = "/";
-
   useEffect(() => {
     console.log(
       `ROOT_LAYOUT [EFFECT] - Action: ${action}, Pathname: ${pathname}, IsNavigating: ${isNavigatingRef.current}`
@@ -136,13 +135,11 @@ export default function RootLayout(): JSX.Element {
       );
       SplashScreen.hideAsync()
         .then(() => {
-          // Removido o parâmetro 'result' se ele for 'void'
           console.log(
             `SplashScreen.hideAsync() [RootLayout useEffect]: Operação completada.`
           );
         })
         .catch((error) => {
-          // É comum um erro aqui se a splash já foi escondida ou se houver outros problemas.
           console.warn(
             `SplashScreen.hideAsync() [RootLayout useEffect] error: ${error}`
           );
