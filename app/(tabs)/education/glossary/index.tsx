@@ -1,6 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, FlatList, View } from "react-native";
+import { StyleSheet, Text, FlatList, View, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 const glossaryData = [
   { id: "1", term: "Fotossíntese", definition: "Processo pelo qual plantas produzem energia a partir da luz solar." },
@@ -8,8 +9,16 @@ const glossaryData = [
   { id: "3", term: "Transpiração", definition: "Perda de água pelas folhas em forma de vapor." },
 ];
 
+type GlossaryItem = {
+  id: string;
+  term: string;
+  definition: string;
+};
+
 export default function GlossaryListScreen() {
-  const renderItem = ({ item }) => (
+  const router = useRouter();
+
+  const renderItem = ({ item }: { item: GlossaryItem }) => (
     <View style={styles.item}>
       <Text style={styles.term}>{item.term}</Text>
       <Text style={styles.definition}>{item.definition}</Text>
@@ -18,6 +27,10 @@ export default function GlossaryListScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+        <Text style={styles.backButtonText}>{"< Voltar"}</Text>
+      </TouchableOpacity>
+
       <Text style={styles.title}>Glossário</Text>
       <FlatList
         data={glossaryData}
@@ -34,6 +47,14 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 20,
     backgroundColor: "#fff",
+  },
+  backButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  backButtonText: {
+    fontSize: 18,
+    color: "#007aff",
   },
   title: {
     fontSize: 28,
