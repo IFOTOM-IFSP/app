@@ -1,0 +1,17 @@
+# dependências
+node_modules/
+
+# build
+build/
+dist/
+
+# arquivos do Expo
+.expo/
+.expo-shared/
+
+# TypeScript
+*.tsbuildinfo
+
+# configs locais
+.env
+*.log
