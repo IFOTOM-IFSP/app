@@ -3,7 +3,7 @@ import {
   getModulePageById,
   getNextPage,
   getPreviousPage,
-} from "@/constants/modulesData";
+} from "@/utils/module-helpers";
 import { Link, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
