@@ -1,4 +1,4 @@
-import BackButton from "@/components/ui/GoBackButton";
+import BackButton from "@/components/ui/BackButton";
 import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";

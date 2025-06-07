@@ -1,4 +1,4 @@
-import BackButton from "@/components/ui/GoBackButton";
+import BackButton from "@/components/ui/BackButton";
 import { Colors } from "@/constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";

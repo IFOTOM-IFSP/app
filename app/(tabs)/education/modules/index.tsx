@@ -1,4 +1,4 @@
-import { MODULES_DATA } from "@/constants/modulesData"; // Ajuste o caminho se necessário
+import { MODULES_DATA } from "@/constants/modulesData";
 import { Link, useRouter } from "expo-router";
 import React from "react";
 import {
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 export default function ModuleListScreen() {
-  const router = useRouter();
+
 
   return (
     <View style={styles.container}>
