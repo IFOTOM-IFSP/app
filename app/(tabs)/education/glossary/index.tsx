@@ -1,12 +1,25 @@
+import BackButton from "@/components/ui/GoBackButton";
 import React from "react";
-import { StyleSheet, Text, FlatList, View, TouchableOpacity } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
 
 const glossaryData = [
-  { id: "1", term: "Fotossíntese", definition: "Processo pelo qual plantas produzem energia a partir da luz solar." },
-  { id: "2", term: "Clorofila", definition: "Pigmento verde das plantas responsável por absorver luz." },
-  { id: "3", term: "Transpiração", definition: "Perda de água pelas folhas em forma de vapor." },
+  {
+    id: "1",
+    term: "Fotossíntese",
+    definition:
+      "Processo pelo qual plantas produzem energia a partir da luz solar.",
+  },
+  {
+    id: "2",
+    term: "Clorofila",
+    definition: "Pigmento verde das plantas responsável por absorver luz.",
+  },
+  {
+    id: "3",
+    term: "Transpiração",
+    definition: "Perda de água pelas folhas em forma de vapor.",
+  },
 ];
 
 type GlossaryItem = {
@@ -16,8 +29,6 @@ type GlossaryItem = {
 };
 
 export default function GlossaryListScreen() {
-  const router = useRouter();
-
   const renderItem = ({ item }: { item: GlossaryItem }) => (
     <View style={styles.item}>
       <Text style={styles.term}>{item.term}</Text>
@@ -27,9 +38,7 @@ export default function GlossaryListScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>{"< Voltar"}</Text>
-      </TouchableOpacity>
+      <BackButton />
 
       <Text style={styles.title}>Glossário</Text>
       <FlatList

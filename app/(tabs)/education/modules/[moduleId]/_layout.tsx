@@ -1,5 +1,6 @@
 import { getModuleTitleById } from "@/constants/modulesData"; // Ajuste o caminho
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
 
 export default function SingleModuleLayout() {
   const { moduleId } = useLocalSearchParams<{ moduleId: string }>();
