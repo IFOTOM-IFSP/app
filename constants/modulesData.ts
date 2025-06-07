@@ -6,7 +6,7 @@ export const MODULES_DATA: Module[] = [
     id: 'introducao-espectrofotometria',
     title: 'Introdução à Espectrofotometria',
     description: 'Conceitos básicos, importância e o espectro eletromagnético.',
-    thumbnailUrl: '/images/spectrophotometry-intro.jpg',
+    // thumbnailUrl: '/images/spectrophotometry-intro.jpg',
     estimatedTime: '25 min',
     pages: [
       {
@@ -70,7 +70,7 @@ export const MODULES_DATA: Module[] = [
           {
             id: 'aplicacoes-image-1',
             type: 'image',
-            src: '/images/aplicacoes-espectro.jpg', // Exemplo de imagem para aplicações
+            src: '/images/aplicacoes-espectro.jpg', 
             alt: 'Diversas aplicações da espectrofotometria em diferentes campos.',
             caption: 'A versatilidade da espectrofotometria a torna indispensável em muitos setores.',
           },
@@ -86,7 +86,7 @@ export const MODULES_DATA: Module[] = [
     id: 'luz-e-materia',
     title: 'Luz e Matéria',
     description: 'Entenda os conceitos de luz, o espectro eletromagnético e a interação da luz com a matéria.',
-    thumbnailUrl: '/images/luz-materia.jpg',
+    // thumbnailUrl: '/images/luz-materia.jpg',
     estimatedTime: '20 min',
     pages: [
       {
@@ -143,9 +143,9 @@ export const MODULES_DATA: Module[] = [
   // 3. Módulo: Princípios da Espectrofotometria de Absorção
   {
     id: 'principios-espectrofotometria-absorcao',
-    title: 'Princípios da Espectrofotometria de Absorção 🧪',
+    title: 'Princípios da Espectrofotometria de Absorção',
     description: 'Aprofunde-se nos conceitos de absorbância, transmitância e a fundamental Lei de Beer-Lambert.',
-    thumbnailUrl: '/images/beer-lambert-principle.jpg',
+    // thumbnailUrl: '/images/beer-lambert-principle.jpg',
     estimatedTime: '30 min',
     pages: [
       {
@@ -212,9 +212,9 @@ export const MODULES_DATA: Module[] = [
   // 4. Módulo: Partes de um Espectrofotômetro
   {
     id: 'partes-espectrofotometro',
-    title: 'Partes de um Espectrofotômetro ⚙️',
+    title: 'Partes de um Espectrofotômetro ',
     description: 'Explore os componentes chave de um espectrofotômetro e como eles funcionam em conjunto.',
-    thumbnailUrl: '/images/espectrofotometro-diagrama.jpg',
+    // thumbnailUrl: '/images/espectrofotometro-diagrama.jpg',
     estimatedTime: '20 min',
     pages: [
       {
@@ -273,9 +273,9 @@ export const MODULES_DATA: Module[] = [
   // 5. Módulo: Tipos de Análises Possíveis
   {
     id: 'tipos-de-analises-possiveis',
-    title: 'Tipos de Análises Possíveis 🧬',
+    title: 'Tipos de Análises Possíveis',
     description: 'Descubra as diferentes aplicações analíticas da espectrofotometria.',
-    thumbnailUrl: '/images/analises-espectro.jpg',
+    // thumbnailUrl: '/images/analises-espectro.jpg',
     estimatedTime: '25 min',
     pages: [
       {
@@ -344,9 +344,9 @@ export const MODULES_DATA: Module[] = [
   // 6. Módulo: Preparo de Soluções para Análise
   {
     id: 'preparo-solucoes-analise',
-    title: 'Preparo de Soluções para Análise 🧫',
+    title: 'Preparo de Soluções para Análise',
     description: 'Aprenda as melhores práticas para o preparo de soluções padrão e diluições.',
-    thumbnailUrl: '/images/preparo-solucoes.jpg',
+    // thumbnailUrl: '/images/preparo-solucoes.jpg',
     estimatedTime: '35 min',
     prerequisites: ['principios-espectrofotometria-absorcao'], // Exemplo de pré-requisito
     pages: [
@@ -423,9 +423,9 @@ export const MODULES_DATA: Module[] = [
   // 7. Módulo: Interpretação de Resultados
   {
     id: 'interpretacao-de-resultados',
-    title: 'Interpretação de Resultados 📉',
+    title: 'Interpretação de Resultados',
     description: 'Aprenda a analisar gráficos de absorbância e identificar erros comuns em espectrofotometria.',
-    thumbnailUrl: '/images/interpretacao-resultados.jpg',
+    // thumbnailUrl: '/images/interpretacao-resultados.jpg',
     estimatedTime: '20 min',
     prerequisites: ['principios-espectrofotometria-absorcao', 'preparo-solucoes-analise'], // Exemplo de pré-requisito
     pages: [

@@ -1,4 +1,4 @@
-import { getModuleById } from "@/constants/modulesData";
+import { getModuleById } from "@/utils/module-helpers";
 import { Link, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
