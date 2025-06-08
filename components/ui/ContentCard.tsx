@@ -76,7 +76,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
 
 const styles = StyleSheet.create({
   cardContainer: {
-    backgroundColor: Colors.light.textWhite,
+    backgroundColor: Colors.light.tabsBackground,
     borderRadius: 16,
     marginVertical: 10,
     marginHorizontal: 4,

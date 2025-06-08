@@ -3,14 +3,14 @@ import { Module } from '@/interfaces/content';
 export const MODULES_DATA: Module[] = [
   // 1. Módulo: Introdução à Espectrofotometria
   {
-    id: 'introducao-espectrofotometria',
+    id: '1',
     title: 'Introdução à Espectrofotometria',
     description: 'Conceitos básicos, importância e o espectro eletromagnético.',
     // thumbnailUrl: '/images/spectrophotometry-intro.jpg',
     estimatedTime: '25 min',
     pages: [
       {
-        id: 'o-que-e-espectrofotometria',
+        id: '1.1',
         title: 'O que é Espectrofotometria?',
         content: [
           {
@@ -22,7 +22,7 @@ export const MODULES_DATA: Module[] = [
         ],
       },
       {
-        id: 'absorcao-e-emissao',
+        id: '1.2',
         title: 'Diferença entre Absorção e Emissão',
         content: [
           {
@@ -34,7 +34,7 @@ export const MODULES_DATA: Module[] = [
         ],
       },
       {
-        id: 'importancia-da-tecnica',
+        id: '1.3',
         title: 'Importância da Técnica',
         content: [
           {
@@ -55,7 +55,7 @@ export const MODULES_DATA: Module[] = [
         ],
       },
       {
-        id: 'exemplos-aplicacoes-reais',
+        id: '1.4',
         title: 'Exemplos de Aplicações Reais',
         content: [
           {
@@ -70,7 +70,7 @@ export const MODULES_DATA: Module[] = [
           {
             id: 'aplicacoes-image-1',
             type: 'image',
-            src: '/images/aplicacoes-espectro.jpg', 
+            src: require('@/assets/images/aplicacoes-espectro.jpg'), 
             alt: 'Diversas aplicações da espectrofotometria em diferentes campos.',
             caption: 'A versatilidade da espectrofotometria a torna indispensável em muitos setores.',
           },
@@ -102,7 +102,7 @@ export const MODULES_DATA: Module[] = [
           {
             id: 'espectro-eletromagnetico-page',
             type: 'image',
-            src: '/images/eletromagnetic-spectrum.png',
+            src: require('@/assets/images/aplicacoes-espectro.jpg'), 
             alt: 'Espectro eletromagnético com diferentes comprimentos de onda.',
             caption: 'O espectro eletromagnético abrange desde ondas de rádio até raios gama, com a luz visível sendo apenas uma pequena parte.',
           },
@@ -260,7 +260,7 @@ export const MODULES_DATA: Module[] = [
           {
             id: 'espectrofotometro-diagrama-image',
             type: 'image',
-            src: '/images/espectrofotometro-partes.png',
+            src: require('@/assets/images/aplicacoes-espectro.jpg'), 
             alt: 'Diagrama detalhado das partes de um espectrofotômetro.',
             caption: 'Componentes principais de um espectrofotômetro.',
           },
@@ -410,7 +410,7 @@ export const MODULES_DATA: Module[] = [
           {
             id: 'preparo-solucoes-image',
             type: 'image',
-            src: '/images/preparo-solucoes.jpg',
+            src: require('@/assets/images/aplicacoes-espectro.jpg'), 
             alt: 'Pessoa preparando uma solução em laboratório.',
             caption: 'A precisão no preparo das soluções é fundamental.',
           },
@@ -451,7 +451,7 @@ export const MODULES_DATA: Module[] = [
           {
             id: 'grafico-exemplo-image',
             type: 'image',
-            src: '/images/curva-calibracao-exemplo.png',
+            src: require('@/assets/images/aplicacoes-espectro.jpg'), 
             alt: 'Exemplo de gráfico de absorbância versus concentração.',
             caption: 'Curva de calibração mostrando a relação linear entre absorbância e concentração.',
           },

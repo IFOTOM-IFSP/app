@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     alignItems: "center",
-    paddingTop: Platform.OS === "ios" ? 50 : 40,
+    paddingTop: Platform.OS === "ios" ? 50 : 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
     backgroundColor: Colors.light.background,
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 12,
     alignItems: "center",
     flexDirection: "row",
   },

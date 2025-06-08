@@ -1,3 +1,4 @@
+import { ImageSourcePropType } from "react-native";
 
 export interface ContentBlock {
   type: 'text' | 'image' | 'video' | 'code' | 'interactive'; 
@@ -14,7 +15,7 @@ export interface TextContent extends ContentBlock {
 
 export interface ImageContent extends ContentBlock {
   type: 'image';
-  src: string; 
+  src: ImageSourcePropType,
   alt: string; 
   caption?: string; 
   width?: number; 
