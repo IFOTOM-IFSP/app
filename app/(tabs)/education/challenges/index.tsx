@@ -1,7 +1,7 @@
-import React from "react";
-import { StyleSheet, Text , TouchableOpacity, FlatList, View} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ChallengeListScreen() {
    const router = useRouter();
