@@ -72,7 +72,7 @@ export default function OptionsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f9fafb",
+    backgroundColor: Colors.light.background,
     paddingTop: 20,
   },
   header: {
@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
-    width: "90%",              // reduz a largura dos botões
-    alignSelf: "center",       // centraliza horizontalmente
+    width: "90%",             
+    alignSelf: "center",       
   },
   optionText: {
     fontSize: 18,
