@@ -1,4 +1,4 @@
-import ContentCard from "@/components/ui/ContentCard";
+import ContentCard from "@/components/modules/modulesId/ContentCard";
 import { Module } from "@/interfaces/content";
 import { Link } from "expo-router";
 import React, { useEffect, useRef } from "react";
@@ -56,7 +56,6 @@ export default function AnimatedListItem({
 
   return (
     <Animated.View style={{ opacity, transform: [{ translateY }] }}>
-      {/* O Link agora envolve o ContentCard aqui fora! */}
       <Link
         href={{
           pathname: "/(tabs)/education/modules/[moduleId]",
@@ -73,7 +72,6 @@ export default function AnimatedListItem({
               ? `Tempo estimado: ${item.estimatedTime}`
               : undefined
           }
-          // A prop onPress não é necessária aqui, pois o Link cuidará do clique.
         />
       </Link>
     </Animated.View>

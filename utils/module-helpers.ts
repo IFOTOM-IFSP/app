@@ -28,26 +28,31 @@ export function getModulePageById(moduleId?: string, pageId?: string): ModulePag
   return module.pages.find(p => p.id === pageId);
 }
 
-export function getNextPage(moduleId?: string, currentPageId?: string): ModulePage | null {
-  if (!moduleId || !currentPageId) return null;
+export const getNextPage = (moduleId: string, currentPageId: string): ModulePage | null => {
   const module = getModuleById(moduleId);
   if (!module) return null;
 
   const currentPageIndex = module.pages.findIndex(p => p.id === currentPageId);
+
+  // Se não encontrou a página ou se já é a última
   if (currentPageIndex === -1 || currentPageIndex >= module.pages.length - 1) {
     return null;
   }
-  return module.pages[currentPageIndex + 1];
-}
 
-export function getPreviousPage(moduleId?: string, currentPageId?: string): ModulePage | null {
-  if (!moduleId || !currentPageId) return null;
+  return module.pages[currentPageIndex + 1];
+};
+
+// Pega a página ANTERIOR na sequência
+export const getPreviousPage = (moduleId: string, currentPageId: string): ModulePage | null => {
   const module = getModuleById(moduleId);
   if (!module) return null;
-
+  
   const currentPageIndex = module.pages.findIndex(p => p.id === currentPageId);
+
+
   if (currentPageIndex <= 0) {
     return null;
   }
+
   return module.pages[currentPageIndex - 1];
-}
+};

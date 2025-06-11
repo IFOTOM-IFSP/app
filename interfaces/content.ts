@@ -1,7 +1,7 @@
 import { ImageSourcePropType } from "react-native";
 
 export interface ContentBlock {
-  type: 'text' | 'image' | 'video' | 'code' | 'interactive'; 
+  type: 'text' | 'image' | 'video' | 'code' | 'interactive' ; 
   id: string; 
 }
 
@@ -9,7 +9,7 @@ export interface ContentBlock {
 export interface TextContent extends ContentBlock {
   type: 'text';
   value: string; 
-  format?: 'paragraph' | 'heading1' | 'heading2' | 'blockquote' | 'list'; 
+  format?: 'paragraph' | 'heading1' | 'heading2' | 'blockquote' | 'list' | 'note' ; 
 }
 
 
@@ -25,6 +25,7 @@ export interface ImageContent extends ContentBlock {
 
 export interface VideoContent extends ContentBlock {
   type: 'video';
+  id: string;
   src: string; 
   alt: string; 
   caption?: string; 
@@ -45,12 +46,10 @@ export interface InteractiveContent extends ContentBlock {
   props?: Record<string, any>; 
 }
 
-
-
 export interface ModulePage {
   id: string;
   title: string;
-  content: (TextContent | ImageContent | VideoContent | CodeContent | InteractiveContent)[]; 
+  content: (TextContent | ImageContent | VideoContent | CodeContent  | InteractiveContent)[]; 
 }
 
 

@@ -1,5 +1,3 @@
-// Em: @/components/ui/PageListItem.tsx
-
 import { Colors } from "@/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
@@ -28,12 +26,10 @@ export function PageListItem({
       }}
       asChild>
       <TouchableOpacity style={styles.pageItemCard} activeOpacity={0.8}>
-        {/* Círculo com o número */}
         <View style={styles.itemIconContainer}>
           <Text style={styles.itemNumberText}>{displayNumber}</Text>
         </View>
 
-        {/* Container com Título e Subtítulo */}
         <View style={styles.itemTextContainer}>
           <Text style={styles.itemTitle} numberOfLines={1}>
             {page.title || `Conteúdo ${displayNumber}`}
@@ -41,7 +37,6 @@ export function PageListItem({
           <Text style={styles.itemSubtitle}>Toque para abrir esta seção</Text>
         </View>
 
-        {/* Ícone de ação (seta) */}
         <View style={styles.itemActionContainer}>
           <Ionicons
             name="chevron-forward-outline"
@@ -54,12 +49,11 @@ export function PageListItem({
   );
 }
 
-// Os estilos pertencentes a este componente vêm com ele.
 const styles = StyleSheet.create({
   pageItemCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.light.tabsBackground, // Usar cores semânticas do seu tema é uma boa prática
+    backgroundColor: Colors.light.tabsBackground,
     padding: 15,
     borderRadius: 12,
     marginBottom: 16,

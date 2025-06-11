@@ -36,7 +36,7 @@ export function HubListItem({ item, onPress }: HubListItemProps) {
           <Ionicons
             name="chevron-forward-outline"
             size={22}
-            color={Colors.light.gray || "#CBD5E0"}
+            color={Colors.light.gray }
           />
         )}
       </View>
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   actionButtonText: {
-    color: Colors.light.textWhite || "#FFFFFF",
+    color: Colors.light.textWhite,
     fontSize: 12,
     fontWeight: "bold",
   },
