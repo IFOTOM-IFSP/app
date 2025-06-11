@@ -1,5 +1,5 @@
-import AnimatedListItem from "@/components/education/modules/AnimatedListItem";
-import HeaderIndex from "@/components/education/modules/HeaderIndex";
+import AnimatedListItem from "@/components/modules/AnimatedListItem";
+import HeaderIndex from "@/components/modules/HeaderIndex";
 import { Colors } from "@/constants/Colors";
 import { MODULES_DATA } from "@/constants/modulesData";
 import { default as React, useRef } from "react";

@@ -146,7 +146,6 @@ export default function RootLayout(): JSX.Element {
         });
     }
   }, [action]);
-
   console.log(
     `ROOT_LAYOUT [RENDER] - Action: ${action}, Pathname: ${pathname}`
   );

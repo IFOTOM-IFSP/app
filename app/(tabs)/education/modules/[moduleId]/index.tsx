@@ -9,8 +9,8 @@ import {
   View,
 } from "react-native";
 
+import { PageListItem } from "@/components/modules/modulesId/PageListItem";
 import BackButton from "@/components/ui/BackButton";
-import { PageListItem } from "@/components/ui/PageListItem";
 import { Colors } from "@/constants/Colors";
 
 export default function ModuleHomeScreen() {

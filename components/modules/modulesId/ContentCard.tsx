@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import { Image } from "expo-image"; // 2. Importado do expo-image
+import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import {
@@ -16,7 +16,7 @@ interface ContentCardProps {
   description: string;
   thumbnailUrl?: string;
   metaInfo?: string;
-  onPress?: () => void; // 3. Adicionada a prop onPress
+  onPress?: () => void;
 }
 
 const ContentCard: React.FC<ContentCardProps> = ({
@@ -29,7 +29,6 @@ const ContentCard: React.FC<ContentCardProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
 
-  // 1. Efeito para resetar o erro quando a URL muda
   useEffect(() => {
     setImageError(false);
   }, [thumbnailUrl]);
@@ -37,12 +36,10 @@ const ContentCard: React.FC<ContentCardProps> = ({
   const showGradient = !thumbnailUrl || imageError;
 
   return (
-    // 3. O Link foi removido daqui. Agora é um TouchableOpacity simples.
     <TouchableOpacity
       style={styles.cardContainer}
       onPress={onPress}
       activeOpacity={0.8}
-      // 4. Melhorando a acessibilidade
       accessibilityRole="button"
       accessibilityLabel={`${title}, ${description}`}>
       {showGradient ? (
@@ -53,14 +50,13 @@ const ContentCard: React.FC<ContentCardProps> = ({
           end={{ x: 1, y: 1 }}
         />
       ) : (
-        // 2. Usando o componente Image do expo-image
         <Image
-          source={thumbnailUrl} // API mais simples, aceita a string diretamente
+          source={thumbnailUrl}
           style={styles.thumbnail}
           contentFit="cover"
           accessibilityLabel={`Capa de ${title}`}
           onError={() => setImageError(true)}
-          transition={300} // Efeito de fade-in suave ao carregar
+          transition={300}
         />
       )}
       <View style={styles.contentWrapper}>
