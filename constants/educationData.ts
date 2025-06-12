@@ -60,7 +60,7 @@ export const EDUCATION_HUB_ITEMS: HubItem[] = [
     iconName: 'link',
     iconColor: Colors.light.pink || '#E91E63', 
     iconBackgroundColor: Colors.light.pinkBackground || '#FCE4EC',
-    route: '/(tabs)/education/referencia',
+    route: '/(tabs)/education/references',
     actionText: 'Explorar',
   },
 ];
