@@ -1,20 +1,120 @@
+import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
   Alert,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import BackButton from "@/components/ui/BackButton";
 import { Colors } from "@/constants/Colors";
 
-export default function OptionsScreen() {
+type OptionButtonProps = {
+  label: string;
+  onPress: () => void;
+  icon?: React.ReactNode;
+  style?: "default" | "danger";
+  info?: string;
+};
+
+const OptionButton: React.FC<OptionButtonProps> = ({
+  label,
+  onPress,
+  icon,
+  style = "default",
+  info,
+}) => {
+  const buttonStyle = style === "danger" ? styles.dangerButton : {};
+  const textStyle = style === "danger" ? styles.dangerButtonText : {};
+
+  return (
+    <TouchableOpacity
+      style={[styles.optionContainer, buttonStyle]}
+      onPress={onPress}>
+      <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+        {icon}
+        <Text
+          style={[
+            styles.optionText,
+            textStyle,
+            icon ? styles.textWithIcon : null,
+          ]}>
+          {label}
+        </Text>
+      </View>
+      {info && (
+        <TouchableOpacity
+          style={styles.infoButton}
+          onPress={(e) => {
+            e.stopPropagation();
+            Alert.alert(label, info);
+          }}>
+          <Feather name="help-circle" size={22} color="#ADB5BD" />
+        </TouchableOpacity>
+      )}
+    </TouchableOpacity>
+  );
+};
+
+type SettingsSwitchProps = {
+  label: string;
+  icon?: React.ReactNode;
+  isEnabled: boolean;
+  onToggleSwitch: (value: boolean) => void;
+  info?: string;
+};
+
+const SettingsSwitch: React.FC<SettingsSwitchProps> = ({
+  label,
+  icon,
+  isEnabled,
+  onToggleSwitch,
+  info,
+}) => {
+  return (
+    <View style={styles.optionContainer}>
+      <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+        {icon}
+        <Text style={[styles.optionText, icon ? styles.textWithIcon : null]}>
+          {label}
+        </Text>
+      </View>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        {info && (
+          <TouchableOpacity
+            style={styles.infoButton}
+            onPress={() => Alert.alert(label, info)}>
+            <Feather name="help-circle" size={22} color="#ADB5BD" />
+          </TouchableOpacity>
+        )}
+        <Switch
+          trackColor={{ false: "#E9E9EA", true: "#C1B2F3" }}
+          thumbColor={isEnabled ? Colors.light.accentPurple : "#f4f3f4"}
+          onValueChange={onToggleSwitch}
+          value={isEnabled}
+        />
+      </View>
+    </View>
+  );
+};
+
+export default function GeneralSettingsScreen() {
   const router = useRouter();
+  const [isKeepScreenOn, setIsKeepScreenOn] = useState(false);
+  const [areNotificationsEnabled, setAreNotificationsEnabled] = useState(true);
+
+  const handleContact = () => {
+    Alert.alert(
+      "Fale Conosco",
+      "Para dúvidas ou para reportar um bug, envie um e-mail para: suporte@seuapp.com"
+    );
+  };
 
   const handleChangeName = async () => {
     Alert.alert("Trocar de nome", "Tem certeza que deseja trocar seu nome?", [
@@ -29,42 +129,91 @@ export default function OptionsScreen() {
     ]);
   };
 
+  const handleDeleteData = () => {
+    Alert.alert(
+      "Deletar Dados",
+      "Esta ação é irreversível e irá apagar todos os seus dados. Deseja continuar?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Deletar",
+          style: "destructive",
+          onPress: () => console.log("Lógica para deletar dados..."),
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <BackButton style={styles.backButton} />
-        <Text style={styles.title}>Configurações</Text>
-      </View>
+      <BackButton title="Configurações" />
 
-      <TouchableOpacity
-        style={styles.option}
+      <Text style={styles.sectionTitle}>Aparência</Text>
+      <OptionButton
+        label="Tema do Aplicativo"
         onPress={() =>
           Alert.alert(
-            "Sobre o aplicativo",
-            "Alert ( depois trocamos por uma aba de sobre , ou remove essa porra kkkkk )"
+            "Mudar Tema",
+            "Funcionalidade de troca de tema a ser implementada."
           )
         }
-      >
-        <Text style={styles.optionText}> Sobre o aplicativo</Text>
-      </TouchableOpacity>
+        icon={
+          <Feather name="sun" size={20} color={Colors.light.accentPurple} />
+        }
+        info="Altere a aparência do aplicativo entre o modo claro e escuro."
+      />
 
-      <TouchableOpacity
-        style={styles.option}
-        onPress={() => Alert.alert("Versão do App", "v1.0.0 (Fazer aquela graça kkk)")}
-      >
-        <Text style={styles.optionText}> Versão do App</Text>
-      </TouchableOpacity>
+      <Text style={styles.sectionTitle}>Funcionalidades</Text>
+      <SettingsSwitch
+        label="Manter a Tela Ativa"
+        isEnabled={isKeepScreenOn}
+        onToggleSwitch={setIsKeepScreenOn}
+        icon={
+          <Feather name="monitor" size={20} color={Colors.light.accentPurple} />
+        }
+        info="Impede que a tela do seu dispositivo se apague automaticamente. Útil durante medições."
+      />
+      <SettingsSwitch
+        label="Notificações"
+        isEnabled={areNotificationsEnabled}
+        onToggleSwitch={setAreNotificationsEnabled}
+        icon={
+          <Feather name="bell" size={20} color={Colors.light.accentPurple} />
+        }
+        info="Receba alertas sobre o término de medições ou lembretes para calibração."
+      />
 
-      <TouchableOpacity style={styles.option} onPress={handleChangeName}>
-        <Text style={styles.optionText}> Trocar de nome</Text>
-      </TouchableOpacity>
+      <Text style={styles.sectionTitle}>Conta</Text>
+      <OptionButton
+        label="Trocar de nome"
+        onPress={handleChangeName}
+        icon={
+          <Feather name="edit-2" size={20} color={Colors.light.accentPurple} />
+        }
+        info="Altere o nome de usuário associado a este dispositivo."
+      />
+      <OptionButton
+        label="Deletar dados da conta"
+        onPress={handleDeleteData}
+        style="danger"
+        icon={<Feather name="trash-2" size={20} color="#D93A3A" />}
+      />
 
-      <TouchableOpacity
-        style={styles.option}
-        onPress={() => router.replace("/")}
-      >
-        <Text style={styles.optionText}> .... </Text>
-      </TouchableOpacity>
+      <Text style={styles.sectionTitle}>Sobre</Text>
+      <OptionButton
+        label="Versão do App"
+        onPress={() => Alert.alert("Versão do App", "v1.0.0")}
+        icon={
+          <Feather name="info" size={20} color={Colors.light.accentPurple} />
+        }
+      />
+      <OptionButton
+        label="Fale Conosco / Reportar Bug"
+        onPress={handleContact}
+        icon={
+          <Feather name="mail" size={20} color={Colors.light.accentPurple} />
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -72,42 +221,43 @@ export default function OptionsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
-    paddingTop: 20,
+    backgroundColor: "#F8F9FA",
+    paddingHorizontal: 20,
   },
-  header: {
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#6C757D",
+    marginTop: 24,
+    marginBottom: 10,
+    textTransform: "uppercase",
+  },
+  optionContainer: {
+    backgroundColor: "#FFFFFF",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 10,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    marginBottom: 16,
-  },
-  backButton: {
-    marginRight: 12,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: Colors.light.accentPurple,
-  },
-  content: {
-    paddingHorizontal: 16,
-  },
-    option: {
-    marginTop: 8,
-    backgroundColor: "#ffffff",
-    padding: 16,
-    borderRadius: 16,
+    justifyContent: "space-between",
     marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-    width: "90%",             
-    alignSelf: "center",       
+    height: 60,
   },
   optionText: {
-    fontSize: 18,
-    color: "#111827",
+    fontSize: 17,
+    color: "#343A40",
+  },
+  textWithIcon: {
+    marginLeft: 15,
+  },
+  infoButton: {
+    paddingLeft: 10,
+    marginRight: 5,
+  },
+  dangerButton: {
+    backgroundColor: "#FFE0E0",
+  },
+  dangerButtonText: {
+    color: "#D93A3A",
   },
 });

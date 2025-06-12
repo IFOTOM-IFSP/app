@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
   },
   gradientPlaceholder: {
     width: "100%",
-    aspectRatio: 16 / 9,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
+    height: 150,
   },
   contentWrapper: {
     paddingVertical: 16,

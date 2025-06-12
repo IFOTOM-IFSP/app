@@ -44,11 +44,9 @@ export default function EducationHubScreen() {
           {EDUCATION_HUB_ITEMS.map((hubItem) => (
             <HubListItem
               key={hubItem.id}
-              // Passamos o item sem a rota, pois o onPress lida com isso.
-              // Se o componente HubListItem precisasse de outros dados de 'hubItem',
-              // poderíamos fazer: item={{ title: hubItem.title, ...etc }}
+
               item={hubItem}
-              onPress={() => router.push(hubItem.route as any)} // Expo Router aceita string ou objeto
+              onPress={() => router.push(hubItem.route as any)} 
             />
           ))}
         </View>
