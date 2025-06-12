@@ -40,7 +40,7 @@ export const EDUCATION_HUB_ITEMS: HubItem[] = [
     iconName: 'trophy-outline',
     iconColor: Colors.light.green || '#4CAF50', 
     iconBackgroundColor: Colors.light.greenBackground || '#E8F5E9',
-    route: '/(tabs)/education/challenges',
+    route: '/(tabs)/education/quiz',
     actionText: 'Começar',
   },
   {
