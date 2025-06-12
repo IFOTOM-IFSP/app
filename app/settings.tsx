@@ -1,13 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import React from "react";
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
+import { Alert, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import BackButton from "@/components/ui/BackButton";
@@ -31,10 +25,7 @@ export default function OptionsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <BackButton style={styles.backButton} />
-        <Text style={styles.title}>Configurações</Text>
-      </View>
+      <BackButton title="Configurações" />
 
       <TouchableOpacity
         style={styles.option}
@@ -43,15 +34,15 @@ export default function OptionsScreen() {
             "Sobre o aplicativo",
             "Alert ( depois trocamos por uma aba de sobre , ou remove essa porra kkkkk )"
           )
-        }
-      >
+        }>
         <Text style={styles.optionText}> Sobre o aplicativo</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.option}
-        onPress={() => Alert.alert("Versão do App", "v1.0.0 (Fazer aquela graça kkk)")}
-      >
+        onPress={() =>
+          Alert.alert("Versão do App", "v1.0.0 (Fazer aquela graça kkk)")
+        }>
         <Text style={styles.optionText}> Versão do App</Text>
       </TouchableOpacity>
 
@@ -61,8 +52,7 @@ export default function OptionsScreen() {
 
       <TouchableOpacity
         style={styles.option}
-        onPress={() => router.replace("/")}
-      >
+        onPress={() => router.replace("/")}>
         <Text style={styles.optionText}> .... </Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -81,9 +71,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     marginBottom: 16,
   },
-  backButton: {
-    marginRight: 12,
-  },
+
   title: {
     fontSize: 24,
     fontWeight: "bold",
@@ -92,7 +80,7 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: 16,
   },
-    option: {
+  option: {
     marginTop: 8,
     backgroundColor: "#ffffff",
     padding: 16,
@@ -103,8 +91,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
-    width: "90%",             
-    alignSelf: "center",       
+    width: "90%",
+    alignSelf: "center",
   },
   optionText: {
     fontSize: 18,
