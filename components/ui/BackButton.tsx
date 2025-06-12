@@ -54,7 +54,7 @@ const BackButton: React.FC<BackButtonProps> = ({
 
 const styles = StyleSheet.create({
   containerWitchButton: {
-    maxWidth: 120,
+    maxWidth: 200,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
