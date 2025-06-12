@@ -1,5 +1,5 @@
 import { getModuleById } from "@/utils/module-helpers";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";
 import {
   ScrollView,
@@ -25,6 +25,9 @@ export default function ModuleHomeScreen() {
     );
   }
 
+  const currentIdAsNumber = parseInt(moduleId || "0", 10);
+  const nextModule = getModuleById(String(currentIdAsNumber + 1));
+
   const firstPageId = module.pages[0]?.id || "1";
 
   return (
@@ -32,7 +35,7 @@ export default function ModuleHomeScreen() {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}>
       <View style={styles.header}>
-        <BackButton />
+        <BackButton onPress={() => router.replace("/education/modules")} />
         <Text style={styles.title} numberOfLines={1}>
           {module.title}
         </Text>
@@ -50,16 +53,31 @@ export default function ModuleHomeScreen() {
         />
       ))}
 
-      <Link
-        href={{
-          pathname: "/(tabs)/education/modules/[moduleId]/p/[page]",
-          params: { moduleId: module.id, page: firstPageId },
-        }}
-        asChild>
-        <TouchableOpacity style={styles.startButton}>
-          <Text style={styles.startButtonText}>Começar Módulo</Text>
-        </TouchableOpacity>
-      </Link>
+      <View style={styles.buttonContainer}>
+        <Link
+          href={{
+            pathname: "/(tabs)/education/modules/[moduleId]/p/[page]",
+            params: { moduleId: module.id, page: firstPageId },
+          }}
+          asChild>
+          <TouchableOpacity style={styles.startButton}>
+            <Text style={styles.startButtonText}>Começar Módulo</Text>
+          </TouchableOpacity>
+        </Link>
+
+        {nextModule && (
+          <Link
+            href={{
+              pathname: "/(tabs)/education/modules/[moduleId]/",
+              params: { moduleId: nextModule.id },
+            }}
+            asChild>
+            <TouchableOpacity style={styles.nextModuleButton}>
+              <Text style={styles.nextModuleButtonText}>Próximo Módulo</Text>
+            </TouchableOpacity>
+          </Link>
+        )}
+      </View>
     </ScrollView>
   );
 }
@@ -92,8 +110,11 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: Colors.light.textSecondary,
   },
+  buttonContainer: {
+    marginTop: 24,
+    gap: 12,
+  },
   startButton: {
-    marginTop: 16,
     backgroundColor: Colors.light.tint,
     alignItems: "center",
     paddingVertical: 14,
@@ -107,6 +128,19 @@ const styles = StyleSheet.create({
   startButtonText: {
     fontSize: 16,
     color: Colors.light.background,
+    fontWeight: "bold",
+  },
+  nextModuleButton: {
+    backgroundColor: "transparent",
+    alignItems: "center",
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: Colors.light.tint,
+  },
+  nextModuleButtonText: {
+    fontSize: 16,
+    color: Colors.light.tint,
     fontWeight: "bold",
   },
 });

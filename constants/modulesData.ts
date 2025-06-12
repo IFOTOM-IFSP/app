@@ -1,4 +1,3 @@
-// data/modules.ts
 import { Module } from '@/interfaces/content';
 export const MODULES_DATA: Module[] = [
   // 1. Módulo: Introdução à Espectrofotometria

@@ -12,11 +12,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// Supondo que estes componentes existam no seu projeto
 import BackButton from "@/components/ui/BackButton";
 import { Colors } from "@/constants/Colors";
 
-// --- Componente para Ações Simples ---
 type OptionButtonProps = {
   label: string;
   onPress: () => void;
@@ -54,7 +52,7 @@ const OptionButton: React.FC<OptionButtonProps> = ({
         <TouchableOpacity
           style={styles.infoButton}
           onPress={(e) => {
-            e.stopPropagation(); // Impede que o onPress principal seja acionado
+            e.stopPropagation();
             Alert.alert(label, info);
           }}>
           <Feather name="help-circle" size={22} color="#ADB5BD" />
@@ -64,7 +62,6 @@ const OptionButton: React.FC<OptionButtonProps> = ({
   );
 };
 
-// --- Componente para Opções On/Off ---
 type SettingsSwitchProps = {
   label: string;
   icon?: React.ReactNode;
@@ -107,7 +104,6 @@ const SettingsSwitch: React.FC<SettingsSwitchProps> = ({
   );
 };
 
-// --- Tela de Configurações Gerais ---
 export default function GeneralSettingsScreen() {
   const router = useRouter();
   const [isKeepScreenOn, setIsKeepScreenOn] = useState(false);
@@ -152,7 +148,6 @@ export default function GeneralSettingsScreen() {
     <SafeAreaView style={styles.container}>
       <BackButton title="Configurações" />
 
-      {/* Seção de Aparência */}
       <Text style={styles.sectionTitle}>Aparência</Text>
       <OptionButton
         label="Tema do Aplicativo"
@@ -168,7 +163,6 @@ export default function GeneralSettingsScreen() {
         info="Altere a aparência do aplicativo entre o modo claro e escuro."
       />
 
-      {/* Seção de Funcionalidades */}
       <Text style={styles.sectionTitle}>Funcionalidades</Text>
       <SettingsSwitch
         label="Manter a Tela Ativa"
@@ -189,7 +183,6 @@ export default function GeneralSettingsScreen() {
         info="Receba alertas sobre o término de medições ou lembretes para calibração."
       />
 
-      {/* Seção da Conta */}
       <Text style={styles.sectionTitle}>Conta</Text>
       <OptionButton
         label="Trocar de nome"
@@ -206,7 +199,6 @@ export default function GeneralSettingsScreen() {
         icon={<Feather name="trash-2" size={20} color="#D93A3A" />}
       />
 
-      {/* Seção de Sobre */}
       <Text style={styles.sectionTitle}>Sobre</Text>
       <OptionButton
         label="Versão do App"
