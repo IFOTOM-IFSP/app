@@ -1,7 +1,7 @@
 import IconButton from "@/components/ui/IconButton";
 import { Colors } from "@/constants/Colors";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native"; // Importe ViewStyle
 
 interface SectionItem {
   id: string;
@@ -13,13 +13,19 @@ interface SectionItem {
 
 interface UsefulSectionsProps {
   sections: SectionItem[];
+  title: boolean;
+  style?: StyleProp<ViewStyle>;
 }
 
-export function UsefulSections({ sections }: UsefulSectionsProps) {
+export function UsefulSections({
+  sections,
+  title,
+  style,
+}: UsefulSectionsProps) {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Seções úteis</Text>
-      <View style={styles.iconsRow}>
+    <View style={[styles.container]}>
+      {title && <Text style={styles.title}>Seções úteis</Text>}
+      <View style={[styles.iconsRow, style]}>
         {sections.map((section) => {
           const IconComponent = section.iconComponent;
           return (

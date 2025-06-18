@@ -1,8 +1,4 @@
-import {
-  FontAwesome5,
-  MaterialCommunityIcons,
-  SimpleLineIcons,
-} from "@expo/vector-icons";
+import { AntDesign, FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
@@ -37,18 +33,24 @@ export default function HomeScreen() {
       onPress: () => console.log("AR Scan Pressionado"),
     },
     {
-      id: "test",
-      label: "Test",
-      iconName: "flask-outline",
-      iconComponent: MaterialCommunityIcons,
-      onPress: () => router.push("/test"),
+      id: "about",
+      label: "sobre",
+      iconName: "exclamationcircleo",
+      iconComponent: AntDesign,
+      onPress: () => {
+        console.log("Sobre Pressionado");
+        router.push("/about");
+      },
     },
     {
       id: "doubts",
       label: "Dúvidas",
       iconName: "question",
       iconComponent: SimpleLineIcons,
-      onPress: () => console.log("Dúvidas Pressionado"),
+      onPress: () => {
+        console.log("Dúvidas Pressionado");
+        router.push("/doubts");
+      },
     },
     {
       id: "more",
@@ -78,7 +80,7 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}>
         <HomeHeader userName={userName} onSettingsPress={handleSettingsPress} />
         <StartAnalysisCard onPress={handleStartAnalysis} />
-        <UsefulSections sections={usefulSectionsData} />
+        <UsefulSections title={true} sections={usefulSectionsData} />
       </ScrollView>
     </SafeAreaView>
   );

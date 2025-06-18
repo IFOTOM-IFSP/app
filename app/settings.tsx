@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
+  Linking,
   StyleSheet,
   Switch,
   Text,
@@ -109,11 +110,37 @@ export default function GeneralSettingsScreen() {
   const [isKeepScreenOn, setIsKeepScreenOn] = useState(false);
   const [areNotificationsEnabled, setAreNotificationsEnabled] = useState(true);
 
-  const handleContact = () => {
-    Alert.alert(
-      "Fale Conosco",
-      "Para dúvidas ou para reportar um bug, envie um e-mail para: suporte@seuapp.com"
-    );
+  const handleContact = async (
+    emailAddress: string,
+    subject: string = "",
+    body: string = ""
+  ) => {
+    const encodedSubject = encodeURIComponent(subject);
+    const encodedBody = encodeURIComponent(body);
+
+    let url = `mailto:${emailAddress}`;
+
+    if (encodedSubject || encodedBody) {
+      url += `?subject=${encodedSubject}&body=${encodedBody}`;
+    }
+
+    try {
+      const supported = await Linking.canOpenURL(url);
+
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.log(
+          `Não foi possível abrir o aplicativo de e-mail. URL: ${url}`
+        );
+        alert(
+          "Não foi possível abrir o aplicativo de e-mail. Por favor, verifique se você tem um configurado."
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao tentar abrir o e-mail:", error);
+      alert("Ocorreu um erro ao tentar abrir o e-mail.");
+    }
   };
 
   const handleChangeName = async () => {
@@ -209,7 +236,13 @@ export default function GeneralSettingsScreen() {
       />
       <OptionButton
         label="Fale Conosco / Reportar Bug"
-        onPress={handleContact}
+        onPress={() =>
+          handleContact(
+            "lucas.biazon@aluno.ifsp.edu.br",
+            "Dúvida sobre o aplicativo",
+            "Olá, tenho uma dúvida sobre..."
+          )
+        }
         icon={
           <Feather name="mail" size={20} color={Colors.light.accentPurple} />
         }
