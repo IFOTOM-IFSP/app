@@ -1,8 +1,7 @@
-import { Colors } from "@/constants/Colors";
+import { ThemedText } from "@/components/ui/ThemedText";
 import React, { JSX } from "react";
 import {
   StyleSheet,
-  Text,
   TextStyle,
   TouchableOpacity,
   ViewStyle,
@@ -11,7 +10,12 @@ import {
 interface IconButtonProps {
   onPress: () => void;
   iconElement: JSX.Element;
-  labelText: string;
+
+  labelText?: string;
+
+  iconOnly?: boolean;
+
+  accessibilityLabel: string;
   style?: ViewStyle;
   textStyle?: TextStyle;
 }
@@ -20,15 +24,29 @@ const IconButton: React.FC<IconButtonProps> = ({
   onPress,
   iconElement,
   labelText,
+  iconOnly = false,
+  accessibilityLabel,
   style,
   textStyle,
 }) => {
+  const containerStyles = [
+    defaultStyles.container,
+    iconOnly && defaultStyles.iconOnlyContainer,
+    style,
+  ];
+
   return (
     <TouchableOpacity
-      style={[defaultStyles.container, style]}
-      onPress={onPress}>
+      style={containerStyles}
+      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button">
       {iconElement}
-      <Text style={[defaultStyles.label, textStyle]}>{labelText}</Text>
+      {labelText && !iconOnly && (
+        <ThemedText style={[defaultStyles.label, textStyle]}>
+          {labelText}
+        </ThemedText>
+      )}
     </TouchableOpacity>
   );
 };
@@ -43,9 +61,16 @@ const defaultStyles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
-    color: Colors.light.textSecondary,
     marginTop: 4,
     textAlign: "center",
+  },
+  iconOnlyContainer: {
+    minWidth: 0,
+    minHeight: 0,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

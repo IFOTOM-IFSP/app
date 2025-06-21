@@ -1,9 +1,10 @@
-import { AuthLayout } from "@/components/AuthLayout";
+import { AuthLayout } from "@/components/layouts/AuthLayout";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { Colors } from "@/constants/Colors";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { useRouter } from "expo-router";
 import React, { JSX } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
 
 export default function WelcomeScreen(): JSX.Element {
   const router = useRouter();
@@ -19,11 +20,12 @@ export default function WelcomeScreen(): JSX.Element {
         <Image
           style={styles.image}
           source={require("@/assets/images/scientist.png")}
+          accessibilityLabel="Ilustração de um cientista segurando um frasco."
         />
-        <Text style={styles.appName}>iFOTOM</Text>
-        <Text style={styles.tagline}>
+        <ThemedText style={styles.appName}>iFOTOM</ThemedText>
+        <ThemedText style={styles.tagline}>
           Análises espectrofotométricas na sua mão.
-        </Text>
+        </ThemedText>
         <PrimaryButton
           title="Vamos lá!"
           onPress={handleProceed}
@@ -44,25 +46,23 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     resizeMode: "contain",
-    marginBottom: 20,
+    marginBottom: Margin.md,
   },
   appName: {
-    fontSize: 52,
-    fontWeight: "bold",
-    color: Colors.light.text,
-    marginBottom: 10,
+    fontSize: FontSize.displayLg,
+    fontWeight: FontWeight.semiBold,
+    marginBottom: Margin.sm,
   },
   tagline: {
-    fontSize: 14,
-    color: Colors.light.text,
+    fontSize: FontSize.sm,
     textAlign: "center",
-    marginBottom: 60,
-    paddingHorizontal: 15,
+    marginBottom: Margin.xxxxl,
+    paddingHorizontal: Padding.sm,
     lineHeight: 20,
-    fontWeight: "700",
+    fontWeight: FontWeight.bold,
   },
   proceedButtonCustom: {
-    marginTop: 30,
+    marginTop: Margin.xl,
     width: "90%",
   },
 });

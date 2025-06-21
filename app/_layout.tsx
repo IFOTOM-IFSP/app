@@ -1,173 +1,91 @@
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { FontSize, Padding } from "@/constants/Styles";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { useUserStore } from "@/context/userStore";
+import { useThemeValue } from "@/hooks/useThemeValue";
 import { Slot, SplashScreen, usePathname, useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
-import React, { JSX, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { Colors } from "../constants/Colors";
-import { getUserName, isFirstLaunch } from "../storage/userStorage";
+import React, { JSX, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 
-SplashScreen.preventAutoHideAsync()
-  .then(() => {
-    console.log(
-      `SplashScreen.preventAutoHideAsync() [RootLayout Global]: Operação iniciada/completada.`
-    );
-  })
-  .catch((error) => {
-    console.warn(
-      `SplashScreen.preventAutoHideAsync() [RootLayout Global] error: ${error}`
-    );
-  });
+SplashScreen.preventAutoHideAsync().catch(console.warn);
 
-type Action =
-  | "INITIAL_CHECK"
-  | "SHOULD_GO_TO_WELCOME"
-  | "SHOULD_GO_TO_APP"
-  | "NAVIGATION_PENDING"
-  | "READY";
+function LoadingScreen() {
+  const textColor = useThemeValue("text");
+  const loaderAnimation = require("@/assets/images/loader_animation.json");
+
+  return (
+    <ThemedView style={styles.loaderContainer}>
+      <View style={styles.loaderContainer2}>
+        <ThemedText style={[styles.loaderText, { color: textColor }]}>
+          Carregando
+        </ThemedText>
+        <LottieView
+          style={styles.loaderAnimation}
+          source={loaderAnimation}
+          autoPlay={true}
+          loop={true}
+        />
+      </View>
+    </ThemedView>
+  );
+}
 
 export default function RootLayout(): JSX.Element {
-  const [action, setAction] = useState<Action>("INITIAL_CHECK");
+  const isLoading = useUserStore((state) => state.isLoading);
+  const isFirstLaunch = useUserStore((state) => state.isFirstLaunch);
+  const init = useUserStore((state) => state.actions.init);
+
   const router = useRouter();
   const pathname = usePathname();
-  const isNavigatingRef = useRef(false);
-  const welcomeScreenPath = "/welcome";
-  const mainAppPath = "/";
+
   useEffect(() => {
     console.log(
-      `ROOT_LAYOUT [EFFECT] - Action: ${action}, Pathname: ${pathname}, IsNavigating: ${isNavigatingRef.current}`
+      "ROOT_LAYOUT [EFFECT INIT]: Chamando init da store (APENAS UMA VEZ)..."
     );
-
-    let isMounted = true;
-
-    const performSideEffects = async () => {
-      if (!isMounted) return;
-
-      if (action === "INITIAL_CHECK") {
-        isNavigatingRef.current = false;
-        try {
-          const firstLaunch = await isFirstLaunch();
-          const name = await getUserName();
-          console.log(
-            `ROOT_LAYOUT [EFFECT] - AsyncStorage: firstLaunch=${firstLaunch}, name=${name}`
-          );
-
-          if (!isMounted) return;
-
-          if (firstLaunch || !name) {
-            console.log("ROOT_LAYOUT [EFFECT] - Decisão: SHOULD_GO_TO_WELCOME");
-            setAction("SHOULD_GO_TO_WELCOME");
-          } else {
-            console.log("ROOT_LAYOUT [EFFECT] - Decisão: SHOULD_GO_TO_APP");
-            setAction("SHOULD_GO_TO_APP");
-          }
-        } catch (error) {
-          console.error("ROOT_LAYOUT [EFFECT] - Erro em INITIAL_CHECK:", error);
-          if (isMounted) setAction("SHOULD_GO_TO_WELCOME");
-        }
-      } else if (action === "SHOULD_GO_TO_WELCOME") {
-        if (pathname !== welcomeScreenPath) {
-          if (!isNavigatingRef.current) {
-            console.log(
-              `ROOT_LAYOUT [EFFECT] - Navegando para Welcome: ${welcomeScreenPath} (de ${pathname})`
-            );
-            isNavigatingRef.current = true;
-            setAction("NAVIGATION_PENDING");
-            router.replace(welcomeScreenPath);
-          } else {
-            console.log(
-              "ROOT_LAYOUT [EFFECT] - Navegação para Welcome já pendente (pathname: ${pathname})."
-            );
-          }
-        } else {
-          console.log(
-            "ROOT_LAYOUT [EFFECT] - Já está em Welcome. Definindo para READY."
-          );
-          setAction("READY");
-        }
-      } else if (action === "SHOULD_GO_TO_APP") {
-        if (pathname === welcomeScreenPath) {
-          if (!isNavigatingRef.current) {
-            console.log(
-              `ROOT_LAYOUT [EFFECT] - Navegando para App: ${mainAppPath} (vindo de ${pathname})`
-            );
-            isNavigatingRef.current = true;
-            setAction("NAVIGATION_PENDING");
-            router.replace(mainAppPath);
-          } else {
-            console.log(
-              "ROOT_LAYOUT [EFFECT] - Navegação para App (de Welcome) já pendente."
-            );
-          }
-        } else if (pathname === mainAppPath) {
-          console.log(
-            `ROOT_LAYOUT [EFFECT] - Já está no App (mainAppPath: ${mainAppPath}). Definindo para READY.`
-          );
-          setAction("READY");
-        } else {
-          console.log(
-            `ROOT_LAYOUT [EFFECT] - Já em uma rota do app (${pathname}) diferente de Welcome. Definindo para READY.`
-          );
-          setAction("READY");
-        }
-      } else if (action === "NAVIGATION_PENDING") {
-        console.log(
-          `ROOT_LAYOUT [EFFECT] - Em NAVIGATION_PENDING. Pathname atual: ${pathname}. Esperando mudança de rota...`
-        );
-        isNavigatingRef.current = false;
-        setAction("INITIAL_CHECK");
-      } else if (action === "READY") {
-        isNavigatingRef.current = false;
-        console.log(
-          "ROOT_LAYOUT [EFFECT] - Estado é READY. Nenhuma ação de navegação neste ciclo."
-        );
-      }
-    };
-    performSideEffects();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [action, pathname, router]);
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
-    if (action === "READY") {
-      console.log(
-        "RootLayout: Action é READY, tentando esconder SplashScreen..."
-      );
-      SplashScreen.hideAsync()
-        .then(() => {
-          console.log(
-            `SplashScreen.hideAsync() [RootLayout useEffect]: Operação completada.`
-          );
-        })
-        .catch((error) => {
-          console.warn(
-            `SplashScreen.hideAsync() [RootLayout useEffect] error: ${error}`
-          );
-        });
+    console.log(
+      `ROOT_LAYOUT [EFFECT NAV]: isLoading=${isLoading}, isFirstLaunch=${isFirstLaunch}, pathname=${pathname}`
+    );
+
+    if (isLoading) {
+      return;
     }
-  }, [action]);
+
+    const authRoutes = ["/welcome", "/enter-name"];
+    const welcomeScreenPath = "/welcome";
+
+    if (isFirstLaunch && !authRoutes.includes(pathname)) {
+      console.log(
+        `ROOT_LAYOUT [EFFECT NAV]: Redirecionando para ${welcomeScreenPath} (rota não permitida no fluxo de auth)`
+      );
+      router.replace(welcomeScreenPath);
+    } else if (
+      !isFirstLaunch &&
+      authRoutes.some((route) => pathname.startsWith(route))
+    ) {
+      console.log(
+        `ROOT_LAYOUT [EFFECT NAV]: Usuário logado tentando acessar rota de auth. Redirecionando para /`
+      );
+      router.replace("/");
+    }
+
+    console.log("ROOT_LAYOUT [EFFECT NAV]: Escondendo SplashScreen.");
+    SplashScreen.hideAsync().catch(console.warn);
+  }, [isLoading, isFirstLaunch, pathname, router]);
+
   console.log(
-    `ROOT_LAYOUT [RENDER] - Action: ${action}, Pathname: ${pathname}`
+    `ROOT_LAYOUT [RENDER]: App está ${isLoading ? "carregando" : "pronto"}.`
   );
 
-  if (action !== "READY") {
-    const loaderAnimation = require("@/assets/images/loader_animation.json");
-    return (
-      <View style={styles.loaderContainer}>
-        <View style={styles.loaderContainer2}>
-          <Text style={styles.loaderText}>Carregando</Text>
-          <LottieView
-            style={styles.loaderAnimation}
-            source={loaderAnimation}
-            autoPlay={true}
-            loop={true}
-          />
-        </View>
-      </View>
-    );
-  }
-
-  return <Slot />;
+  return (
+    <ThemeProvider>{isLoading ? <LoadingScreen /> : <Slot />}</ThemeProvider>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -175,8 +93,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-
-    backgroundColor: Colors.light.background,
   },
   loaderContainer2: {
     flexDirection: "row",
@@ -185,11 +101,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: "100%",
     height: 100,
-    padding: 10,
+    padding: Padding.sm,
   },
   loaderText: {
-    fontSize: 18,
-    color: Colors.light.text,
+    fontSize: FontSize.lg,
   },
   loaderAnimation: {
     width: 60,

@@ -1,146 +1,149 @@
 import { getModuleById } from "@/utils/module-helpers";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React from "react";
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
-import { PageListItem } from "@/components/modules/modulesId/PageListItem";
+import { PageListItem } from "@/components/specific/modules/PageListItem";
 import BackButton from "@/components/ui/BackButton";
-import { Colors } from "@/constants/Colors";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedView } from "@/components/ui/ThemedView";
+import {
+  BorderRadius,
+  FontSize,
+  FontWeight,
+  LayoutSize,
+  Margin,
+  Padding,
+  Spacing,
+} from "@/constants/Styles";
+import { useThemeValue } from "@/hooks/useThemeValue";
 
-export default function ModuleHomeScreen() {
+export default function ModuleDetailScreen() {
   const { moduleId } = useLocalSearchParams<{ moduleId: string }>();
+  const tintColor = useThemeValue("tint");
+  const buttonTextColor = useThemeValue("buttonText");
+  const textColor = useThemeValue("text");
+  const textSecondaryColor = useThemeValue("textSecondary");
+
   const module = getModuleById(moduleId);
+  const nextModule = module?.nextModuleId
+    ? getModuleById(module.nextModuleId)
+    : null;
 
   if (!module) {
     return (
-      <View style={styles.container}>
-        <Text>Módulo não encontrado.</Text>
-      </View>
+      <ThemedView style={styles.container}>
+        <ThemedText>Módulo não encontrado.</ThemedText>
+      </ThemedView>
     );
   }
-
-  const currentIdAsNumber = parseInt(moduleId || "0", 10);
-  const nextModule = getModuleById(String(currentIdAsNumber + 1));
 
   const firstPageId = module.pages[0]?.id || "1";
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}>
-      <View style={styles.header}>
-        <BackButton onPress={() => router.replace("/education/modules")} />
-        <Text style={styles.title} numberOfLines={1}>
-          {module.title}
-        </Text>
-      </View>
-      <Text style={styles.description}>
-        Este é o início do módulo. Escolha uma página:
-      </Text>
+    <ThemedView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.header}>
+          <BackButton
+            onPress={() => router.replace("/(tabs)/education/modules")}
+          />
+          <ThemedText
+            style={[styles.title, { color: textColor }]}
+            numberOfLines={1}>
+            {module.title}
+          </ThemedText>
+        </View>
+        <ThemedText style={[styles.description, { color: textSecondaryColor }]}>
+          Este é o início do módulo. Escolha uma página para começar a aprender:
+        </ThemedText>
 
-      {module.pages.map((page, index) => (
-        <PageListItem
-          key={page.id}
-          page={page}
-          moduleId={module.id}
-          displayNumber={index + 1}
-        />
-      ))}
+        {module.pages.map((page, index) => (
+          <PageListItem
+            key={page.id}
+            page={page}
+            moduleId={module.id}
+            displayNumber={index + 1}
+          />
+        ))}
 
-      <View style={styles.buttonContainer}>
-        <Link
-          href={{
-            pathname: "/(tabs)/education/modules/[moduleId]/p/[page]",
-            params: { moduleId: module.id, page: firstPageId },
-          }}
-          asChild>
-          <TouchableOpacity style={styles.startButton}>
-            <Text style={styles.startButtonText}>Começar Módulo</Text>
-          </TouchableOpacity>
-        </Link>
-
-        {nextModule && (
+        <View style={styles.buttonContainer}>
           <Link
             href={{
-              pathname: "/(tabs)/education/modules/[moduleId]/",
-              params: { moduleId: nextModule.id },
+              pathname: "/(tabs)/education/modules/[moduleId]/p/[page]",
+              params: { moduleId: module.id, page: firstPageId },
             }}
             asChild>
-            <TouchableOpacity style={styles.nextModuleButton}>
-              <Text style={styles.nextModuleButtonText}>Próximo Módulo</Text>
-            </TouchableOpacity>
+            <PrimaryButton title="Começar Módulo" onPress={() => {}} />
           </Link>
-        )}
-      </View>
-    </ScrollView>
+
+          {nextModule && (
+            <Link
+              href={{
+                pathname: "/(tabs)/education/modules/[moduleId]/",
+                params: { moduleId: nextModule.id },
+              }}
+              asChild>
+              <PrimaryButton
+                title={`Próximo Módulo: ${nextModule.title}`}
+                variant="outline"
+                onPress={() => {}}
+              />
+            </Link>
+          )}
+        </View>
+      </ScrollView>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
   },
   contentContainer: {
-    paddingTop: 50,
-    paddingHorizontal: 16,
-    paddingBottom: 30,
+    paddingTop: Padding.xxxxl,
+    paddingHorizontal: Padding.md,
+    paddingBottom: Padding.xl,
   },
   header: {
-    height: 60,
+    minHeight: LayoutSize.buttonHeight,
     width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    gap: 12,
+    gap: Spacing.md,
+    marginBottom: Margin.md,
   },
   title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    color: Colors.light.text,
+    fontSize: FontSize.xl,
+    fontWeight: FontWeight.bold,
     flex: 1,
   },
   description: {
-    fontSize: 16,
-    marginBottom: 20,
-    color: Colors.light.textSecondary,
+    fontSize: FontSize.md,
+    marginBottom: Margin.xl,
   },
   buttonContainer: {
-    marginTop: 24,
-    gap: 12,
+    marginTop: Margin.lg,
+    gap: Spacing.md,
   },
   startButton: {
-    backgroundColor: Colors.light.tint,
     alignItems: "center",
-    paddingVertical: 14,
-    borderRadius: 12,
+    paddingVertical: Padding.md,
+    borderRadius: BorderRadius.lg,
     elevation: 2,
-    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
   },
-  startButtonText: {
-    fontSize: 16,
-    color: Colors.light.background,
-    fontWeight: "bold",
+  buttonText: {
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.bold,
   },
   nextModuleButton: {
-    backgroundColor: "transparent",
     alignItems: "center",
-    paddingVertical: 14,
-    borderRadius: 12,
+    paddingVertical: Padding.md,
+    borderRadius: BorderRadius.lg,
     borderWidth: 1.5,
-    borderColor: Colors.light.tint,
-  },
-  nextModuleButtonText: {
-    fontSize: 16,
-    color: Colors.light.tint,
-    fontWeight: "bold",
   },
 });
