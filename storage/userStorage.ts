@@ -46,7 +46,7 @@ export const saveUserName = async (name: string): Promise<void> => {
     }
   } catch (error) {
     console.error('SQLite [userStorage]: Erro ao salvar o nome do usuário:', error);
-
+    throw error;
   }
 };
 
@@ -97,5 +97,6 @@ export const clearFirstLaunch = async (): Promise<void> => {
     console.log("SQLite [userStorage]: Dados do usuário limpos.");
   } catch (error) {
     console.error('SQLite [userStorage]: Erro ao limpar dados do usuário:', error);
+    throw error;
   }
 };

@@ -1,19 +1,30 @@
-import { Colors } from "@/constants/Colors";
+import { LayoutSize } from "@/constants/Styles";
+import { useThemeValue } from "@/hooks/useThemeValue";
 import { Feather, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TabLayout() {
-  console.log("TAB_LAYOUT: Renderizando Tabs Navigator com rotas em inglês");
+  console.log("TAB_LAYOUT: Renderizando Tabs Navigator");
+  const insets = useSafeAreaInsets();
+  const background = useThemeValue("background");
+  const tabBarActiveTintColor = useThemeValue("tabIconSelected");
+  const tabBarInactiveTintColor = useThemeValue("tabIconDefault");
+  const tabBackgroundColor = useThemeValue("background");
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors.light.tabActive,
-        tabBarInactiveTintColor: Colors.light.tabIconDefault,
+        tabBarActiveTintColor: tabBarActiveTintColor,
+        tabBarInactiveTintColor: tabBarInactiveTintColor,
         tabBarStyle: {
-          backgroundColor: Colors.light.background,
+          backgroundColor: tabBackgroundColor,
           position: "relative",
+          borderTopColor: background,
+          paddingTop: 10,
+          paddingBottom: insets.bottom,
+          height: LayoutSize.tabBarHeight + insets.bottom,
         },
         headerShown: false,
       }}>

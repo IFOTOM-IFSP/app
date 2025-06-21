@@ -1,41 +1,30 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
-import { EducationHeroCard } from "@/components/education/EducationHeroCard";
-import { HubListItem } from "@/components/education/HubListItem";
-import {
-  BACKGROUND_COLOR_LIGHT,
-  Colors,
-  PRIMARY_COLOR_HEX,
-  PRIMARY_COLOR_RGB,
-} from "@/constants/Colors";
-import { EDUCATION_HUB_ITEMS } from "@/constants/educationData";
+import { EducationLayout } from "@/components/layouts/EducationLayout";
+import { EducationHeroCard } from "@/components/specific/education/EducationHeroCard";
+import { HubListItem } from "@/components/specific/education/HubListItem";
+import { ThemedText } from "@/components/ui/ThemedText";
+
+import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
+import { EDUCATION_HUB_ITEMS } from "@/data/educationData";
 
 export default function EducationHubScreen() {
   const router = useRouter();
 
   return (
-    <LinearGradient
-      colors={[
-        PRIMARY_COLOR_HEX,
-        PRIMARY_COLOR_RGB,
-        BACKGROUND_COLOR_LIGHT,
-        BACKGROUND_COLOR_LIGHT,
-        BACKGROUND_COLOR_LIGHT,
-      ]}
-      style={styles.gradientBackground}
-      start={{ x: 0.0, y: 0.0 }}
-      end={{ x: 0.0, y: 0.4 }}>
+    <EducationLayout>
       <EducationHeroCard />
 
       <View style={styles.listIntroduction}>
-        <Text style={styles.listHeaderTitle}>Explore as Seções</Text>
-        <Text style={styles.listIntroSubtitle}>
+        <ThemedText style={styles.listHeaderTitle}>
+          Explore as Seções
+        </ThemedText>
+        <ThemedText style={styles.listIntroSubtitle}>
           Sua jornada no mundo da espectrofotometria começa aqui. Explore nossos
           módulos e ferramentas.
-        </Text>
+        </ThemedText>
       </View>
       <ScrollView
         contentContainerStyle={styles.scrollContentContainer}
@@ -44,46 +33,36 @@ export default function EducationHubScreen() {
           {EDUCATION_HUB_ITEMS.map((hubItem) => (
             <HubListItem
               key={hubItem.id}
-
               item={hubItem}
-              onPress={() => router.push(hubItem.route as any)} 
+              onPress={() => router.push(hubItem.route as `/${string}`)}
             />
           ))}
         </View>
       </ScrollView>
-    </LinearGradient>
+    </EducationLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: Colors.light.background,
-  },
-  gradientBackground: {
-    flex: 1,
-  },
   scrollContentContainer: {
-    paddingBottom: 20,
+    paddingBottom: Padding.xl,
   },
   listIntroduction: {
-    paddingHorizontal: 20,
-    marginTop: 20,
-    marginBottom: 10,
+    paddingHorizontal: Padding.xl,
+    marginTop: Margin.xl,
+    marginBottom: Margin.sm,
   },
   listHeaderTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: Colors.light.textPrimary,
-    marginBottom: 8,
+    fontSize: FontSize.xl,
+    fontWeight: FontWeight.bold,
+    marginBottom: Margin.sm,
   },
   listIntroSubtitle: {
-    fontSize: 14,
-    color: Colors.light.textPrimary,
-    lineHeight: 20,
+    fontSize: FontSize.sm,
+    lineHeight: FontSize.xl,
   },
   listItemsOuterContainer: {
-    marginHorizontal: 16,
-    marginTop: 10,
+    marginHorizontal: Margin.md,
+    marginTop: Margin.sm,
   },
 });

@@ -1,22 +1,56 @@
-import {
-  FontAwesome5,
-  MaterialCommunityIcons,
-  SimpleLineIcons,
-} from "@expo/vector-icons";
+import { AntDesign, FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { HomeHeader } from "@/components/home/HomeHeader";
-import { StartAnalysisCard } from "@/components/home/StartAnalysisCard";
-import { UsefulSections } from "@/components/home/UsefulSections";
-import { Colors } from "@/constants/Colors";
-import { useUserName } from "@/hooks/useUserName";
+import { UsefulSections } from "@/components/common/UsefulSections";
+import { HomeHeader } from "@/components/specific/home/HomeHeader";
+import { StartAnalysisCard } from "@/components/specific/home/StartAnalysisCard";
+import { Padding } from "@/constants/Styles";
+import { useUserStore } from "@/context/userStore";
+import { useThemeValue } from "@/hooks/useThemeValue";
+
+type AppRouter = ReturnType<typeof useRouter>;
+const getUsefulSectionsData = (router: AppRouter) => [
+  {
+    id: "ar-scan",
+    label: "AR Scan",
+    iconName: "vr-cardboard",
+    iconComponent: FontAwesome5,
+    onPress: () => console.log("AR Scan Pressionado"),
+  },
+  {
+    id: "about",
+    label: "sobre",
+    iconName: "exclamationcircleo",
+    iconComponent: AntDesign,
+    onPress: () => router.push("/about"),
+  },
+  {
+    id: "doubts",
+    label: "Dúvidas",
+    iconName: "question",
+    iconComponent: SimpleLineIcons,
+    onPress: () => router.push("/doubts"),
+  },
+  {
+    id: "more",
+    label: "Mais",
+    iconName: "options",
+    iconComponent: SimpleLineIcons,
+    onPress: () => router.push("/options"),
+  },
+];
 
 export default function HomeScreen() {
-  const { userName, loadingName } = useUserName();
+  const userName = useUserStore((state) => state.name);
+  const loadingName = useUserStore((state) => state.isLoading);
+
   const router = useRouter();
+  const backgroundColor = useThemeValue("background");
+  const tintColor = useThemeValue("tint");
+  const usefulSectionsData = getUsefulSectionsData(router);
 
   const handleStartAnalysis = () => {
     console.log("Botão SIM para iniciar análise clicado");
@@ -28,57 +62,24 @@ export default function HomeScreen() {
     console.log("Botão de configurações - Pressionado");
   };
 
-  const usefulSectionsData = [
-    {
-      id: "ar-scan",
-      label: "AR Scan",
-      iconName: "vr-cardboard",
-      iconComponent: FontAwesome5,
-      onPress: () => console.log("AR Scan Pressionado"),
-    },
-    {
-      id: "test",
-      label: "Test",
-      iconName: "flask-outline",
-      iconComponent: MaterialCommunityIcons,
-      onPress: () => router.push("/test"),
-    },
-    {
-      id: "doubts",
-      label: "Dúvidas",
-      iconName: "question",
-      iconComponent: SimpleLineIcons,
-      onPress: () => console.log("Dúvidas Pressionado"),
-    },
-    {
-      id: "more",
-      label: "Mais",
-      iconName: "options",
-      iconComponent: SimpleLineIcons,
-      onPress: () => {
-        console.log("Mais Opções Pressionado");
-        router.push("/options");
-      },
-    },
-  ];
-
   if (loadingName) {
     return (
-      <SafeAreaView style={[styles.safeArea, styles.centered]}>
-        <ActivityIndicator size="large" color={Colors.light.tabActive} />
+      <SafeAreaView
+        style={[styles.safeArea, styles.centered, { backgroundColor }]}>
+        <ActivityIndicator size="large" color={tintColor} />
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor }]}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
         <HomeHeader userName={userName} onSettingsPress={handleSettingsPress} />
         <StartAnalysisCard onPress={handleStartAnalysis} />
-        <UsefulSections sections={usefulSectionsData} />
+        <UsefulSections title={true} sections={usefulSectionsData} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -87,7 +88,6 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.light.background,
   },
   centered: {
     justifyContent: "center",
@@ -95,9 +95,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 25,
+    paddingHorizontal: Padding.md,
   },
   scrollContent: {
-    paddingBottom: 20,
+    paddingBottom: Padding.lg,
   },
 });

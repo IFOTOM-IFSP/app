@@ -55,7 +55,8 @@
           "imageWidth": 500,
           "imageHeight": 700
         }
-      ]
+      ],
+      "expo-web-browser"
     ],
     "scheme": "myapp"
   }

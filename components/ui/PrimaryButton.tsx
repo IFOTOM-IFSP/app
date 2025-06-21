@@ -1,4 +1,12 @@
-import { Colors } from "@/constants/Colors";
+// src/components/ui/PrimaryButton.tsx
+
+import {
+  BorderRadius,
+  FontSize,
+  FontWeight,
+  Padding,
+} from "@/constants/Styles";
+import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";
 import {
   ActivityIndicator,
@@ -17,6 +25,7 @@ interface PrimaryButtonProps {
   disabled?: boolean;
   loading?: boolean;
   activeOpacity?: number;
+  variant?: "filled" | "outline";
 }
 
 export function PrimaryButton({
@@ -27,21 +36,47 @@ export function PrimaryButton({
   disabled = false,
   loading = false,
   activeOpacity = 0.7,
+  variant = "filled",
 }: PrimaryButtonProps) {
+  const tintColor = useThemeValue("tint");
+  const buttonTextColor = useThemeValue("buttonText");
+  const disabledColor = useThemeValue("gray");
+
+  const isOutline = variant === "outline";
+
+  const containerStyle = [
+    styles.button,
+    isOutline
+      ? { ...styles.outlineButton, borderColor: tintColor }
+      : { backgroundColor: tintColor },
+    disabled || loading
+      ? {
+          backgroundColor: disabledColor,
+          borderColor: isOutline ? disabledColor : undefined,
+        }
+      : null,
+    style,
+  ];
+
+  const contentTextStyle = [
+    styles.buttonText,
+    isOutline ? { color: tintColor } : { color: buttonTextColor },
+    (disabled || loading) && isOutline ? { color: disabledColor } : null, 
+    textStyle,
+  ];
+
   return (
     <TouchableOpacity
       activeOpacity={activeOpacity}
-      style={[
-        styles.button,
-        disabled || loading ? styles.disabledButton : {},
-        style,
-      ]}
+      style={containerStyle}
       onPress={onPress}
-      disabled={disabled || loading}>
+      disabled={disabled || loading}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: disabled || loading }}>
       {loading ? (
-        <ActivityIndicator color={Colors.light.textWhite} />
+        <ActivityIndicator color={isOutline ? tintColor : buttonTextColor} />
       ) : (
-        <Text style={[styles.buttonText, textStyle]}>{title}</Text>
+        <Text style={contentTextStyle}>{title}</Text>
       )}
     </TouchableOpacity>
   );
@@ -49,23 +84,20 @@ export function PrimaryButton({
 
 const styles = StyleSheet.create({
   button: {
-    width: "90%",
-    backgroundColor: Colors.light.tint,
-    paddingVertical: 16,
-    borderRadius: 20,
-    elevation: 1,
+    width: "100%",
+    paddingVertical: Padding.md,
+    borderRadius: BorderRadius.xl,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
   },
   buttonText: {
-    color: Colors.light.textWhite,
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.semiBold,
     textAlign: "center",
   },
-  disabledButton: {
-    backgroundColor: Colors.light.gray,
-    opacity: 0.7,
+  outlineButton: {
+    backgroundColor: "transparent",
+    borderWidth: 1.5,
   },
 });

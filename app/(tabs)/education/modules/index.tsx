@@ -1,15 +1,16 @@
-import AnimatedListItem from "@/components/modules/AnimatedListItem";
-import HeaderIndex from "@/components/modules/HeaderIndex";
-import { Colors } from "@/constants/Colors";
-import { MODULES_DATA } from "@/constants/modulesData";
+import AnimatedListItem from "@/components/specific/modules/AnimatedListItem";
+import HeaderIndex from "@/components/specific/modules/ModuleListHeader";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { Padding } from "@/constants/Styles";
+import { MODULES_DATA } from "@/data/modulesData";
 import { default as React, useRef } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import { Animated, StyleSheet } from "react-native";
 
 export default function ModuleListScreen() {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
-    <View style={styles.container}>
+    <ThemedView style={styles.container}>
       <HeaderIndex title="Módulos de Aprendizado" />
 
       <Animated.FlatList
@@ -25,18 +26,17 @@ export default function ModuleListScreen() {
         )}
         scrollEventThrottle={16}
       />
-    </View>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.light.background,
   },
   flatListContent: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 20,
+    paddingHorizontal: Padding.xl,
+    paddingTop: Padding.sm,
+    paddingBottom: Padding.xl,
   },
 });
