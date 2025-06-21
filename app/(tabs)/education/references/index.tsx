@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     marginLeft: Margin.sm,
     borderWidth: 0,
     paddingVertical: Padding.sm,
+    textAlign: "left",
   },
   // --- Estilos dos Filtros (Reutilizados do QuizListScreen) ---
   filtersContainer: {

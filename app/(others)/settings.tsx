@@ -1,6 +1,6 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -9,13 +9,14 @@ import { SettingsSwitch } from "@/components/common/SettingsSwitch";
 import BackButton from "@/components/ui/BackButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
-
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { useTheme } from "@/context/ThemeContext";
 import { useUserStore } from "@/context/userStore";
+import { useNotifications } from "@/hooks/useNotifications";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { openEmail } from "@/utils/linkingUtils";
 import { getSchemeLabel } from "@/utils/themeUtils";
+import * as KeepAwake from "expo-keep-awake";
 
 export default function GeneralSettingsScreen() {
   const router = useRouter();
@@ -23,7 +24,18 @@ export default function GeneralSettingsScreen() {
   const userActions = useUserStore((state) => state.actions);
 
   const [isKeepScreenOn, setIsKeepScreenOn] = useState(false);
-  const [areNotificationsEnabled, setAreNotificationsEnabled] = useState(true);
+  const { notificationsEnabled, toggleNotifications } = useNotifications();
+  useEffect(() => {
+    if (isKeepScreenOn) {
+      KeepAwake.activateKeepAwakeAsync();
+    } else {
+      KeepAwake.deactivateKeepAwake();
+    }
+
+    return () => {
+      KeepAwake.deactivateKeepAwake();
+    };
+  }, [isKeepScreenOn]);
 
   const handleThemeChange = () => {
     Alert.alert(
@@ -38,7 +50,6 @@ export default function GeneralSettingsScreen() {
       { cancelable: true }
     );
   };
-
   const handleChangeName = () => {
     Alert.alert("Trocar de nome", "Tem certeza que deseja trocar seu nome?", [
       { text: "Cancelar", style: "cancel" },
@@ -51,7 +62,6 @@ export default function GeneralSettingsScreen() {
       },
     ]);
   };
-
   const handleDeleteData = () => {
     Alert.alert(
       "Deletar Dados",
@@ -100,8 +110,8 @@ export default function GeneralSettingsScreen() {
         />
         <SettingsSwitch
           label="Notificações"
-          isEnabled={areNotificationsEnabled}
-          onToggleSwitch={setAreNotificationsEnabled}
+          isEnabled={notificationsEnabled}
+          onToggleSwitch={toggleNotifications}
           icon={
             <Feather
               name="bell"
@@ -109,7 +119,7 @@ export default function GeneralSettingsScreen() {
               color={useThemeValue("accentPurple")}
             />
           }
-          info="Receba alertas sobre o término de medições ou lembretes para calibração."
+          info="Receba um lembrete diário para realizar suas análises e estudos."
         />
 
         <ThemedText style={styles.sectionTitle}>Conta</ThemedText>
@@ -171,7 +181,6 @@ export default function GeneralSettingsScreen() {
     </ThemedView>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: Padding.md, paddingTop: Padding.md },
   sectionTitle: {

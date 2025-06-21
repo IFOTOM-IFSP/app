@@ -21,7 +21,7 @@ export function HomeHeader({ userName, onSettingsPress }: HomeHeaderProps) {
       <IconButton
         onPress={onSettingsPress}
         iconElement={
-          <Ionicons name="settings-outline" size={20} color={iconColor} />
+          <Ionicons name="settings-outline" size={24} color={iconColor} />
         }
         iconOnly={true}
         accessibilityLabel="botão de naveção para tela de configurações"
