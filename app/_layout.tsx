@@ -4,6 +4,7 @@ import { FontSize, Padding } from "@/constants/Styles";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { useUserStore } from "@/context/userStore";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { initializeNotifications } from "@/service/notificationService";
 import { Slot, SplashScreen, usePathname, useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { JSX, useEffect } from "react";
@@ -45,6 +46,7 @@ export default function RootLayout(): JSX.Element {
       "ROOT_LAYOUT [EFFECT INIT]: Chamando init da store (APENAS UMA VEZ)..."
     );
     init();
+    initializeNotifications();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
