@@ -3,7 +3,7 @@ import { FormInput } from "@/components/ui/FormInput";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
-import { useUserStore } from "@/context/userStore";
+import { useUserStore } from "@/state/userStore";
 import { useRouter } from "expo-router";
 import React, { JSX, useState } from "react";
 import {
