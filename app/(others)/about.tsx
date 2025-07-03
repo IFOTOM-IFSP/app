@@ -1,21 +1,16 @@
 import { PROJECT_DATA, TEAM_MEMBERS } from "@/data/aboutScreenData";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 
 import { ObjectiveItem } from "@/components/specific/about/ObjectiveItem";
 import { TeamMemberCard } from "@/components/specific/about/TeamMemberCard";
-import BackButton from "@/components/ui/BackButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 
+import TitleSection from "@/components/common/TitleSection";
+import { ScreenLayout } from "@/components/layouts/ScreenLayout";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import {
   BorderRadius,
   FontSize,
@@ -28,124 +23,88 @@ import { useThemeValue } from "@/hooks/useThemeValue";
 import { openURL } from "@/utils/linkingUtils";
 
 export default function AboutScreen() {
-  const tintColor = useThemeValue("tint");
-  const accentColor = useThemeValue("accentPurple");
+  const primaryColor = useThemeValue("primary");
   const buttonTextColor = useThemeValue("buttonText");
-  const borderColor = useThemeValue("borderColor");
+  const borderColor = useThemeValue("border");
 
   return (
-    <ThemedView style={styles.safeArea}>
-      <SafeAreaView style={styles.container}>
-        <ScrollView
-          contentContainerStyle={styles.scrollContentContainer}
-          showsVerticalScrollIndicator={false}>
-          <View style={styles.header}>
-            <View style={styles.headerContent}>
-              <BackButton />
-              <ThemedText style={[styles.title, { color: accentColor }]}>
-                {PROJECT_DATA.name}
-              </ThemedText>
-            </View>
-            <ThemedText style={styles.slogan}>{PROJECT_DATA.slogan}</ThemedText>
-          </View>
+    <ScreenLayout>
+      <TitleSection title={PROJECT_DATA.name} subtitle={PROJECT_DATA.slogan} />
+      <ScrollView
+        contentContainerStyle={styles.scrollContentContainer}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.section}>
+          <ThemedText
+            style={[styles.sectionTitle, { borderBottomColor: primaryColor }]}>
+            A Nossa Missão
+          </ThemedText>
+          <ThemedText style={styles.paragraph}>
+            {PROJECT_DATA.mission}
+          </ThemedText>
+        </View>
 
-          <View style={styles.section}>
-            <ThemedText
-              style={[styles.sectionTitle, { borderBottomColor: tintColor }]}>
-              A Nossa Missão
+        <View style={styles.section}>
+          <ThemedText
+            style={[styles.sectionTitle, { borderBottomColor: primaryColor }]}>
+            Os Nossos Objetivos
+          </ThemedText>
+          {PROJECT_DATA.objectives.map((obj, index) => (
+            <ObjectiveItem key={index} text={obj} />
+          ))}
+        </View>
+
+        <View style={styles.section}>
+          <ThemedText
+            style={[styles.sectionTitle, { borderBottomColor: primaryColor }]}>
+            A Nossa Equipa
+          </ThemedText>
+          {TEAM_MEMBERS.map((member) => (
+            <TeamMemberCard key={member.id} member={member} />
+          ))}
+        </View>
+
+        <View style={styles.section}>
+          <ThemedText
+            style={[styles.sectionTitle, { borderBottomColor: primaryColor }]}>
+            Instituição
+          </ThemedText>
+          <ThemedView style={[styles.institutionContainer, { borderColor }]}>
+            <Image
+              source={{ uri: PROJECT_DATA.institution.logoUrl }}
+              style={styles.institutionLogo}
+            />
+            <ThemedText style={styles.institutionName}>
+              {PROJECT_DATA.institution.name}
             </ThemedText>
             <ThemedText style={styles.paragraph}>
-              {PROJECT_DATA.mission}
+              {PROJECT_DATA.institution.description}
             </ThemedText>
-          </View>
-
-          <View style={styles.section}>
-            <ThemedText
-              style={[styles.sectionTitle, { borderBottomColor: tintColor }]}>
-              Os Nossos Objetivos
-            </ThemedText>
-            {PROJECT_DATA.objectives.map((obj, index) => (
-              <ObjectiveItem key={index} text={obj} />
-            ))}
-          </View>
-
-          <View style={styles.section}>
-            <ThemedText
-              style={[styles.sectionTitle, { borderBottomColor: tintColor }]}>
-              A Nossa Equipa
-            </ThemedText>
-            {TEAM_MEMBERS.map((member) => (
-              <TeamMemberCard key={member.id} member={member} />
-            ))}
-          </View>
-
-          <View style={styles.section}>
-            <ThemedText
-              style={[styles.sectionTitle, { borderBottomColor: tintColor }]}>
-              Instituição
-            </ThemedText>
-            <ThemedView style={[styles.institutionContainer, { borderColor }]}>
-              <Image
-                source={{ uri: PROJECT_DATA.institution.logoUrl }}
-                style={styles.institutionLogo}
-              />
-              <ThemedText style={styles.institutionName}>
-                {PROJECT_DATA.institution.name}
-              </ThemedText>
-              <ThemedText style={styles.paragraph}>
-                {PROJECT_DATA.institution.description}
-              </ThemedText>
-              <TouchableOpacity
-                style={[styles.actionButton, { backgroundColor: tintColor }]}
-                onPress={() => openURL(PROJECT_DATA.institution.websiteUrl)}>
+            <PrimaryButton
+              style={styles.actionButton}
+              onPress={() => openURL(PROJECT_DATA.institution.websiteUrl)}
+              icon={
                 <Ionicons
                   name="business-outline"
                   size={18}
                   color={buttonTextColor}
                 />
-                <ThemedText
-                  style={[styles.actionButtonText, { color: buttonTextColor }]}>
-                  Visitar Site
-                </ThemedText>
-              </TouchableOpacity>
-            </ThemedView>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </ThemedView>
+              }
+              title="Visitar Site"
+            />
+          </ThemedView>
+        </View>
+      </ScrollView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1 },
-  container: { flex: 1 },
   scrollContentContainer: {
-    paddingVertical: Padding.lg,
-    paddingHorizontal: Padding.xl,
+    paddingBottom: Padding.lg,
   },
-  header: {
-    paddingTop: Padding.xl,
-    alignItems: "flex-start",
-    marginBottom: Margin.xl,
-  },
-  headerContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingBottom: Padding.xl,
-  },
-  title: {
-    fontSize: FontSize.xxl,
-    fontWeight: FontWeight.bold,
-    marginTop: Margin.sm,
-    textAlign: "center",
-    flexGrow: 3 / 4,
-  },
-  slogan: {
-    fontSize: FontSize.md,
-    marginTop: Margin.xs,
-  },
+
   section: {
-    marginBottom: Margin.xl,
+    paddingTop: Padding.lg,
   },
   sectionTitle: {
     fontSize: FontSize.xl,
@@ -181,12 +140,12 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     padding: Padding.xl,
     alignItems: "center",
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 0.8,
   },
   institutionLogo: {
     width: 150,
     height: 150,
-    resizeMode: "cover",
+    resizeMode: "contain",
     marginBottom: Margin.md,
     borderRadius: BorderRadius.md,
   },
