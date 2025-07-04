@@ -22,7 +22,7 @@ interface TeamMemberCardProps {
 
 export function TeamMemberCard({ member }: TeamMemberCardProps) {
   const tintColor = useThemeValue("tint");
-  const cardBackgroun = useThemeValue("cardBackground");
+  const cardBackgroun = useThemeValue("card");
 
   return (
     <View style={[styles.teamMemberCard, { backgroundColor: cardBackgroun }]}>

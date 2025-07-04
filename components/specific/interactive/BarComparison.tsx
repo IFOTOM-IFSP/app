@@ -23,8 +23,8 @@ export function BarComparison({
 }: BarComparisonProps) {
   const { width } = useWindowDimensions();
 
-  const cardBgColor = useThemeValue("cardBackground");
-  const chartLineColor = useThemeValue("accentPurple");
+  const cardBgColor = useThemeValue("card");
+  const chartLineColor = useThemeValue("primary");
   const chartLabelColor = useThemeValue("textSecondary");
 
   const chartConfig = {

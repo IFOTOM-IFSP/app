@@ -38,11 +38,11 @@ function ContentCard({
 }: ContentCardProps) {
   const [imageError, setImageError] = useState(false);
 
-  const cardBg = useThemeValue("cardBackground");
-  const shadowColor = useThemeValue("shadowColor");
-  const borderColor = useThemeValue("cardBorder");
-  const imagePlaceholder = useThemeValue("imagePlaceholder");
-  const placeholderGradient = useThemeValue("placeholderGradient");
+  const cardBg = useThemeValue("card");
+  const shadowColor = useThemeValue("shadow");
+  const borderColor = useThemeValue("border");
+  const imagePlaceholder = useThemeValue("primary");
+  const placeholderGradient = useThemeValue("authGradient");
   const textColor = useThemeValue("text");
   const textSecondaryColor = useThemeValue("textSecondary");
 
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     borderRadius: BorderRadius.lg,
     marginVertical: Margin.sm,
-    marginHorizontal: Margin.xs,
     overflow: "hidden",
     ...Platform.select({
       ios: {

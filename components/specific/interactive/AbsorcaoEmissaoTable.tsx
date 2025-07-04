@@ -21,10 +21,10 @@ type AbsorcaoEmissaoTableProps = {
 };
 
 export function AbsorcaoEmissaoTable({ data }: AbsorcaoEmissaoTableProps) {
-  const borderColor = useThemeValue("borderColor");
-  const headerBgColor = useThemeValue("accentPurple");
+  const borderColor = useThemeValue("border");
+  const headerBgColor = useThemeValue("primary");
   const headerTextColor = useThemeValue("buttonText");
-  const primaryTextColor = useThemeValue("textPrimary");
+  const primaryTextColor = useThemeValue("text");
 
   return (
     <View style={[styles.container, { borderColor }]}>

@@ -19,11 +19,11 @@ type ChecklistProps = {
 };
 
 export function Checklist({ title, items }: ChecklistProps) {
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
-  const primaryText = useThemeValue("textPrimary");
+  const cardBg = useThemeValue("card");
+  const borderColor = useThemeValue("border");
+  const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
 
   const [checkedState, setCheckedState] = useState<Record<number, boolean>>({});
 

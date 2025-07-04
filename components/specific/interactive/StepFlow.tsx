@@ -1,6 +1,5 @@
 import { ThemedText } from "@/components/ui/ThemedText";
 import {
-  BorderRadius,
   FontSize,
   FontWeight,
   Margin,
@@ -16,10 +15,10 @@ type StepFlowProps = { title?: string; description?: string; steps: Step[] };
 
 export function StepFlow({ title, description, steps }: StepFlowProps) {
   // 1. Cores dinâmicas do tema
-  const cardBg = useThemeValue("cardBackground");
-  const primaryText = useThemeValue("textPrimary");
+  const cardBg = useThemeValue("card");
+  const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
   const buttonText = useThemeValue("buttonText");
 
   return (
@@ -80,7 +79,7 @@ const styles = StyleSheet.create({
   container: {
     padding: Padding.md,
     marginVertical: Margin.md,
-    borderRadius: BorderRadius.lg,
+    borderRadius: 10,
   },
   mainTitle: {
     fontSize: FontSize.xl,

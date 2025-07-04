@@ -1,4 +1,4 @@
-import { useThemeValue} from "@/hooks/useThemeValue";
+import { useThemeValue } from "@/hooks/useThemeValue";
 import { type IconProps } from "@expo/vector-icons/build/createIconSet";
 import React from "react";
 
@@ -17,9 +17,7 @@ export function ThemedIcon({
   darkColor,
   ...rest
 }: ThemedIconProps) {
-  const color = useThemeValue(
-    "accentPurple"
-  );
+  const color = useThemeValue("primary");
 
   return <Icon color={color} {...rest} />;
 }

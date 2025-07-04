@@ -18,8 +18,8 @@ interface ArticleListItemProps {
 }
 
 export function ArticleListItem({ item }: ArticleListItemProps) {
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
+  const cardBg = useThemeValue("card");
+  const borderColor = useThemeValue("border");
   const textColor = useThemeValue("text");
   const textSecondary = useThemeValue("textSecondary");
   const tintColor = useThemeValue("tint");
@@ -31,7 +31,7 @@ export function ArticleListItem({ item }: ArticleListItemProps) {
         {
           backgroundColor: cardBg,
           borderColor,
-          shadowColor: useThemeValue("shadowColor"),
+          shadowColor: useThemeValue("shadow"),
         },
       ]}
       onPress={() => openURL(item.url)}

@@ -30,9 +30,9 @@ export function OptionButton({
 }: OptionButtonProps) {
   const dangerBgColor = useThemeValue("dangerBackground");
   const dangerTextColor = useThemeValue("dangerText");
-  const infoIconColor = useThemeValue("tabIconDefault");
+  const infoIconColor = useThemeValue("primary");
   const valueTextColor = useThemeValue("textSecondary");
-  const cardBackgroun = useThemeValue("cardBackground");
+  const cardBackgroun = useThemeValue("card");
   const isDanger = variant === "danger";
 
   return (

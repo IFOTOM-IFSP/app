@@ -25,12 +25,12 @@ export function PageListItem({
   moduleId,
   displayNumber,
 }: PageListItemProps) {
-  const cardBg = useThemeValue("cardBackground");
+  const cardBg = useThemeValue("card");
   const tint = useThemeValue("tint");
   const iconText = useThemeValue("buttonText");
-  const chevron = useThemeValue("gray");
+  const chevron = useThemeValue("disabledText");
   const subtitle = useThemeValue("textSecondary");
-  const shadow = useThemeValue("shadowColor");
+  const shadow = useThemeValue("shadow");
 
   return (
     <Link

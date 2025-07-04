@@ -26,9 +26,9 @@ export function ChartContainer({
   xAxisLabel,
   yAxisLabel,
 }: ChartContainerProps) {
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
-  const primaryText = useThemeValue("textPrimary");
+  const cardBg = useThemeValue("card");
+  const borderColor = useThemeValue("border");
+  const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");
 
   return (

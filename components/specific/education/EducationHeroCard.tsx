@@ -11,7 +11,7 @@ import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 export function EducationHeroCard() {
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
 
   return (
     <View style={styles.heroCardContainer}>

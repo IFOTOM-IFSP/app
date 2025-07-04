@@ -8,7 +8,7 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { ImageContent } from "@/interfaces/content";
+import { ImageContent } from "@/schema/contentSchema";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState } from "react";
@@ -47,16 +47,16 @@ export function ImageHighlight({
   );
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
-  const shadow = useThemeValue("shadowColor");
-  const primaryText = useThemeValue("textPrimary");
+  const cardBg = useThemeValue("card");
+  const borderColor = useThemeValue("border");
+  const shadow = useThemeValue("shadow");
+  const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
   const buttonText = useThemeValue("buttonText");
-  const dotBg = useThemeValue("dotBackground");
-  const explanationBg = useThemeValue("blockquoteBackground");
-  const placeholderGradient = useThemeValue("placeholderGradient");
+  const dotBg = useThemeValue("pinkBackground");
+  const explanationBg = useThemeValue("card");
+  const placeholderGradient = useThemeValue("authGradient");
   useEffect(() => {
     setImageError(false);
   }, [src]);

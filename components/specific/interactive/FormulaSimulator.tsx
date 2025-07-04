@@ -57,8 +57,8 @@ export const FormulaSimulator: React.FC<FormulaSimulatorProps> = ({
     }
   };
 
-  const formulaBg = useThemeValue("formulaBackground");
-  const primaryText = useThemeValue("textPrimary");
+  const formulaBg = useThemeValue("card");
+  const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");
 
   return (

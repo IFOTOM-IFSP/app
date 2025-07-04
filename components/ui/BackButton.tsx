@@ -11,26 +11,26 @@ import {
 import { ThemedText } from "./ThemedText";
 
 interface BackButtonProps {
-  onPress?: () => void;
+  path?: string;
   title?: string;
   style?: ViewStyle;
   textStyle?: TextStyle;
 }
 
 const BackButton: React.FC<BackButtonProps> = ({
-  onPress,
+  path,
   title,
   style,
   textStyle,
 }) => {
   const router = useRouter();
 
-  const backgroundColor = useThemeValue("tabActive");
+  const backgroundColor = useThemeValue("primary");
   const foregroundColor = useThemeValue("textWhite");
 
   const handlePress = () => {
-    if (onPress) {
-      onPress();
+    if (path) {
+      router.replace(path)
     } else {
       router.back();
     }

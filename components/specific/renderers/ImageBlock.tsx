@@ -1,7 +1,7 @@
 import { ThemedText } from "@/components/ui/ThemedText";
 import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { ImageContent } from "@/interfaces/content";
+import { ImageContent } from "@/schema/contentSchema";
 import { Image } from "expo-image";
 import React from "react";
 import { StyleSheet, View } from "react-native";

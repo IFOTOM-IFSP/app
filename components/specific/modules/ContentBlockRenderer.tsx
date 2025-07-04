@@ -5,7 +5,7 @@ import {
   InteractiveContent,
   TextContent,
   VideoContent,
-} from "@/interfaces/content";
+} from "@/schema/contentSchema";
 import React from "react";
 
 import { CodeBlock } from "@/components/specific/renderers/CodeBlock";

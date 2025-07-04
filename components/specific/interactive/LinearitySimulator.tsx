@@ -34,12 +34,12 @@ export function LinearitySimulator({
   const [points, setPoints] = useState<Point[]>(initialData);
   const regression = useLinearRegression(points);
 
-  const cardBg = useThemeValue("cardBackground");
-  const primaryText = useThemeValue("textPrimary");
-  const accentColor = useThemeValue("accentPurple");
+  const cardBg = useThemeValue("card");
+  const primaryText = useThemeValue("text");
+  const accentColor = useThemeValue("primary");
   const dangerColor = useThemeValue("dangerBackground");
   const secondaryText = useThemeValue("textSecondary");
-  const borderColor = useThemeValue("borderColor");
+  const borderColor = useThemeValue("border");
 
   const chartConfig = {
     backgroundColor: cardBg,
@@ -114,7 +114,7 @@ export function LinearitySimulator({
         <View
           style={[
             styles.resultContainer,
-            { backgroundColor: useThemeValue("blockquoteBackground") },
+            { backgroundColor: useThemeValue("card") },
           ]}>
           <ThemedText style={[styles.resultText, { color: primaryText }]}>
             R² ={" "}

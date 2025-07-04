@@ -18,15 +18,14 @@ interface HubListItemProps {
 }
 
 export function HubListItem({ item, onPress }: HubListItemProps) {
-  const cardBackgroundColor = useThemeValue("cardBackground");
+  const cardBackgroundColor = useThemeValue("card");
   const shadowColor = useThemeValue("shadow");
-  const primaryTextColor = useThemeValue("textPrimary");
-  const secondaryTextColor = useThemeValue("textSecondary");
-  const chevronColor = useThemeValue("gray");
+  const chevronColor = useThemeValue("primary");
   const buttonTextColor = useThemeValue("buttonText");
-
-  const iconColor = useThemeValue(item.iconColorName);
-  const iconBackgroundColor = useThemeValue(item.iconBackgroundColorName);
+  const iconColor = useThemeValue(item.iconColorName as any);
+  const iconBackgroundColor = useThemeValue(
+    item.iconBackgroundColorName as any
+  );
 
   return (
     <TouchableOpacity

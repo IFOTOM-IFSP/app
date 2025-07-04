@@ -15,7 +15,7 @@ import { ToggleExplanation } from "@/components/specific/interactive/ToggleExpla
 import { ThemedText } from "@/components/ui/ThemedText";
 import { BorderRadius, Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { InteractiveContent } from "@/interfaces/content";
+import { InteractiveContent } from "@/schema/contentSchema";
 import {
   calculateAbsorbance,
   calculateBeerLambert,

@@ -1,14 +1,14 @@
 import { ThemedText } from "@/components/ui/ThemedText";
 import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { VideoContent } from "@/interfaces/content";
+import { VideoContent } from "@/schema/contentSchema";
 import { getYouTubeId } from "@/utils/videoUtils";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 
 export function VideoBlock({ block }: { block: VideoContent }) {
-  const videoPlaceholderBg = useThemeValue("imagePlaceholder");
+  const videoPlaceholderBg = useThemeValue("disabledBackground");
   const captionColor = useThemeValue("textSecondary");
 
   const videoId = getYouTubeId(block.src);

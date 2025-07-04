@@ -23,10 +23,10 @@ export function InteractiveCard({
   children,
   style,
 }: InteractiveCardProps) {
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
-  const shadowColor = useThemeValue("shadowColor");
-  const primaryText = useThemeValue("textPrimary");
+  const cardBg = useThemeValue("card");
+  const borderColor = useThemeValue("border");
+  const shadowColor = useThemeValue("shadow");
+  const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");
 
   return (

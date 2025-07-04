@@ -8,7 +8,7 @@ import {
   Padding,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import  React  from "react";
+import React from "react";
 import { StyleSheet, TextInputProps, View } from "react-native";
 
 interface UnitInputProps extends TextInputProps {
@@ -18,7 +18,7 @@ interface UnitInputProps extends TextInputProps {
 
 export function UnitInput({ label, unit, ...props }: UnitInputProps) {
   const secondaryText = useThemeValue("textSecondary");
-  const borderColor = useThemeValue("borderColor");
+  const borderColor = useThemeValue("border");
 
   return (
     <View style={unitInputStyles.inputContainer}>
@@ -41,7 +41,6 @@ export function UnitInput({ label, unit, ...props }: UnitInputProps) {
   );
 }
 
-// --- ESTILOS CORRIGIDOS PARA O UnitInput ---
 const unitInputStyles = StyleSheet.create({
   inputContainer: {
     marginBottom: Margin.md,
@@ -50,11 +49,10 @@ const unitInputStyles = StyleSheet.create({
     fontSize: FontSize.sm,
     fontWeight: FontWeight.medium,
     marginBottom: Margin.sm,
-    // O alinhamento à esquerda já é o padrão para ThemedText
   },
   inputWrapper: {
     flexDirection: "row",
-    alignItems: "center", // Alinha os itens (input e unidade) verticalmente no centro
+    alignItems: "center",
     borderWidth: 1,
     borderRadius: BorderRadius.lg,
   },
@@ -63,7 +61,7 @@ const unitInputStyles = StyleSheet.create({
     padding: Padding.md,
     fontSize: FontSize.md,
     borderWidth: 0,
-    textAlign: "left", // Força o texto do input a alinhar à esquerda
+    textAlign: "left",
   },
   inputUnit: {
     paddingHorizontal: Padding.md,

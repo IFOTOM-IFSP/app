@@ -25,17 +25,17 @@ export function QuizOption({
   onPress,
   disabled,
 }: QuizOptionProps) {
-  const defaultBg = useThemeValue("cardBackground");
-  const defaultBorder = useThemeValue("borderColor");
+  const defaultBg = useThemeValue("card");
+  const defaultBorder = useThemeValue("border");
   const defaultText = useThemeValue("text");
 
-  const correctBg = useThemeValue("correctBackground");
-  const correctBorder = useThemeValue("correctBorder");
-  const correctText = useThemeValue("correctText");
+  const correctBg = useThemeValue("successBackground");
+  const correctBorder = useThemeValue("green");
+  const correctText = useThemeValue("successText");
 
-  const incorrectBg = useThemeValue("incorrectBackground");
-  const incorrectBorder = useThemeValue("incorrectBorder");
-  const incorrectText = useThemeValue("incorrectText");
+  const incorrectBg = useThemeValue("dangerBackground");
+  const incorrectBorder = useThemeValue("danger");
+  const incorrectText = useThemeValue("dangerText");
 
   const statusStyles = {
     default: { backgroundColor: defaultBg, borderColor: defaultBorder },

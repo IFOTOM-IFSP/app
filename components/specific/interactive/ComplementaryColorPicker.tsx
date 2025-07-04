@@ -51,7 +51,7 @@ export function ComplementaryColorPicker({
   const themeText = useThemeValue("text");
   const themeTextSecondary = useThemeValue("textSecondary");
   const themeButtonText = useThemeValue("buttonText");
-  const themeBorder = useThemeValue("borderColor");
+  const themeBorder = useThemeValue("border");
   const themeBackground = useThemeValue("background");
 
   const [selected, setSelected] = useState<ColorInfo | null>(null);
