@@ -1,5 +1,5 @@
 import { Colors, type ThemeColors } from "@/constants/Colors";
-import { useTheme } from "../context/ThemeContext";
+import { useTheme } from "../state/ThemeContext";
 
 export function useThemeValue<K extends keyof ThemeColors>(
   key: K

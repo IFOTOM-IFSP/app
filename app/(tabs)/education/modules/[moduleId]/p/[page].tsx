@@ -1,4 +1,5 @@
 import { ErrorState } from "@/components/common/ErrorState";
+import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { ContentBlockRenderer } from "@/components/specific/modules/ContentBlockRenderer";
 import { ModulePageNavigation } from "@/components/specific/modules/ModulePageNavigation";
 import { ThemedText } from "@/components/ui/ThemedText";
@@ -12,14 +13,14 @@ import {
 } from "@/utils/module-helpers";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
 export default function ModuleContentPage(): React.ReactElement | null {
   const params = useLocalSearchParams<{ moduleId: string; page: string }>();
   const scrollRef = React.useRef<ScrollView>(null);
   const backgroundColor = useThemeValue("background");
   const textSecondaryColor = useThemeValue("textSecondary");
-  const accentPurpleColor = useThemeValue("accentPurple");
+  const accentPurpleColor = useThemeValue("primary");
 
   React.useEffect(() => {
     scrollRef.current?.scrollTo({ y: 0, animated: false });
@@ -50,11 +51,11 @@ export default function ModuleContentPage(): React.ReactElement | null {
   }
 
   return (
-    <SafeAreaView style={[styles.pageContainer, { backgroundColor }]}>
+    <ScreenLayout>
       <ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainer}>
+        contentContainerStyle={{ paddingBottom: Padding.lg }}>
         <View style={styles.header}>
           <ThemedText
             style={[styles.headerTitle, { color: textSecondaryColor }]}>
@@ -75,27 +76,18 @@ export default function ModuleContentPage(): React.ReactElement | null {
         prevPage={prevPage}
         nextPage={nextPage}
       />
-    </SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  pageContainer: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingHorizontal: Padding.xl,
-    paddingBottom: 95,
-  },
   header: {
-    paddingTop: Padding.lg,
     marginBottom: Margin.md,
   },
   headerTitle: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.semiBold,
     marginBottom: Margin.sm,
-    paddingTop: Padding.xl,
   },
   centeredContainer: {
     flex: 1,

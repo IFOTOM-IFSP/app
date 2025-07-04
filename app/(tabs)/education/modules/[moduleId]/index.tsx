@@ -1,30 +1,24 @@
 import { getModuleById } from "@/utils/module-helpers";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
+import TitleSection from "@/components/common/TitleSection";
+import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { PageListItem } from "@/components/specific/modules/PageListItem";
-import BackButton from "@/components/ui/BackButton";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
 import {
   BorderRadius,
   FontSize,
   FontWeight,
-  LayoutSize,
   Margin,
   Padding,
   Spacing,
 } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 
 export default function ModuleDetailScreen() {
   const { moduleId } = useLocalSearchParams<{ moduleId: string }>();
-  const tintColor = useThemeValue("tint");
-  const buttonTextColor = useThemeValue("buttonText");
-  const textColor = useThemeValue("text");
-  const textSecondaryColor = useThemeValue("textSecondary");
 
   const module = getModuleById(moduleId);
   const nextModule = module?.nextModuleId
@@ -33,30 +27,23 @@ export default function ModuleDetailScreen() {
 
   if (!module) {
     return (
-      <ThemedView style={styles.container}>
+      <ScreenLayout>
         <ThemedText>Módulo não encontrado.</ThemedText>
-      </ThemedView>
+      </ScreenLayout>
     );
   }
 
   const firstPageId = module.pages[0]?.id || "1";
 
   return (
-    <ThemedView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <View style={styles.header}>
-          <BackButton
-            onPress={() => router.replace("/(tabs)/education/modules")}
-          />
-          <ThemedText
-            style={[styles.title, { color: textColor }]}
-            numberOfLines={1}>
-            {module.title}
-          </ThemedText>
-        </View>
-        <ThemedText style={[styles.description, { color: textSecondaryColor }]}>
-          Este é o início do módulo. Escolha uma página para começar a aprender:
-        </ThemedText>
+    <ScreenLayout>
+      <ScrollView>
+        <TitleSection
+          title={module.title}
+          subtitle={module.description}
+          routerPath="/(tabs)/education/modules"
+          style={{ fontSize: FontSize.xl }}
+        />
 
         {module.pages.map((page, index) => (
           <PageListItem
@@ -93,36 +80,11 @@ export default function ModuleDetailScreen() {
           )}
         </View>
       </ScrollView>
-    </ThemedView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    paddingTop: Padding.xxxxl,
-    paddingHorizontal: Padding.md,
-    paddingBottom: Padding.xl,
-  },
-  header: {
-    minHeight: LayoutSize.buttonHeight,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: Spacing.md,
-    marginBottom: Margin.md,
-  },
-  title: {
-    fontSize: FontSize.xl,
-    fontWeight: FontWeight.bold,
-    flex: 1,
-  },
-  description: {
-    fontSize: FontSize.md,
-    marginBottom: Margin.xl,
-  },
   buttonContainer: {
     marginTop: Margin.lg,
     gap: Spacing.md,

@@ -1,10 +1,10 @@
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { FontSize, Padding } from "@/constants/Styles";
-import { ThemeProvider } from "@/context/ThemeContext";
-import { useUserStore } from "@/context/userStore";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { initializeNotifications } from "@/service/notificationService";
+import { ThemeProvider } from "@/state/ThemeContext";
+import { useUserStore } from "@/state/userStore";
 import { Slot, SplashScreen, usePathname, useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
 import React, { JSX, useEffect } from "react";
@@ -37,7 +37,6 @@ export default function RootLayout(): JSX.Element {
   const isLoading = useUserStore((state) => state.isLoading);
   const isFirstLaunch = useUserStore((state) => state.isFirstLaunch);
   const init = useUserStore((state) => state.actions.init);
-
   const router = useRouter();
   const pathname = usePathname();
 

@@ -1,4 +1,4 @@
-import { Module } from '@/interfaces/content';
+import { Module } from '@/schema/contentSchema';
 export const MODULES_DATA: Module[] = [
 
   {
@@ -8,8 +8,8 @@ export const MODULES_DATA: Module[] = [
     estimatedTime: '25 min',
     nextModuleId: '2',
     iconName: 'library-outline',
-    iconColorName: 'iconThemePurple',
-    iconBackgroundColorName: 'iconThemePurpleBackground',
+    iconColorName: 'primary',
+    iconBackgroundColorName: 'primaryBackground',
     pages: [
       {
         id: '1.1',
@@ -188,10 +188,10 @@ export const MODULES_DATA: Module[] = [
               id: 'importancia-list-1',
               type: 'text',
               value: `**Química**: Determinação de concentração de analitos, cinética de reações químicas, identificação de compostos.
-  - **Biologia**: Quantificação de proteínas, DNA, RNA e outros biomarcadores em pesquisas laboratoriais e clínicas.
-  - **Medicina**: Diagnóstico de doenças, exames laboratoriais (como bilirrubina, glicose e creatinina), monitoramento de níveis hormonais e metabólicos.
-  - **Indústria**: Controle de qualidade em produtos como alimentos, bebidas, fármacos, tintas, plásticos e combustíveis.
-  - **Meio ambiente**: Monitoramento de poluentes em água, solo e ar.`,
+- **Biologia**: Quantificação de proteínas, DNA, RNA e outros biomarcadores em pesquisas laboratoriais e clínicas.
+- **Medicina**: Diagnóstico de doenças, exames laboratoriais (como bilirrubina, glicose e creatinina), monitoramento de níveis hormonais e metabólicos.
+- **Indústria**: Controle de qualidade em produtos como alimentos, bebidas, fármacos, tintas, plásticos e combustíveis.
+- **Meio ambiente**: Monitoramento de poluentes em água, solo e ar.`,
               format: 'list',
             },
             {
@@ -269,11 +269,11 @@ export const MODULES_DATA: Module[] = [
             {
               id: 'aplicacoes-lista-principal',
               type: 'text',
-              value: `- **Análise da qualidade da água**: Detecção e quantificação de metais pesados, como chumbo e mercúrio, em estações de tratamento.
-  - **Controle de alimentos**: Medição de teores de vitamina C em sucos ou presença de corantes artificiais em doces e refrigerantes.
-  - **Farmácia e medicamentos**: Avaliação da concentração de substâncias ativas em comprimidos para garantir eficácia e segurança.
-  - **Laboratórios clínicos**: Testes bioquímicos como ureia, creatinina e glicose utilizam espectrofotometria como método padrão.
-  - **Indústria de cosméticos**: Determinação da estabilidade e coloração de cremes e protetores solares.`,
+              value: `**Análise da qualidade da água**: Detecção e quantificação de metais pesados, como chumbo e mercúrio, em estações de tratamento.
+- **Controle de alimentos**: Medição de teores de vitamina C em sucos ou presença de corantes artificiais em doces e refrigerantes.
+- **Farmácia e medicamentos**: Avaliação da concentração de substâncias ativas em comprimidos para garantir eficácia e segurança.
+- **Laboratórios clínicos**: Testes bioquímicos como ureia, creatinina e glicose utilizam espectrofotometria como método padrão.
+- **Indústria de cosméticos**: Determinação da estabilidade e coloração de cremes e protetores solares.`,
               format: 'list',
             },
             {
@@ -359,8 +359,8 @@ export const MODULES_DATA: Module[] = [
     description: 'Entenda os conceitos de luz, o espectro eletromagnético e a interação da luz com a matéria.',
     estimatedTime: '20 min',
     iconName: 'bulb-outline',
-    iconColorName: 'iconThemeBlue',
-    iconBackgroundColorName: 'iconThemeBlueBackground',
+    iconColorName: 'blue',
+    iconBackgroundColorName: 'blueBackground',
     nextModuleId: '3',
     pages: [
         {
@@ -506,8 +506,8 @@ export const MODULES_DATA: Module[] = [
     description: 'Aprofunde-se nos conceitos de absorbância, transmitância e a fundamental Lei de Beer-Lambert.',
     estimatedTime: '30 min',
     iconName: 'flask-outline',
-    iconColorName: 'iconThemeGreen',
-    iconBackgroundColorName: 'iconThemeGreenBackground',
+    iconColorName: 'green',
+    iconBackgroundColorName: 'greenBackground',
     nextModuleId: '4',
     pages: [
         {
@@ -662,8 +662,8 @@ export const MODULES_DATA: Module[] = [
       "description": "Explore os componentes chave de um espectrofotômetro e como eles funcionam em conjunto.",
       "estimatedTime": "20 min",
       "iconName": 'settings-outline',
-      "iconColorName": 'iconThemeOrange',
-      "iconBackgroundColorName": 'iconThemeOrangeBackground',
+      "iconColorName": 'pink',
+      "iconBackgroundColorName": 'pinkBackground',
       "nextModuleId": '5',
       "pages": [
         {
@@ -754,8 +754,8 @@ export const MODULES_DATA: Module[] = [
       "description": "Descubra as diferentes aplicações analíticas da espectrofotometria.",
       "estimatedTime": "25 min",
       iconName: 'file-tray-full-outline',
-    "iconColorName": 'iconThemeTeal',
-    "iconBackgroundColorName": 'iconThemeTealBackground',
+    "iconColorName": 'warning',
+    "iconBackgroundColorName": 'warningBackground',
     "nextModuleId": '6',
       "pages": [
         {
@@ -910,8 +910,8 @@ export const MODULES_DATA: Module[] = [
     "estimatedTime": "35 min",
     "prerequisites": ["principios-espectrofotometria-absorcao"],
     "iconName": 'flask-outline',
-    "iconColorName": 'iconThemeCyan',
-    "iconBackgroundColorName": 'iconThemeCyanBackground',
+    "iconColorName": 'blue',
+    "iconBackgroundColorName": 'blueBackground',
     "nextModuleId": '7',
     "pages": [
       {
@@ -946,7 +946,19 @@ export const MODULES_DATA: Module[] = [
           {
             "id": "solucao-padrao-text",
             "type": "text",
-            "value": "Uma **solução padrão** possui concentração conhecida com alta precisão. Pode ser preparada por:\n- **Pesagem direta** de uma substância pura.\n- **Diluição de uma solução mais concentrada**.\n\nEla é usada como **referência confiável** em calibrações e validações analíticas.",
+            "value": "Uma **solução padrão** possui concentração conhecida com alta precisão. Pode ser preparada por:",
+            "format": "paragraph"
+          },
+          {
+            "id": "solucao-padrao-list",
+            "type": "text",
+            value: "**Pesagem direta** de uma substância pura.\n- **Diluição de uma solução mais concentrada**.",
+            format: 'list'
+          },
+                    {
+            "id": "solucao-padrao-text-final",
+            "type": "text",
+            "value": "Ela é usada como **referência confiável** em calibrações e validações analíticas.",
             "format": "paragraph"
           },
           {
@@ -970,8 +982,14 @@ export const MODULES_DATA: Module[] = [
           {
             "id": "diluicoes-text",
             "type": "text",
-            "value": "Diluir é reduzir a concentração de uma solução. A equação clássica usada é $C_1 \\cdot V_1 = C_2 \\cdot V_2$\n\nOnde:\n- $C_1$: concentração inicial\n- $V_1$: volume a ser retirado\n- $C_2$: concentração desejada\n- $V_2$: volume final",
+            "value": "Diluir é reduzir a concentração de uma solução. A equação clássica usada é: \n$C_1 \\cdot V_1 = C_2 \\cdot V_2$\n\nOnde:",
             "format": "paragraph"
+          },
+          {
+            "id": "diluicoes-list",
+            "type": "text",
+            "value": "$C_1$: concentração inicial\n- $V_1$: volume a ser retirado\n- $C_2$: concentração desejada\n- $V_2$: volume final",
+            "format": "list"
           },
           {
             "id": "simulador-diluicao",
@@ -1040,8 +1058,8 @@ export const MODULES_DATA: Module[] = [
     "estimatedTime": "20 min",
     "prerequisites": ["principios-espectrofotometria-absorcao", "preparo-solucoes-analise"],
     iconName: 'analytics-outline',
-    iconColorName: 'iconThemePink',
-    iconBackgroundColorName: 'iconThemePinkBackground',
+    iconColorName: 'pink',
+    iconBackgroundColorName: 'pinkBackground',
     nextModuleId: null,
     "pages": [
       {

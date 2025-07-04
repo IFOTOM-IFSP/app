@@ -1,4 +1,3 @@
-
 export const getContrastColor = (hexColor: string, darkColor: string, lightColor: string): string => {
   if (!hexColor || hexColor.length < 7) return darkColor;
   

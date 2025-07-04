@@ -1,4 +1,4 @@
-import { Reference } from "@/interfaces/reference";
+import { Reference } from "@/schema/referenceSchema";
 
 export const referencesData: Reference[] = [
   {

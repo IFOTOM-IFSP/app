@@ -1,5 +1,5 @@
 
-import { type SchemeType } from "@/context/ThemeContext";
+import { type SchemeType } from "@/state/ThemeContext";
 
 
 export const getSchemeLabel = (scheme: SchemeType): string => {

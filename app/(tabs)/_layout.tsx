@@ -9,8 +9,8 @@ export default function TabLayout() {
   console.log("TAB_LAYOUT: Renderizando Tabs Navigator");
   const insets = useSafeAreaInsets();
   const background = useThemeValue("background");
-  const tabBarActiveTintColor = useThemeValue("tabIconSelected");
-  const tabBarInactiveTintColor = useThemeValue("tabIconDefault");
+  const tabBarActiveTintColor = useThemeValue("primary");
+  const tabBarInactiveTintColor = useThemeValue("disabledText");
   const tabBackgroundColor = useThemeValue("background");
 
   return (
