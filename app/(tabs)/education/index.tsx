@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   listIntroduction: {
     paddingHorizontal: Padding.xl,
     marginTop: Margin.xl,
-    marginBottom: Margin.sm,
+    marginBottom: Margin.lg,
   },
   listHeaderTitle: {
     fontSize: FontSize.xl,

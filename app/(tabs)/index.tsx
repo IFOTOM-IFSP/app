@@ -2,14 +2,15 @@ import { AntDesign, FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { UsefulSections } from "@/components/common/UsefulSections";
+import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { HomeHeader } from "@/components/specific/home/HomeHeader";
 import { StartAnalysisCard } from "@/components/specific/home/StartAnalysisCard";
 import { Padding } from "@/constants/Styles";
-import { useUserStore } from "@/context/userStore";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { useUserStore } from "@/state/userStore";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type AppRouter = ReturnType<typeof useRouter>;
 const getUsefulSectionsData = (router: AppRouter) => [
@@ -54,7 +55,7 @@ export default function HomeScreen() {
 
   const handleStartAnalysis = () => {
     console.log("Botão SIM para iniciar análise clicado");
-    router.push("/acquisition");
+    router.push("/analysis");
   };
 
   const handleSettingsPress = () => {
@@ -72,7 +73,7 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor }]}>
+    <ScreenLayout>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.scrollContent}
@@ -81,7 +82,7 @@ export default function HomeScreen() {
         <StartAnalysisCard onPress={handleStartAnalysis} />
         <UsefulSections title={true} sections={usefulSectionsData} />
       </ScrollView>
-    </SafeAreaView>
+    </ScreenLayout>
   );
 }
 

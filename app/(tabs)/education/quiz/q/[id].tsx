@@ -5,18 +5,15 @@ import { QuizResultsScreen } from "@/components/specific/quiz/QuizResultsScreen"
 import BackButton from "@/components/ui/BackButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
-import { Padding } from "@/constants/Styles";
-import { useQuizActions } from "@/context/quizStore";
 import { quizData } from "@/data/quizData";
+import { useQuizActions } from "@/state/quizStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet } from "react-native";
 
 export default function QuizScreen() {
-  // --- LÓGICA DE ESTADO COMPLETA ---
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  // 2. MUDANÇA: Usa a ação da quizStore em vez do hook useQuizResults
   const { addQuizResult } = useQuizActions();
 
   const [quiz, setQuiz] = useState(() => quizData.find((q) => q.id === id));
@@ -31,9 +28,6 @@ export default function QuizScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const currentQuestion = quiz?.questions[currentQuestionIndex];
 
-  // --- EFEITOS E MANIPULADORES COMPLETOS ---
-
-  // Efeito para lidar com quiz não encontrado
   useEffect(() => {
     if (!quiz) {
       Alert.alert("Erro", "Quiz não encontrado.", [
@@ -42,7 +36,6 @@ export default function QuizScreen() {
     }
   }, [quiz, router]);
 
-  // Efeito para salvar o resultado quando o quiz termina
   useEffect(() => {
     if (quizFinished && quiz) {
       const score = (correctAnswersCount / quiz.questions.length) * 100;
@@ -54,7 +47,6 @@ export default function QuizScreen() {
     }
   }, [quizFinished, quiz, correctAnswersCount, addQuizResult]);
 
-  // Efeito para rolar para a explicação após a resposta
   useEffect(() => {
     if (isAnswered) {
       const timer = setTimeout(() => {
@@ -64,7 +56,6 @@ export default function QuizScreen() {
     }
   }, [isAnswered]);
 
-  // Função para lidar com a seleção de uma opção
   const handleOptionSelect = (optionIndex: number) => {
     if (isAnswered) return;
 
@@ -76,7 +67,6 @@ export default function QuizScreen() {
     }
   };
 
-  // Função para avançar para a próxima questão ou finalizar
   const handleNextQuestion = () => {
     if (currentQuestionIndex < (quiz?.questions.length || 0) - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
@@ -132,5 +122,5 @@ export default function QuizScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, },
+  container: { flex: 1 },
 });

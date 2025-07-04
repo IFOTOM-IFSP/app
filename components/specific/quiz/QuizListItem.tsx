@@ -5,7 +5,6 @@ import {
   FontWeight,
   Margin,
   Padding,
-  Spacing,
 } from "@/constants/Styles";
 import { Quiz } from "@/data/quizData";
 import { useThemeValue } from "@/hooks/useThemeValue";
@@ -20,9 +19,8 @@ interface QuizListItemProps {
 }
 
 export function QuizListItem({ item, highScore }: QuizListItemProps) {
-  // --- Cores Dinâmicas ---
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
+  const cardBg = useThemeValue("card");
+  const borderColor = useThemeValue("border");
   const textColor = useThemeValue("text");
   const textSecondary = useThemeValue("textSecondary");
   const buttonText = useThemeValue("buttonText");
@@ -47,7 +45,7 @@ export function QuizListItem({ item, highScore }: QuizListItemProps) {
           {
             backgroundColor: cardBg,
             borderColor,
-            shadowColor: useThemeValue("shadowColor"),
+            shadowColor: useThemeValue("shadow"),
           },
         ]}
         accessibilityLabel={`${item.title}, Dificuldade: ${item.difficulty}, Melhor pontuação: ${highScore}%`}>
@@ -78,11 +76,12 @@ export function QuizListItem({ item, highScore }: QuizListItemProps) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: BorderRadius.lg, 
-    marginBottom: Margin.md, 
-    padding: Padding.md, 
+    borderRadius: BorderRadius.lg,
+    marginBottom: Margin.md,
+    width: "90%",
+    padding: Padding.md,
     borderWidth: 1,
- 
+    paddingHorizontal: Padding.lg,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
@@ -92,37 +91,38 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
-    marginBottom: Margin.sm, 
+    marginBottom: Margin.sm,
   },
   cardTitle: {
-    fontSize: FontSize.lg, 
+    fontSize: FontSize.lg,
     fontWeight: FontWeight.bold,
     flex: 1,
-    marginRight: Margin.sm, 
+    marginRight: Margin.sm,
   },
   difficultyBadge: {
-    paddingVertical: Padding.xs, 
-    paddingHorizontal: Padding.sm, 
-    borderRadius: BorderRadius.full, 
+    paddingVertical: Padding.xs,
+    paddingHorizontal: Padding.sm,
+    borderRadius: BorderRadius.full,
   },
   difficultyText: {
-    fontSize: FontSize.xs, 
+    fontSize: FontSize.xs,
     fontWeight: FontWeight.bold,
   },
   cardDescription: {
-    fontSize: FontSize.sm, 
-    marginBottom: Margin.md, 
-    lineHeight: Spacing.xl, 
+    fontSize: FontSize.sm,
+    marginBottom: Margin.md,
   },
   cardFooter: {
     flexDirection: "row",
     alignItems: "center",
-    borderTopWidth: 1,
-    paddingTop: Padding.sm, 
+    borderBottomWidth: 1,
+    paddingTop: Padding.sm,
+    marginBottom: Margin.md,
+    paddingBottom: Padding.md,
   },
   highScoreText: {
-    fontSize: FontSize.sm, 
-    marginLeft: Margin.sm, 
-    fontWeight: FontWeight.medium, 
+    fontSize: FontSize.sm,
+    marginLeft: Margin.sm,
+    fontWeight: FontWeight.medium,
   },
 });

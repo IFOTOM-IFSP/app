@@ -24,8 +24,8 @@ export function SpectrumGraph({
 }: SpectrumGraphProps) {
   const { width } = useWindowDimensions();
 
-  const cardBg = useThemeValue("cardBackground");
-  const accentColor = useThemeValue("accentPurple");
+  const cardBg = useThemeValue("card");
+  const accentColor = useThemeValue("primary");
   const secondaryText = useThemeValue("textSecondary");
   const chartLineColor = useThemeValue("tint");
 

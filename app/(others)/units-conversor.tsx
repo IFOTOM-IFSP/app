@@ -1,16 +1,16 @@
+import FilterTabs from "@/components/common/FilterTabs";
+import TitleSection from "@/components/common/TitleSection";
+import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { ConverterCard } from "@/components/specific/converter/ConverterCard";
 import { UnitInput } from "@/components/specific/converter/UnitInput";
-import BackButton from "@/components/ui/BackButton";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
 import {
   BorderRadius,
   FontSize,
   FontWeight,
   Margin,
   Padding,
-  Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import {
@@ -32,11 +32,10 @@ import React, { useReducer, useState } from "react";
 import {
   Alert,
   Keyboard,
-  SafeAreaView,
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 
@@ -121,10 +120,7 @@ export default function ConverterScreen() {
   const [activeConverter, setActiveConverter] = useState("all");
 
   const tintColor = useThemeValue("tint");
-  const primaryText = useThemeValue("textPrimary");
-  const secondaryText = useThemeValue("textSecondary");
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
+  const borderColor = useThemeValue("border");
   const buttonText = useThemeValue("buttonText");
 
   const handleInputChange = (field: string, value: string) => {
@@ -296,85 +292,34 @@ export default function ConverterScreen() {
   );
 
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContentContainer}>
-            <View style={styles.header}>
-              <BackButton />
-              <View>
-                <ThemedText style={[styles.title, { color: tintColor }]}>
-                  Conversor Espectro
-                </ThemedText>
-                <ThemedText style={[styles.slogan, { color: secondaryText }]}>
-                  Ferramentas de conversão para espectrofotometria.
-                </ThemedText>
-              </View>
-            </View>
-
-            <View>
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.filterScrollView}>
-                {converters.map((converter) => {
-                  const isActive = activeConverter === converter.key;
-                  return (
-                    <TouchableOpacity
-                      key={converter.key}
-                      style={[
-                        styles.filterButton,
-                        { backgroundColor: cardBg, borderColor },
-                        isActive && {
-                          backgroundColor: tintColor,
-                          borderColor: tintColor,
-                        },
-                      ]}
-                      onPress={() => setActiveConverter(converter.key)}>
-                      <ThemedText
-                        style={[
-                          styles.filterButtonText,
-                          { color: primaryText },
-                          isActive && { color: buttonText },
-                        ]}>
-                        {converter.label}
-                      </ThemedText>
-                    </TouchableOpacity>
-                  );
-                })}
-              </ScrollView>
-            </View>
-            <View style={styles.content}>{renderContent()}</View>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </SafeAreaView>
-    </ThemedView>
+    <ScreenLayout>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <TitleSection
+          title="Conversor de Unidades"
+          subtitle="Converta unidades de química e física facilmente"
+        />
+        <FilterTabs<(typeof converters)[0]>
+          data={converters}
+          selectedValue={activeConverter}
+          onSelect={setActiveConverter}
+          getValue={(converter) => converter.key}
+          getLabel={(converter) => converter.label}
+        />
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContentContainer}>
+          <View style={styles.content}>{renderContent()}</View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
   scrollContentContainer: { paddingBottom: Padding.xxl },
-  header: {
-    paddingTop: Padding.xl,
-    paddingHorizontal: Padding.xl,
-    paddingBottom: Padding.lg,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: Spacing.md,
-  },
-  title: {
-    fontSize: FontSize.xxl,
-    fontWeight: FontWeight.bold,
-  },
-  slogan: {
-    fontSize: FontSize.md,
-    marginTop: Spacing.xs,
-  },
+
   filterScrollView: {
-    paddingHorizontal: Padding.xl,
     paddingVertical: Padding.sm,
     marginBottom: Margin.sm,
   },
@@ -389,9 +334,7 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.semiBold,
     fontSize: FontSize.sm,
   },
-  content: {
-    paddingHorizontal: Padding.xl,
-  },
+  content: {},
   formulaText: {
     fontFamily: "monospace",
     padding: Padding.md,

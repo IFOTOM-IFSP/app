@@ -16,15 +16,15 @@ interface StartAnalysisCardProps {
 }
 
 export function StartAnalysisCard({ onPress }: StartAnalysisCardProps) {
-  const gradientColors = useThemeValue("cardGradient");
-  const buttonBackgroundColor = useThemeValue("accentPurple");
-  const shadowColor = useThemeValue("shadowColor");
-  const cardTextColor = useThemeValue("textWhite");
-  const buttonTextColor = useThemeValue("textWhite");
-
+  const gradientColors = useThemeValue("authGradient");
+  const buttonBackgroundColor = useThemeValue("primary");
+  const shadowColor = useThemeValue("shadow");
+  const featuredCardTextColor = useThemeValue("textWhite");
+  const buttonTextColor = useThemeValue("buttonText");
+  const borderColor = useThemeValue("border");
   return (
     <TouchableOpacity
-      style={[styles.cardTouchable, { shadowColor }]}
+      style={[styles.cardTouchable, { shadowColor, borderColor }]}
       onPress={onPress}
       activeOpacity={0.85}>
       <LinearGradient
@@ -32,7 +32,7 @@ export function StartAnalysisCard({ onPress }: StartAnalysisCardProps) {
         style={styles.cardGradient}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}>
-        <Text style={[styles.cardText, { color: cardTextColor }]}>
+        <Text style={[styles.cardText, { color: featuredCardTextColor }]}>
           Quer começar uma análise?
         </Text>
         <View
@@ -49,16 +49,16 @@ export function StartAnalysisCard({ onPress }: StartAnalysisCardProps) {
 const styles = StyleSheet.create({
   cardTouchable: {
     height: 200,
-    marginTop: Margin.sm,
     marginBottom: Margin.xl,
     borderRadius: BorderRadius.lg,
-    elevation: 1,
+    elevation: 2,
     shadowOffset: {
       width: Spacing.none,
       height: 2,
     },
     shadowOpacity: 0.15,
     shadowRadius: Spacing.xs,
+    borderWidth: 0.1,
   },
   cardGradient: {
     flex: 1,

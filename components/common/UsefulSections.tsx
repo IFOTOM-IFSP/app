@@ -27,23 +27,24 @@ export function UsefulSections({
   return (
     <View style={styles.container}>
       {title && <ThemedText style={styles.title}>Seções úteis</ThemedText>}
-      <View style={[styles.iconsRow, style]}>
+      <View style={[styles.iconsRowContainer, style]}>
         {sections.map((section) => {
           return (
-            <IconButton
-              key={section.id}
-              onPress={section.onPress}
-              labelText={section.label}
-              iconElement={
-                <ThemedIcon
-                  iconComponent={section.iconComponent}
-                  name={section.iconName}
-                  size={26}
-                />
-              }
-              iconOnly={false}
-              accessibilityLabel={"Ir para tela " + section.label}
-            />
+            <View key={section.id} style={styles.iconButtonWrapper}>
+              <IconButton
+                onPress={section.onPress}
+                labelText={section.label}
+                iconElement={
+                  <ThemedIcon
+                    iconComponent={section.iconComponent}
+                    name={section.iconName}
+                    size={26}
+                  />
+                }
+                iconOnly={false}
+                accessibilityLabel={"Ir para tela " + section.label}
+              />
+            </View>
           );
         })}
       </View>
@@ -61,10 +62,16 @@ const styles = StyleSheet.create({
     fontWeight: FontWeight.medium,
     marginBottom: Margin.md,
   },
-  iconsRow: {
+  iconsRowContainer: {
     flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-around",
-    gap: Spacing.md,
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+
+    margin: -Spacing.md / 2,
+  },
+
+  iconButtonWrapper: {
+    width: "25%",
+    padding: Spacing.md / 2,
   },
 });

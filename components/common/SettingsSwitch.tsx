@@ -35,10 +35,10 @@ export function SettingsSwitch({
 }: SettingsSwitchProps) {
   const trackColorFalse = useThemeValue("switchTrackFalse");
   const trackColorTrue = useThemeValue("switchTrackTrue");
-  const thumbColorEnabled = useThemeValue("accentPurple");
-  const thumbColorDisabled = useThemeValue("switchThumbDisabled");
-  const infoIconColor = useThemeValue("tabIconDefault");
-  const cardBackgroun = useThemeValue("cardBackground");
+  const thumbColorEnabled = useThemeValue("switchTrackTrue");
+  const thumbColorDisabled = useThemeValue("switchTrackFalse");
+  const infoIconColor = useThemeValue("primary");
+  const cardBackgroun = useThemeValue("card");
 
   return (
     <View style={[styles.optionContainer, { backgroundColor: cardBackgroun }]}>

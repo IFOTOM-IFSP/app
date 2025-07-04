@@ -46,11 +46,11 @@ export function MultiSlider({
 
   const [values, setValues] = useState(initialState);
 
-  const textPrimary = useThemeValue("textPrimary");
+  const textPrimary = useThemeValue("text");
   const textSecondary = useThemeValue("textSecondary");
-  const accentColor = useThemeValue("accentPurple");
-  const borderColor = useThemeValue("borderColor");
-  const outputBg = useThemeValue("blockquoteBackground");
+  const accentColor = useThemeValue("primary");
+  const borderColor = useThemeValue("border");
+  const outputBg = useThemeValue("card");
 
   const handleValueChange = (id: string, newValue: number) => {
     setValues((prev) => ({ ...prev, [id]: newValue }));

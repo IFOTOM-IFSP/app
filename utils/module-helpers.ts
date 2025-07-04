@@ -1,5 +1,5 @@
 import { MODULES_DATA } from '@/data/modulesData';
-import { Module, ModulePage } from '@/interfaces/content';
+import { Module, ModulePage } from '@/schema/contentSchema';
 
 export const moduleTitles: { [key: string]: string } = {
   "1": "Introdução",

@@ -38,13 +38,13 @@ export function QuizActiveScreen({
   handleNextQuestion,
   scrollViewRef,
 }: QuizActiveScreenProps) {
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
   const buttonText = useThemeValue("buttonText");
   const textColor = useThemeValue("text");
   const textSecondary = useThemeValue("textSecondary");
   const progressBg = useThemeValue("progressBarBackground");
-  const borderColor = useThemeValue("borderColor");
-  const explanationBg = useThemeValue("blockquoteBackground");
+  const borderColor = useThemeValue("border");
+  const explanationBg = useThemeValue("disabledBackground");
 
   return (
     <ThemedView style={styles.container}>

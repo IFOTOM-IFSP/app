@@ -74,7 +74,8 @@
           ],
           "enableBackgroundRemoteNotifications": false
         }
-      ]
+      ],
+      "expo-font"
     ],
     "scheme": "myapp",
     "extra": {

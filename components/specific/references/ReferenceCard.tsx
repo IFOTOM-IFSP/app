@@ -15,7 +15,7 @@ import {
   GenericOnlineReference,
   Reference,
   WebsiteReference,
-} from "@/interfaces/reference";
+} from "@/schema/referenceSchema";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
@@ -25,10 +25,10 @@ interface ReferenceCardProps {
 }
 
 const ReferenceCard: React.FC<ReferenceCardProps> = ({ reference }) => {
-  const cardBg = useThemeValue("cardBackground");
+  const cardBg = useThemeValue("card");
   const textColor = useThemeValue("text");
   const textSecondary = useThemeValue("textSecondary");
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
 
   const handlePressLink = (url: string | undefined) => {
     if (url) {
@@ -223,9 +223,9 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     padding: Padding.md,
     marginBottom: Margin.md,
-    borderWidth: 1, // Adiciona uma borda para separar melhor os cards
-    borderColor: "rgba(128, 128, 128, 0.2)", // Cor da borda
-    overflow: "hidden", // Para garantir que o badge não vaze
+    borderWidth: 1,
+    borderColor: "rgba(128, 128, 128, 0.2)",
+    overflow: "hidden",
   },
   typeBadge: {
     position: "absolute",

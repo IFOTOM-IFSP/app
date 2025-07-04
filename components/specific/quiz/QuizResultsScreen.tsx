@@ -22,7 +22,7 @@ export function QuizResultsScreen({
   onRestart,
   onGoBack,
 }: QuizResultsScreenProps) {
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
   const textColor = useThemeValue("text");
   const textSecondaryColor = useThemeValue("textSecondary");
 

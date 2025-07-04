@@ -8,10 +8,12 @@ import {
   TextInputProps,
   ViewStyle,
 } from "react-native";
+import { ThemedText } from "./ThemedText";
 
-type ThemedInputProps = TextInputProps & {
+export type ThemedInputProps = TextInputProps & {
   variant?: "default" | "solved" | "error";
   style?: StyleProp<ViewStyle>;
+  label?: string; // Optional label prop for future use
 };
 
 export function ThemedInput({
@@ -19,13 +21,13 @@ export function ThemedInput({
   style,
   ...rest
 }: ThemedInputProps) {
-  const textColor = useThemeValue("textPrimary");
-  const borderColor = useThemeValue("borderColor");
+  const textColor = useThemeValue("text");
+  const borderColor = useThemeValue("border");
   const placeholderColor = useThemeValue("textSecondary");
 
-  const solvedBg = useThemeValue("solvedInputBackground");
-  const solvedColor = useThemeValue("accentPurple");
-  const solvedBorder = useThemeValue("solvedInputBorder");
+  const solvedBg = useThemeValue("card");
+  const solvedColor = useThemeValue("primary");
+  const solvedBorder = useThemeValue("card");
   const errorColor = useThemeValue("dangerBackground");
 
   const variantStyles = {
@@ -46,11 +48,18 @@ export function ThemedInput({
   };
 
   return (
-    <TextInput
-      style={[styles.input, variantStyles[variant], style]}
-      placeholderTextColor={placeholderColor}
-      {...rest}
-    />
+    <>
+      {rest.label && (
+        <ThemedText style={{ marginBottom: Padding.xs }}>
+          {rest.label}
+        </ThemedText>
+      )}
+      <TextInput
+        style={[styles.input, variantStyles[variant], style]}
+        placeholderTextColor={placeholderColor}
+        {...rest}
+      />
+    </>
   );
 }
 
@@ -60,6 +69,6 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.md,
     padding: Padding.sm,
     fontSize: FontSize.md,
-    textAlign: "right",
+    textAlign: "left",
   },
 });

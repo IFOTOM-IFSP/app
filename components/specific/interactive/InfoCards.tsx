@@ -27,8 +27,8 @@ interface InfoCardsProps {
 }
 
 function InfoCard({ title, description, icon }: CardData) {
-  const accentColor = useThemeValue("accentPurple");
-  const iconBgColor = useThemeValue("blockquoteBackground");
+  const accentColor = useThemeValue("primary");
+  const iconBgColor = useThemeValue("primaryBackground");
 
   const { width: screenWidth } = useWindowDimensions();
 
@@ -37,7 +37,7 @@ function InfoCard({ title, description, icon }: CardData) {
   return (
     <InteractiveCard title={title} style={[styles.card, { width: cardWidth }]}>
       {icon && (
-        <IconContainer color={iconBgColor}>
+        <IconContainer color={iconBgColor} style={{ borderRadius: 50 }}>
           <FontAwesome5 name={icon} size={24} color={accentColor} />
         </IconContainer>
       )}
@@ -47,7 +47,7 @@ function InfoCard({ title, description, icon }: CardData) {
 }
 
 export function InfoCards({ title, description, cards }: InfoCardsProps) {
-  const primaryText = useThemeValue("textPrimary");
+  const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");
 
   return (

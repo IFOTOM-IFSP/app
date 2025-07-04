@@ -8,14 +8,14 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { CodeContent } from "@/interfaces/content";
+import { CodeContent } from "@/schema/contentSchema";
 import React from "react";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 
 export function CodeBlock({ block }: { block: CodeContent }) {
-  const backgroundColor = useThemeValue("codeBlockBackground");
-  const langColor = useThemeValue("codeLangText");
-  const codeColor = useThemeValue("codeBodyText");
+  const backgroundColor = useThemeValue("card");
+  const langColor = useThemeValue("textSecondary");
+  const codeColor = useThemeValue("secondary");
 
   return (
     <View style={[styles.container, { backgroundColor }]}>

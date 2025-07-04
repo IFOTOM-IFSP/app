@@ -13,7 +13,7 @@ export function FormInput(props: FormInputProps) {
   return (
     <TextInput
       style={[styles.input, { color: Colors.light.text }, props.style]}
-      placeholderTextColor={Colors.light.gray}
+      placeholderTextColor={Colors.light.disabledText}
       {...props}
     />
   );
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Padding.lg,
     fontSize: FontSize.md,
     borderWidth: 0.8,
-    borderColor: Colors.light.borderColor,
+    borderColor: Colors.light.border,
     shadowColor: Colors.light.text,
     shadowOpacity: 0.1,
     shadowRadius: 8,

@@ -8,19 +8,19 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { TextContent } from "@/interfaces/content";
+import { TextContent } from "@/schema/contentSchema";
 import { FormattedText } from "@/utils/text-formatting";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
 export function TextBlock({ block }: { block: TextContent }) {
-  const textPrimaryColor = useThemeValue("textPrimary");
+  const textPrimaryColor = useThemeValue("text");
   const textSecondaryColor = useThemeValue("text");
-  const accentPurpleColor = useThemeValue("accentPurple");
-  const blockquoteBgColor = useThemeValue("blockquoteBackground");
-  const noteBgColor = useThemeValue("noteBackground");
-  const noteBorderColor = useThemeValue("noteBorder");
-  const noteTextColor = useThemeValue("noteText");
+  const accentPurpleColor = useThemeValue("primary");
+  const blockquoteBgColor = useThemeValue("card");
+  const noteBgColor = useThemeValue("primaryBackground");
+  const noteBorderColor = useThemeValue("border");
+  const noteTextColor = useThemeValue("text");
 
   if (block.format === "blockquote") {
     return (
@@ -88,61 +88,61 @@ export function TextBlock({ block }: { block: TextContent }) {
 
 const styles = StyleSheet.create({
   paragraph: {
-    fontSize: FontSize.lg, 
-    lineHeight: Spacing.xl, 
-    marginBottom: Margin.lg, 
+    fontSize: FontSize.lg,
+    lineHeight: Spacing.xl,
+    marginBottom: Margin.lg,
     textAlign: "justify",
   },
   heading1: {
-    fontSize: FontSize.xxl, 
+    fontSize: FontSize.xxl,
     fontWeight: FontWeight.bold,
-    marginBottom: Margin.md, 
-    marginTop: Margin.md, 
+    marginBottom: Margin.md,
+    marginTop: Margin.md,
   },
   heading2: {
-    fontSize: FontSize.xl, 
-    fontWeight: FontWeight.semiBold, 
-    marginBottom: Margin.sm, 
-    marginTop: Margin.lg, 
+    fontSize: FontSize.xl,
+    fontWeight: FontWeight.semiBold,
+    marginBottom: Margin.sm,
+    marginTop: Margin.lg,
   },
   blockquote: {
     padding: Padding.md,
-    paddingLeft: Padding.xl, 
+    paddingLeft: Padding.xl,
     borderLeftWidth: 4,
-    marginBottom: Margin.lg, 
-    borderRadius: BorderRadius.sm, 
+    marginBottom: Margin.lg,
+    borderRadius: BorderRadius.sm,
   },
   blockquoteText: {
-    fontSize: FontSize.md, 
-    lineHeight: Spacing.lg, 
+    fontSize: FontSize.md,
+    lineHeight: Spacing.lg,
     fontStyle: "italic",
   },
   listContainer: {
-    marginBottom: Margin.lg, 
-    paddingLeft: Padding.sm, 
+    marginBottom: Margin.lg,
+    paddingLeft: Padding.sm,
   },
   listItem: {
     flexDirection: "row",
     alignItems: "flex-start",
-    marginBottom: Margin.sm, 
+    marginBottom: Margin.sm,
   },
   bulletPoint: {
-    fontSize: FontSize.lg, 
-    lineHeight: Spacing.xl, 
-    marginRight: Margin.sm, 
+    fontSize: FontSize.lg,
+    lineHeight: Spacing.xl,
+    marginRight: Margin.sm,
   },
   listItemText: {
-    fontSize: FontSize.lg, 
-    lineHeight: Spacing.xl, 
+    fontSize: FontSize.lg,
+    lineHeight: Spacing.xl,
     flex: 1,
     textAlign: "justify",
   },
   note: {
-    padding: Padding.md, 
+    padding: Padding.md,
     borderRadius: BorderRadius.md,
     borderLeftWidth: 4,
-    fontSize: FontSize.md, 
-    lineHeight: Spacing.lg, 
-    marginBottom: Margin.lg, 
+    fontSize: FontSize.md,
+    lineHeight: Spacing.lg,
+    marginBottom: Margin.lg,
   },
 });

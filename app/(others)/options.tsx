@@ -1,10 +1,6 @@
-// src/screens/options.tsx
-
-import { UsefulSections } from "@/components/common/UsefulSections"; // 1. Caminho atualizado após a promoção
-import BackButton from "@/components/ui/BackButton";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { FontSize, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import TitleSection from "@/components/common/TitleSection";
+import { UsefulSections } from "@/components/common/UsefulSections"; 
+import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { openURL } from "@/utils/linkingUtils";
 import {
   AntDesign,
@@ -15,8 +11,7 @@ import {
 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
 
 type OptionRouter = ReturnType<typeof useRouter>;
 const getOptionsItems = (router: OptionRouter) => [
@@ -77,47 +72,34 @@ const getOptionsItems = (router: OptionRouter) => [
       router.push("/units-conversor");
     },
   },
-
   {
     id: "instagram",
     label: "Instagram",
     iconName: "instagram",
     iconComponent: MaterialCommunityIcons,
-    onPress: () => openURL("https://www.instagram.com/ifsp.campinas/"),
+    onPress: () => openURL("https://www.instagram.com/ifotom.ifsp/"),
   },
 ];
 
 export default function OptionsScreen() {
   const router = useRouter();
-  const backgroundColor = useThemeValue("background");
   const items = getOptionsItems(router);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor }]}>
-      <View style={styles.header}>
-        <BackButton />
-        <ThemedText style={styles.title}>Opções</ThemedText>
-      </View>
+    <ScreenLayout>
+      <TitleSection title="Mais opções" />
       <UsefulSections style={styles.sections} title={false} sections={items} />
-    </SafeAreaView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: Padding.lg, paddingHorizontal: Padding.xl },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingBottom: Padding.lg,
-  },
-  title: {
-    fontSize: FontSize.lg,
-    textAlign: "center",
-    flexGrow: 3 / 4,
-  },
   sections: {
-    flexWrap: "wrap",
     justifyContent: "flex-start",
+    alignItems: "flex-start",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    height: "100%",
     gap: 0,
   },
 });

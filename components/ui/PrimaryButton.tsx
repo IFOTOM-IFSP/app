@@ -1,10 +1,9 @@
-// src/components/ui/PrimaryButton.tsx
-
 import {
   BorderRadius,
   FontSize,
   FontWeight,
   Padding,
+  Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";
@@ -14,6 +13,7 @@ import {
   Text,
   TextStyle,
   TouchableOpacity,
+  View,
   ViewStyle,
 } from "react-native";
 
@@ -26,6 +26,7 @@ interface PrimaryButtonProps {
   loading?: boolean;
   activeOpacity?: number;
   variant?: "filled" | "outline";
+  icon?: React.ReactNode;
 }
 
 export function PrimaryButton({
@@ -37,10 +38,12 @@ export function PrimaryButton({
   loading = false,
   activeOpacity = 0.7,
   variant = "filled",
+  icon,
 }: PrimaryButtonProps) {
-  const tintColor = useThemeValue("tint");
+  const tintColor = useThemeValue("primary");
   const buttonTextColor = useThemeValue("buttonText");
-  const disabledColor = useThemeValue("gray");
+  const disabledBgColor = useThemeValue("disabledBackground");
+  const disabledTextColor = useThemeValue("disabledText");
 
   const isOutline = variant === "outline";
 
@@ -51,8 +54,9 @@ export function PrimaryButton({
       : { backgroundColor: tintColor },
     disabled || loading
       ? {
-          backgroundColor: disabledColor,
-          borderColor: isOutline ? disabledColor : undefined,
+          backgroundColor: disabledBgColor,
+          borderColor: isOutline ? disabledBgColor : undefined,
+          buttonTextColor: disabledTextColor,
         }
       : null,
     style,
@@ -61,7 +65,8 @@ export function PrimaryButton({
   const contentTextStyle = [
     styles.buttonText,
     isOutline ? { color: tintColor } : { color: buttonTextColor },
-    (disabled || loading) && isOutline ? { color: disabledColor } : null, 
+    (disabled || loading) && isOutline ? { color: disabledBgColor } : null,
+    icon ? { marginLeft: Spacing.sm } : null,
     textStyle,
   ];
 
@@ -76,7 +81,10 @@ export function PrimaryButton({
       {loading ? (
         <ActivityIndicator color={isOutline ? tintColor : buttonTextColor} />
       ) : (
-        <Text style={contentTextStyle}>{title}</Text>
+        <View style={styles.contentContainer}>
+          {icon}
+          <Text style={contentTextStyle}>{title}</Text>
+        </View>
       )}
     </TouchableOpacity>
   );
@@ -99,5 +107,10 @@ const styles = StyleSheet.create({
   outlineButton: {
     backgroundColor: "transparent",
     borderWidth: 1.5,
+  },
+  contentContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -1,7 +1,7 @@
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { Padding, Spacing } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { ModulePage } from "@/interfaces/content";
+import { ModulePage } from "@/schema/contentSchema";
 import { AntDesign } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import React from "react";

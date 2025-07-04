@@ -1,271 +1,274 @@
-// Primárias (Marca)
-const COLOR_PRIMARY = '#A25CC7';         // Roxo principal
-const COLOR_PRIMARY_LIGHT = '#CBA6E8';   // Lilás claro
-const COLOR_PRIMARY_ACCENT = '#9D4EDD';  // Roxo vibrante para acentos
+// ====================================================================================
+// PASSO 1: DEFINIR A PALETA DE CORES BASE (RAW PALETTE)
+// Nossa única fonte da verdade para todos os valores de cor.
+// Nenhuma alteração necessária aqui, a paleta já contém as cores que queremos.
+// ====================================================================================
 
-// Neutros
-const COLOR_NEUTRAL_TEXT = '#1E1E1E';        // Texto principal (modo claro)
-const COLOR_NEUTRAL_SECONDARY = '#6B6B6B';   // Texto secundário
-const COLOR_NEUTRAL_ICON = '#929292';        // Ícones neutros (modo claro)
-const COLOR_NEUTRAL_BG_LIGHT = '#F4F2F8';    // Fundo claro com toque lilás
-const COLOR_WHITE = '#FFFFFF';
-
-// Acentos (status, categorias, feedback)
-const COLOR_PINK = '#E91E63';
-const COLOR_PINK_BG = '#FCE4EC';
-const COLOR_BLUE = '#03A9F4';
-const COLOR_BLUE_BG = '#E1F5FE';
-const COLOR_GREEN = '#4CAF50';
-const COLOR_GREEN_BG = '#E8F5E9';
-const COLOR_ORANGE = '#FF9800';
-const COLOR_ORANGE_BG = '#FFF3E0';
-
-// Tema Escuro
-const COLOR_DARK_TEXT = '#ECEDEE';
-const COLOR_DARK_TEXT_SECONDARY = '#B0B3B8';
-const COLOR_DARK_ICON = '#9BA1A6';
-const COLOR_DARK_BG = '#272727';
-const COLOR_DARK_CARD = '#202224';
-
-type ColorValueKeys<T> = { [K in keyof T]: T[K] extends string ? K : never }[keyof T];
-export type ThemeColorName = ColorValueKeys<ThemeColors>;
-export interface ThemeColors {
-  text: string;
-  textPrimary: string;
-  textSecondary: string;
-  textWhite: string;
-  buttonText: string;
-  background: string;
-  cardBackground: string;
-  borderColor: string;
-  tint: string;
-  tabActive: string;
-  tabIconSelected: string;
-  icon: string;
-  tabIconDefault: string;
-  accentPurple: string;
-  pink: string;
-  pinkBackground: string;
-  blue: string;
-  blueBackground: string;
-  green: string;
-  shadowColor: string,
-  greenBackground: string;
-  orange: string;
-  orangeBackground: string;
-  tabsBackground: string;
-  loadIndicator: string;
-  dangerText: string;
-  dangerBackground: string;
-  switchTrackFalse:string;
-  switchTrackTrue: string;
-  switchThumbDisabled:string;
-  gray: string;
-  authGradient: readonly [string, string, ...string[]];
-  cardGradient: readonly [string, string, ...string[]];
-  iconThemePurple: string;
-  iconThemePurpleBackground: string;
-  iconThemeGreen: string;
-  iconThemeGreenBackground: string;
-  iconThemeBlue: string;
-  iconThemeBlueBackground: string;
-  iconThemePink: string;
-  iconThemePinkBackground: string;
-  imagePlaceholder: string;
-  placeholderGradient: readonly [string, string, ...string[]];
-  cardBorder: string;
-    iconThemeOrange: string;
-  iconThemeOrangeBackground: string;
-  iconThemeTeal: string;
-  iconThemeTealBackground: string;
-  iconThemeCyan: string;
-  iconThemeCyanBackground: string;
-   blockquoteBackground: string;
-  blockquoteBorder: string;
-  noteBackground: string;
-  noteBorder: string;
-  noteText: string;
-  codeBlockBackground: string;
-  codeLangText: string; // Cor para o nome da linguagem (ex: JAVASCRIPT)
-  codeBodyText: string;
-    formulaBackground: string;
-  solvedInputBackground: string;
-  solvedInputBorder: string;
-  dotBackground: string;
-    difficultyEasy: string;
-  difficultyMedium: string;
-  difficultyHard: string;
-    correctBackground: string;
-  correctBorder: string;
-  correctText: string;
-  incorrectBackground: string;
-  incorrectBorder: string;
-  incorrectText: string;
-  progressBarBackground: string;
-}
-export const Colors: { light: ThemeColors; dark: ThemeColors }  = {
-  light: {   difficultyEasy: "#28A745",
-    difficultyMedium: "#FFC107",
-    difficultyHard: "#DC3545",
-    // Base
-      dotBackground: 'rgba(107, 70, 193, 0.5)',
-    correctBackground: '#D4EDDA',
-    correctBorder: '#28A745',
-    correctText: '#155724',
-    incorrectBackground: '#F8D7DA',
-    incorrectBorder: '#DC3545',
-    incorrectText: '#721C24',
-    progressBarBackground: '#E9ECEF',
-      formulaBackground: 'rgba(0,0,0,0.02)',
-  solvedInputBackground: 'rgba(107, 70, 193, 0.05)',
-  solvedInputBorder: 'rgba(107, 70, 193, 0.2)',
-    text: COLOR_NEUTRAL_TEXT,
-    textPrimary: COLOR_NEUTRAL_TEXT,
-    textSecondary: COLOR_NEUTRAL_SECONDARY,
-    textWhite: COLOR_WHITE,
-    buttonText: COLOR_WHITE,
- blockquoteBackground: 'rgba(107, 70, 193, 0.05)',
-    blockquoteBorder: '#9D4EDD', // accentPurple
-    noteBackground: 'rgba(255, 229, 100, 0.15)',
-    noteBorder: '#FFC107',
-    noteText: '#5B4E1B',
-    background: COLOR_NEUTRAL_BG_LIGHT,
-    cardBackground: COLOR_WHITE,
-    borderColor: COLOR_PRIMARY_LIGHT,
-    shadowColor: "#000",
-    cardBorder: 'rgba(0, 0, 0, 0.05)',
-    imagePlaceholder: '#F0F0F0',
-    placeholderGradient: ['#E3DFFf', '#EAD5E6'],
-    // Acento
-    tint: COLOR_PRIMARY,
-    tabActive: COLOR_PRIMARY_ACCENT,
-    tabIconSelected: COLOR_PRIMARY,
-    icon: COLOR_NEUTRAL_ICON,
-    tabIconDefault: COLOR_NEUTRAL_ICON,
-
-    // Status
-    accentPurple: COLOR_PRIMARY_ACCENT,
-    pink: COLOR_PINK,
-    pinkBackground: COLOR_PINK_BG,
-    blue: COLOR_BLUE,
-    blueBackground: COLOR_BLUE_BG,
-    green: COLOR_GREEN,
-    greenBackground: COLOR_GREEN_BG,
-    orange: COLOR_ORANGE,
-    orangeBackground: COLOR_ORANGE_BG,
-
-    // Diversos
-    tabsBackground: COLOR_WHITE,
-    loadIndicator: COLOR_PRIMARY,
-    gray: COLOR_NEUTRAL_SECONDARY,
-    authGradient: [COLOR_PRIMARY_LIGHT, '#E3C7F4', COLOR_WHITE, COLOR_WHITE] as const,
-    cardGradient: ['#8A4DBC', '#6A0DAD'] as const,
-    dangerText: '#D93A3A',
-    dangerBackground: '#FFE0E0',
-    switchTrackFalse: '#E9E9EA',
-    switchTrackTrue: '#C1B2F3',
-    switchThumbDisabled: '#f4f3f4',
-        iconThemePurple: '#9D4EDD',
-    iconThemePurpleBackground: '#F3E5F5', // Um roxo bem claro
-    iconThemeGreen: '#4CAF50',
-    iconThemeGreenBackground: '#E8F5E9',
-    iconThemeBlue: '#03A9F4',
-    iconThemeBlueBackground: '#E1F5FE',
-    iconThemePink: '#E91E63',
-    iconThemePinkBackground: '#FCE4EC',
-        iconThemeOrange: '#F57C00',
-    iconThemeOrangeBackground: '#FFF3E0',
-    iconThemeTeal: '#00796B',
-    iconThemeTealBackground: '#E0F2F1',
-    iconThemeCyan: '#0097A7',
-    iconThemeCyanBackground: '#E0F7FA',
- codeBlockBackground: '#1E1E1E',
-    codeLangText: '#9CDCFE',
-    codeBodyText: '#D4D4D4',
-    
+const RawPalette = {
+  // 1. Cores da Marca (Brand)
+  brand: {
+    primary: '#9D4EDD',      // Roxo principal, vibrante (para ações primárias, tint)
+    secondary: '#6A0DAD',     // Roxo mais escuro (para gradientes, textos de marca)
+    light: '#CBA6E8',  
+    bg_light: '#F3E5F5',      // Lilás claro (para fundos sutis, hovers, highlights)
   },
 
+  // 2. Cores de Feedback (Semânticas)
+  feedback: {
+    success_main: '#28A745',
+    success_bg_light: '#E8F5E9',
+    success_bg_dark: 'rgba(40, 167, 69, 0.25)',
+    success_text: '#155724',
+    success_text_dark: '#C8E6C9',
+
+    warning_main: '#FFC107',
+    warning_bg_light: '#FFFBEA',
+    warning_bg_dark: 'rgba(255, 193, 7, 0.25)',
+    warning_text: '#5B4E1B',
+    warning_text_dark: '#FDE68A',
+
+    danger_main: '#DC3545',
+    danger_bg_light: '#F8D7DA',
+    danger_bg_dark: 'rgba(220, 53, 69, 0.25)',
+    danger_text: '#721C24',
+    danger_text_dark: '#F5C6CB',
+
+    info_main: '#03A9F4', // Azul para Info
+    info_bg_light: '#E1F5FE',
+    info_bg_dark: 'rgba(3, 169, 244, 0.25)',
+  },
+  
+  // 3. Cores Neutras (para textos, fundos, bordas)
+  neutral: {
+    white: '#FFFFFF',
+    black: '#000000',
+    
+    // Tons para Modo Claro
+    light_bg: '#F4F2F8',            // Fundo principal da tela
+    light_card: '#FFFFFF',          // Fundo de cards/componentes
+    light_text: '#1E1E1E',          // Texto principal
+    light_text_secondary: '#6B6B6B',// Texto secundário
+    light_icon: '#929292',          // Ícones
+    light_border: 'rgba(0, 0, 0, 0.1)',
+    light_disabled_bg: '#E0E0E0',
+    light_disabled_text: '#BDBDBD',
+
+  
+    // Tons para Modo Escuro
+    dark_bg: '#1C1C1E',             // Fundo principal da tela
+    dark_card: '#2C2C2E',           // Fundo de cards/componentes
+    dark_text: '#ECEDEE',           // Texto principal
+    dark_text_secondary: '#B0B3B8', // Texto secundário
+    dark_icon: '#9BA1A6',           // Ícones
+    dark_border: 'rgba(255, 255, 255, 0.15)',    
+    dark_disabled_bg: '#424242',
+    dark_disabled_text: '#757575', 
+  },
+
+  // 4. Cores Estendidas (para categorias, gráficos, etc.)
+  extended: {
+    teal_main: '#009688',
+    teal_bg_light: '#E0F2F1',
+    teal_bg_dark: 'rgba(0, 150, 136, 0.25)',
+    
+    pink_main: '#E91E63',
+    pink_bg_light: '#FCE4EC',
+    pink_bg_dark: 'rgba(233, 30, 99, 0.25)',
+
+    cyan_main: '#00BCD4',
+    cyan_bg_light: '#E0F7FA',
+    cyan_bg_dark: 'rgba(0, 188, 212, 0.25)',
+  }
+};
+
+
+// ====================================================================================
+// PASSO 2: DEFINIR A TIPAGEM DO TEMA (INTERFACE)
+// Adicionadas as cores de categoria específicas.
+// ====================================================================================
+
+export type ThemeColorName = keyof ThemeColors;
+
+export interface ThemeColors {
+  // --- Core UI ---
+  background: string;
+  card: string;
+  text: string;
+  textSecondary: string;
+  textWhite: string;
+  icon: string;
+  border: string;
+  shadow: string;
+
+  // --- Brand & Accents ---
+  primary: string;
+  primaryBackground: string; // ADICIONADO
+  secondary: string;
+  secondaryBackground: string;
+  tint: string;
+  
+  // --- Components ---
+  buttonText: string;
+  loadIndicator: string;
+  progressBarBackground: string;
+  switchTrackFalse: string;
+  switchTrackTrue: string;
+  
+  // --- Feedback & Status ---
+  success: string;
+  successBackground: string;
+  successText: string;
+  warning: string;
+  warningBackground: string;
+  warningText: string;
+  danger: string;
+  dangerBackground: string;
+  dangerText: string;
+  info: string;
+  infoBackground: string;
+
+  // --- Estados ---
+  disabledBackground: string;
+  disabledText: string;
+
+  // --- ADICIONADO: Cores de Categoria para uso direto ---
+  green: string;
+  greenBackground: string;
+  blue: string;
+  blueBackground: string;
+  pink: string;
+  pinkBackground: string;
+
+  // --- Specific Use Cases ---
+  difficultyEasy: string;
+  difficultyMedium: string;
+  difficultyHard: string;
+  authGradient: readonly [string, string, string];
+}
+
+// ====================================================================================
+// PASSO 3: CRIAR OS TEMAS MAPEANDO A PALETA BASE
+// Adicionados os mapeamentos para as novas cores de categoria.
+// ====================================================================================
+
+export const Colors: { light: ThemeColors; dark: ThemeColors } = {
+  // -------------------------
+  // TEMA CLARO (LIGHT THEME)
+  // -------------------------
+  light: {
+    // --- Core UI ---
+    background: RawPalette.neutral.light_bg,
+    card: RawPalette.neutral.light_card,
+    text: RawPalette.neutral.light_text,
+    textSecondary: RawPalette.neutral.light_text_secondary,
+    textWhite: RawPalette.neutral.white,
+    icon: RawPalette.neutral.light_icon,
+    border: RawPalette.neutral.light_border,
+    shadow: RawPalette.neutral.black,
+
+    // --- Brand & Accents ---
+    primary: RawPalette.brand.primary,
+    primaryBackground: RawPalette.brand.bg_light, // ADICIONADO
+    secondary: RawPalette.extended.teal_main,
+    secondaryBackground: RawPalette.extended.teal_bg_light,
+    tint: RawPalette.brand.primary,
+    
+    // --- Components ---
+    buttonText: RawPalette.neutral.white,
+    loadIndicator: RawPalette.brand.primary,
+    progressBarBackground: RawPalette.neutral.light_border,
+    switchTrackFalse: '#E9E9EA',
+    switchTrackTrue: RawPalette.brand.light,
+
+    // --- Feedback & Status ---
+    success: RawPalette.feedback.success_main,
+    successBackground: RawPalette.feedback.success_bg_light,
+    successText: RawPalette.feedback.success_text,
+    warning: RawPalette.feedback.warning_main,
+    warningBackground: RawPalette.feedback.warning_bg_light,
+    warningText: RawPalette.feedback.warning_text,
+    danger: RawPalette.feedback.danger_main,
+    dangerBackground: RawPalette.feedback.danger_bg_light,
+    dangerText: RawPalette.feedback.danger_text,
+    info: RawPalette.feedback.info_main, // Mantido como Azul
+    infoBackground: RawPalette.feedback.info_bg_light,
+    
+    // --- Estados ---
+    disabledBackground: RawPalette.neutral.light_disabled_bg,
+    disabledText: RawPalette.neutral.light_disabled_text,
+
+    // --- ADICIONADO: Mapeamento das Cores de Categoria ---
+    green: RawPalette.feedback.success_main,
+    greenBackground: RawPalette.feedback.success_bg_light,
+    blue: RawPalette.feedback.info_main,
+    blueBackground: RawPalette.feedback.info_bg_light,
+    pink: RawPalette.extended.pink_main,
+    pinkBackground: RawPalette.extended.pink_bg_light,
+
+    // --- Specific Use Cases ---
+    difficultyEasy: RawPalette.feedback.success_main,
+    difficultyMedium: RawPalette.feedback.warning_main,
+    difficultyHard: RawPalette.feedback.danger_main,
+    authGradient: [RawPalette.brand.light, '#E3C7F4', RawPalette.neutral.light_bg],
+  },
+  
+  // -------------------------
+  // TEMA ESCURO (DARK THEME)
+  // -------------------------
   dark: {
-    // Ba
-     correctBackground: 'rgba(40, 167, 69, 0.2)',
-    correctBorder: '#28A745',
-    correctText: '#C8E6C9',
-    incorrectBackground: 'rgba(220, 53, 69, 0.2)',
-    incorrectBorder: '#DC3545',
-    incorrectText: '#F5C6CB',
-    progressBarBackground: '#495057',
-      
-    difficultyEasy: "#28A745",
-    difficultyMedium: "#FFC107",
-    difficultyHard: "#DC3545",
+    // --- Core UI ---
+    background: RawPalette.neutral.dark_bg,
+    card: RawPalette.neutral.dark_card,
+    text: RawPalette.neutral.dark_text,
+    textSecondary: RawPalette.neutral.dark_text_secondary,
+    textWhite: RawPalette.neutral.white,
+    icon: RawPalette.neutral.dark_icon,
+    border: RawPalette.neutral.dark_border,
+    shadow: RawPalette.neutral.black,
 
-      dotBackground: 'rgba(192, 132, 252, 0.4)',
-
-     formulaBackground: 'rgba(255,255,255,0.05)',
-  solvedInputBackground: 'rgba(192, 132, 252, 0.1)',
-  solvedInputBorder: 'rgba(192, 132, 252, 0.3)',
-     codeBlockBackground: '#1E1E1E',
-    codeLangText: '#9CDCFE',
-    codeBodyText: '#D4D4D4',
-    text: COLOR_DARK_TEXT,
-    textPrimary: COLOR_DARK_TEXT,
-    textSecondary: COLOR_DARK_TEXT_SECONDARY,
-    textWhite: COLOR_WHITE,
-    buttonText: COLOR_WHITE,
-blockquoteBackground: 'rgba(192, 132, 252, 0.1)',
-    blockquoteBorder: '#C084FC', // accentPurple mais claro
-    noteBackground: 'rgba(250, 204, 21, 0.15)',
-    noteBorder: '#FACC15',
-    noteText: '#FDE68A',
-    background: COLOR_DARK_BG,
-    cardBackground: COLOR_DARK_CARD,
-    borderColor: COLOR_DARK_TEXT_SECONDARY,
-    shadowColor: '#ffffff',
-    cardBorder: 'rgba(255, 255, 255, 0.1)',
-    imagePlaceholder: '#333333',
-    placeholderGradient: ['#3E2A4C', '#4C2A40'],
-    // Acento
-    tint: COLOR_PRIMARY, // Ajustável para mais brilho se necessário
-    tabActive: COLOR_PRIMARY_ACCENT,
-    tabIconSelected: COLOR_PRIMARY_ACCENT,
-    icon: COLOR_DARK_ICON,
-    tabIconDefault: COLOR_DARK_ICON,
-
-    // Status (em fundo escuro, usar fundo escuro para manter contraste)
-    accentPurple: COLOR_PRIMARY_ACCENT,
-    pink: COLOR_PINK,
-    pinkBackground: COLOR_DARK_CARD,
-    blue: COLOR_BLUE,
-    blueBackground: COLOR_DARK_CARD,
-    green: COLOR_GREEN,
-    greenBackground: COLOR_DARK_CARD,
-    orange: COLOR_ORANGE,
-    orangeBackground: COLOR_DARK_CARD,
-
-    // Diversos
-    loadIndicator: COLOR_PRIMARY_ACCENT,
-    gray: COLOR_DARK_TEXT_SECONDARY,
-    authGradient: ['rgba(85, 7, 85, 0.98)', 'rgb(61, 3, 53)', COLOR_DARK_BG, COLOR_DARK_BG] as const,
-    tabsBackground: COLOR_DARK_CARD,
-    cardGradient: ['#4A0E69', '#3B0A5A'] as const,
-    dangerText: '#FF8A8A',
-    dangerBackground: '#4B1F1F',
+    // --- Brand & Accents ---
+    primary: RawPalette.brand.primary,
+    primaryBackground: 'rgba(192, 132, 252, 0.2)', // ADICIONADO
+    secondary: RawPalette.extended.teal_main,
+    secondaryBackground: RawPalette.extended.teal_bg_dark,
+    tint: RawPalette.brand.light,
+    
+    // --- Components ---
+    buttonText: RawPalette.neutral.white,
+    loadIndicator: RawPalette.brand.light,
+    progressBarBackground: 'rgba(255, 255, 255, 0.2)',
     switchTrackFalse: '#3E3E3E',
-    switchTrackTrue: '#5B41A5',
-    switchThumbDisabled: '#a9a9a9',
-    iconThemePurple: '#C482F7', 
-    iconThemePurpleBackground: '#4A235A', 
-    iconThemeGreen: '#81C784',
-    iconThemeGreenBackground: '#1B5E20',
-    iconThemeBlue: '#4FC3F7',
-    iconThemeBlueBackground: '#01579B',
-    iconThemePink: '#F48FB1',
-    iconThemePinkBackground: '#880E4F',
-     iconThemeOrange: '#FFA726',
-    iconThemeOrangeBackground: '#5D4037',
-    iconThemeTeal: '#4DB6AC',
-    iconThemeTealBackground: '#004D40',
-    iconThemeCyan: '#4DD0E1',
-    iconThemeCyanBackground: '#006064',
+    switchTrackTrue: RawPalette.brand.secondary,
+    
+    // --- Feedback & Status ---
+    success: RawPalette.feedback.success_main,
+    successBackground: RawPalette.feedback.success_bg_dark,
+    successText: RawPalette.feedback.success_text_dark,
+    warning: RawPalette.feedback.warning_main,
+    warningBackground: RawPalette.feedback.warning_bg_dark,
+    warningText: RawPalette.feedback.warning_text_dark,
+    danger: RawPalette.feedback.danger_main,
+    dangerBackground: RawPalette.feedback.danger_bg_dark,
+    dangerText: RawPalette.feedback.danger_text_dark,
+    info: RawPalette.feedback.info_main,
+    infoBackground: RawPalette.feedback.info_bg_dark,
+    
+    // --- Estados ---
+    disabledBackground: RawPalette.neutral.dark_disabled_bg,
+    disabledText: RawPalette.neutral.dark_disabled_text,
+    
+    // --- ADICIONADO: Mapeamento das Cores de Categoria ---
+    green: RawPalette.feedback.success_main,
+    greenBackground: RawPalette.feedback.success_bg_dark,
+    blue: RawPalette.feedback.info_main,
+    blueBackground: RawPalette.feedback.info_bg_dark,
+    pink: RawPalette.extended.pink_main,
+    pinkBackground: RawPalette.extended.pink_bg_dark,
+
+    // --- Specific Use Cases ---
+    difficultyEasy: RawPalette.feedback.success_main,
+    difficultyMedium: RawPalette.feedback.warning_main,
+    difficultyHard: RawPalette.feedback.danger_main,
+    authGradient: [RawPalette.brand.secondary, '#3D0335', RawPalette.neutral.dark_bg],
   },
 };

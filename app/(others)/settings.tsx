@@ -2,18 +2,17 @@ import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { OptionButton } from "@/components/common/OptionButton";
 import { SettingsSwitch } from "@/components/common/SettingsSwitch";
-import BackButton from "@/components/ui/BackButton";
+import TitleSection from "@/components/common/TitleSection";
+import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
-import { useTheme } from "@/context/ThemeContext";
-import { useUserStore } from "@/context/userStore";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { useTheme } from "@/state/ThemeContext";
+import { useUserStore } from "@/state/userStore";
 import { openEmail } from "@/utils/linkingUtils";
 import { getSchemeLabel } from "@/utils/themeUtils";
 import * as KeepAwake from "expo-keep-awake";
@@ -55,6 +54,7 @@ export default function GeneralSettingsScreen() {
       { text: "Cancelar", style: "cancel" },
       {
         text: "Sim",
+        style: "default",
         onPress: async () => {
           await userActions.resetName();
           router.replace("./(auth)/enter-name");
@@ -81,108 +81,87 @@ export default function GeneralSettingsScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView>
-        <BackButton title="Configurações" />
+    <ScreenLayout>
+      <TitleSection
+        title="Configurações Gerais"
+        subtitle="Personalize a aparência e funcionalidades do aplicativo."
+      />
+      <OptionButton
+        label="Tema do Aplicativo"
+        onPress={handleThemeChange}
+        icon={<Feather name="sun" size={20} color={useThemeValue("primary")} />}
+        info="Altere a aparência do aplicativo entre o modo claro e escuro."
+        value={getSchemeLabel(scheme)}
+      />
 
-        <ThemedText style={[styles.sectionTitle]}>Aparência</ThemedText>
-        <OptionButton
-          label="Tema do Aplicativo"
-          onPress={handleThemeChange}
-          icon={<Feather name="sun" size={20} color={useThemeValue("icon")} />}
-          info="Altere a aparência do aplicativo entre o modo claro e escuro."
-          value={getSchemeLabel(scheme)}
-        />
+      <ThemedText style={styles.sectionTitle}>Funcionalidades</ThemedText>
+      <SettingsSwitch
+        label="Manter a Tela Ativa"
+        isEnabled={isKeepScreenOn}
+        onToggleSwitch={setIsKeepScreenOn}
+        icon={
+          <Feather name="monitor" size={20} color={useThemeValue("primary")} />
+        }
+        info="Impede que a tela do seu dispositivo se apague automaticamente. Útil durante medições."
+      />
+      <SettingsSwitch
+        label="Notificações"
+        isEnabled={notificationsEnabled}
+        onToggleSwitch={toggleNotifications}
+        icon={
+          <Feather name="bell" size={20} color={useThemeValue("primary")} />
+        }
+        info="Receba um lembrete diário para realizar suas análises e estudos."
+      />
 
-        <ThemedText style={styles.sectionTitle}>Funcionalidades</ThemedText>
-        <SettingsSwitch
-          label="Manter a Tela Ativa"
-          isEnabled={isKeepScreenOn}
-          onToggleSwitch={setIsKeepScreenOn}
-          icon={
-            <Feather
-              name="monitor"
-              size={20}
-              color={useThemeValue("accentPurple")}
-            />
-          }
-          info="Impede que a tela do seu dispositivo se apague automaticamente. Útil durante medições."
-        />
-        <SettingsSwitch
-          label="Notificações"
-          isEnabled={notificationsEnabled}
-          onToggleSwitch={toggleNotifications}
-          icon={
-            <Feather
-              name="bell"
-              size={20}
-              color={useThemeValue("accentPurple")}
-            />
-          }
-          info="Receba um lembrete diário para realizar suas análises e estudos."
-        />
+      <ThemedText style={styles.sectionTitle}>Conta</ThemedText>
+      <OptionButton
+        label="Trocar de nome"
+        onPress={handleChangeName}
+        icon={
+          <Feather name="edit-2" size={20} color={useThemeValue("primary")} />
+        }
+        info="Altere o nome de usuário associado a este dispositivo."
+      />
+      <OptionButton
+        label="Deletar dados da conta"
+        onPress={handleDeleteData}
+        variant="danger"
+        icon={
+          <Feather
+            name="trash-2"
+            size={20}
+            color={useThemeValue("dangerText")}
+          />
+        }
+      />
 
-        <ThemedText style={styles.sectionTitle}>Conta</ThemedText>
-        <OptionButton
-          label="Trocar de nome"
-          onPress={handleChangeName}
-          icon={
-            <Feather
-              name="edit-2"
-              size={20}
-              color={useThemeValue("accentPurple")}
-            />
-          }
-          info="Altere o nome de usuário associado a este dispositivo."
-        />
-        <OptionButton
-          label="Deletar dados da conta"
-          onPress={handleDeleteData}
-          variant="danger"
-          icon={
-            <Feather
-              name="trash-2"
-              size={20}
-              color={useThemeValue("dangerText")}
-            />
-          }
-        />
-
-        <ThemedText style={styles.sectionTitle}>Sobre</ThemedText>
-        <OptionButton
-          label="Versão do App"
-          onPress={() => Alert.alert("Versão do App", "v1.0.0")}
-          icon={
-            <Feather
-              name="info"
-              size={20}
-              color={useThemeValue("accentPurple")}
-            />
-          }
-        />
-        <OptionButton
-          label="Fale Conosco / Reportar Bug"
-          onPress={() =>
-            openEmail(
-              "ifotom.ifsp@gmail.com",
-              "Dúvida sobre o aplicativo",
-              "Olá, tenho uma dúvida sobre..."
-            )
-          }
-          icon={
-            <Feather
-              name="mail"
-              size={20}
-              color={useThemeValue("accentPurple")}
-            />
-          }
-        />
-      </SafeAreaView>
-    </ThemedView>
+      <ThemedText style={styles.sectionTitle}>Sobre</ThemedText>
+      <OptionButton
+        label="Versão do App"
+        onPress={() => Alert.alert("Versão do App", "v1.0.0")}
+        icon={
+          <Feather name="info" size={20} color={useThemeValue("primary")} />
+        }
+      />
+      <OptionButton
+        label="Fale Conosco / Reportar Bug"
+        onPress={() =>
+          openEmail(
+            "ifotom.ifsp@gmail.com",
+            "Dúvida sobre o aplicativo",
+            "Olá, tenho uma dúvida sobre..."
+          )
+        }
+        icon={
+          <Feather name="mail" size={20} color={useThemeValue("primary")} />
+        }
+      />
+    </ScreenLayout>
   );
 }
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingHorizontal: Padding.md, paddingTop: Padding.md },
+  container: { flex: 1, paddingHorizontal: Padding.md },
   sectionTitle: {
     fontSize: FontSize.sm,
     fontWeight: FontWeight.semiBold,

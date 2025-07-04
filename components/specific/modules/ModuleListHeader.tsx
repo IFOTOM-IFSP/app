@@ -1,9 +1,9 @@
-import BackButton from "@/components/ui/BackButton";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { FontSize, FontWeight, Padding } from "@/constants/Styles";
+import TitleSection from "@/components/common/TitleSection";
+import { ThemedView } from "@/components/ui/ThemedView";
+import { Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 interface ModuleListHeaderProps {
   title?: string;
@@ -11,35 +11,23 @@ interface ModuleListHeaderProps {
 
 export default function ModuleListHeader({ title }: ModuleListHeaderProps) {
   const backgroundColor = useThemeValue("background");
-  const shadowColor = useThemeValue("shadowColor");
+  const shadowColor = useThemeValue("shadow");
   const tintColor = useThemeValue("tint");
 
   return (
-    <View
+    <ThemedView
       style={[
         styles.container,
-        { backgroundColor, shadowColor, borderBottomColor: "transparent" },
+        { shadowColor, borderBottomColor: "transparent" },
       ]}>
-      <BackButton />
-      <View style={styles.contentWrapper}>
-        {title && (
-          <ThemedText style={[styles.title, { color: tintColor }]}>
-            {" "}
-            {title}
-          </ThemedText>
-        )}
-      </View>
-    </View>
+      <TitleSection title={title || "Módulos de Aprendizado"} />
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingTop: Platform.OS === "ios" ? Padding.xxxxl : Padding.xxxxl,
-    paddingBottom: Padding.md,
-    paddingHorizontal: Padding.xl,
+    paddingTop: Platform.OS === "ios" ? Padding.md : Padding.md,
     shadowOffset: {
       width: 0,
       height: 1,
@@ -48,15 +36,5 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     elevation: 2,
     borderBottomWidth: 1,
-  },
-  contentWrapper: {
-    flex: 1,
-    paddingHorizontal: Padding.sm,
-    alignItems: "center",
-    flexDirection: "row",
-  },
-  title: {
-    fontSize: FontSize.xxl,
-    fontWeight: FontWeight.bold,
   },
 });

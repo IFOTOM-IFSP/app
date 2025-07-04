@@ -18,10 +18,10 @@ type ToggleExplanationProps = { title?: string; items: Item[] };
 export function ToggleExplanation({ title, items }: ToggleExplanationProps) {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const accentColor = useThemeValue("accentPurple");
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
-  const primaryText = useThemeValue("textPrimary");
+  const accentColor = useThemeValue("primary");
+  const cardBg = useThemeValue("card");
+  const borderColor = useThemeValue("border");
+  const primaryText = useThemeValue("text");
   const buttonText = useThemeValue("buttonText");
   const secondaryText = useThemeValue("textSecondary");
 

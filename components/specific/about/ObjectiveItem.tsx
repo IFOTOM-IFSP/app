@@ -10,7 +10,7 @@ interface ObjectiveItemProps {
 }
 
 export function ObjectiveItem({ text }: ObjectiveItemProps) {
-  const tintColor = useThemeValue("tint");
+  const tintColor = useThemeValue("primary");
 
   return (
     <View style={styles.objectiveItem}>

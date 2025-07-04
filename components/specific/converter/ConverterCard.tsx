@@ -17,10 +17,10 @@ interface ConverterCardProps {
 }
 
 export function ConverterCard({ title, children }: ConverterCardProps) {
-  const cardBg = useThemeValue("cardBackground");
-  const primaryText = useThemeValue("textPrimary");
-  const borderColor = useThemeValue("borderColor");
-  const shadowColor = useThemeValue("shadowColor");
+  const cardBg = useThemeValue("card");
+  const primaryText = useThemeValue("text");
+  const borderColor = useThemeValue("border");
+  const shadowColor = useThemeValue("shadow");
 
   return (
     <ThemedView
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 10,
-    elevation: 3,
+    elevation: 1,
   },
   cardTitle: {
     fontSize: FontSize.xl,

@@ -27,12 +27,12 @@ export function ImpactoSetorialChart({
   unit,
   description,
 }: ImpactoSetorialChartProps) {
-  const cardBg = useThemeValue("cardBackground");
-  const borderColor = useThemeValue("borderColor");
+  const cardBg = useThemeValue("card");
+  const borderColor = useThemeValue("border");
   const textSecondary = useThemeValue("textSecondary");
-  const textPrimary = useThemeValue("textPrimary");
-  const barBg = useThemeValue("borderColor");
-  const barColor = useThemeValue("accentPurple");
+  const textPrimary = useThemeValue("text");
+  const barBg = useThemeValue("border");
+  const barColor = useThemeValue("primary");
   const barTextColor = useThemeValue("buttonText");
 
   return (

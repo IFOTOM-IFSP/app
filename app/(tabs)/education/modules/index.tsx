@@ -1,6 +1,6 @@
+import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import AnimatedListItem from "@/components/specific/modules/AnimatedListItem";
 import HeaderIndex from "@/components/specific/modules/ModuleListHeader";
-import { ThemedView } from "@/components/ui/ThemedView";
 import { Padding } from "@/constants/Styles";
 import { MODULES_DATA } from "@/data/modulesData";
 import { default as React, useRef } from "react";
@@ -10,7 +10,7 @@ export default function ModuleListScreen() {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   return (
-    <ThemedView style={styles.container}>
+    <ScreenLayout>
       <HeaderIndex title="Módulos de Aprendizado" />
 
       <Animated.FlatList
@@ -26,16 +26,13 @@ export default function ModuleListScreen() {
         )}
         scrollEventThrottle={16}
       />
-    </ThemedView>
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   flatListContent: {
-    paddingHorizontal: Padding.xl,
+    paddingHorizontal: Padding.md,
     paddingTop: Padding.sm,
     paddingBottom: Padding.xl,
   },

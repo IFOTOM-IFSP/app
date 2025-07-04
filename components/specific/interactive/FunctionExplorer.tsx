@@ -49,13 +49,13 @@ export function FunctionExplorer({
   const [sliderValue, setSliderValue] = useState(input.min);
   const outputValue = output.calculate(sliderValue);
 
-  const primaryText = useThemeValue("textPrimary");
+  const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
   const pinkColor = useThemeValue("pink");
-  const borderColor = useThemeValue("borderColor");
-  const cardBg = useThemeValue("cardBackground");
-  const outputBg = useThemeValue("blockquoteBackground");
+  const borderColor = useThemeValue("border");
+  const cardBg = useThemeValue("card");
+  const outputBg = useThemeValue("card");
   const chartLineColor = useThemeValue("tint");
 
   const chartData = useMemo(() => {
