@@ -1,14 +1,17 @@
 import { AntDesign, FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
 import { UsefulSections } from "@/components/common/UsefulSections";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
+import { HistoryToggleList } from "@/components/specific/home/HistoryToggleList";
 import { HomeHeader } from "@/components/specific/home/HomeHeader";
 import { StartAnalysisCard } from "@/components/specific/home/StartAnalysisCard";
 import { Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
+
+import { useNotesStore } from "@/state/notesStore";
 import { useUserStore } from "@/state/userStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -53,10 +56,25 @@ export default function HomeScreen() {
   const tintColor = useThemeValue("tint");
   const usefulSectionsData = getUsefulSectionsData(router);
 
-  const handleStartAnalysis = () => {
-    console.log("Botão SIM para iniciar análise clicado");
-    router.push("/analysis");
-  };
+  // const {
+  //   notes,
+  //   actions: noteActions,
+  //   isLoading: notesLoading,
+  // } = useNotesStore();
+  // // const {
+  // //   analyses,
+  // //   actions: analysisActions,
+  // //   isLoading: analysesLoading,
+  // // } = useAnalysisStore();
+
+  // useEffect(() => {
+  //   noteActions.init();
+  //   analysisActions.fetchAllAnalyses();
+  // }, [analysisActions, noteActions]);
+  // const handleStartAnalysis = () => {
+  //   console.log("Botão SIM para iniciar análise clicado");
+  //   router.push("/analysis/select-type");
+  // };
 
   const handleSettingsPress = () => {
     router.push("/settings");
@@ -79,8 +97,13 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
         <HomeHeader userName={userName} onSettingsPress={handleSettingsPress} />
-        <StartAnalysisCard onPress={handleStartAnalysis} />
+        {/* <StartAnalysisCard onPress={handleStartAnalysis} /> */}
         <UsefulSections title={true} sections={usefulSectionsData} />
+        {/* <HistoryToggleList
+          notes={notes}
+          analyses={analyses}
+          isLoading={notesLoading || analysesLoading}
+        /> */}
       </ScrollView>
     </ScreenLayout>
   );
@@ -96,7 +119,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: Padding.md,
   },
   scrollContent: {
     paddingBottom: Padding.lg,

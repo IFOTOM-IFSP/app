@@ -1,12 +1,7 @@
-export type GlossaryItem = {
-  id: string;
-  term: string;
-  definition: string;
-  theme: string; // Nova propriedade para o tema
-};
+import { GlossaryItem } from "@/models";
+
 
 export const glossaryData: GlossaryItem[] = [
-  // Termos existentes
   {
     id: "1",
     term: "Absorbância (A)",
@@ -218,3 +213,5 @@ export const glossaryData: GlossaryItem[] = [
     theme: "Instrumentação",
   },
 ];
+export { GlossaryItem };
+

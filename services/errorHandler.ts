@@ -49,7 +49,6 @@ export class ImageProcessingError extends AppError {
     }
 }
 
-
 export const handleError = (
   error: unknown,
   context: string = 'unknown',

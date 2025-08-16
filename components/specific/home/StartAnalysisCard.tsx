@@ -4,7 +4,6 @@ import {
   FontWeight,
   Margin,
   Padding,
-  Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,7 +15,7 @@ interface StartAnalysisCardProps {
 }
 
 export function StartAnalysisCard({ onPress }: StartAnalysisCardProps) {
-  const gradientColors = useThemeValue("authGradient");
+  const gradientColors = useThemeValue("cardGradient");
   const buttonBackgroundColor = useThemeValue("primary");
   const shadowColor = useThemeValue("shadow");
   const featuredCardTextColor = useThemeValue("textWhite");
@@ -51,14 +50,7 @@ const styles = StyleSheet.create({
     height: 200,
     marginBottom: Margin.xl,
     borderRadius: BorderRadius.lg,
-    elevation: 2,
-    shadowOffset: {
-      width: Spacing.none,
-      height: 2,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: Spacing.xs,
-    borderWidth: 0.1,
+    borderWidth: 0.5,
   },
   cardGradient: {
     flex: 1,

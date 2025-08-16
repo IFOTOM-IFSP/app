@@ -1,7 +1,7 @@
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
 import { Padding, Spacing } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { ModulePage } from "@/schema/contentSchema";
+import { ModulePage } from "@/models";
 import { AntDesign } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import React from "react";
@@ -30,7 +30,7 @@ export function ModulePageNavigation({
   return (
     <View style={styles.navigationContainer}>
       {prevPage ? (
-        <PrimaryButton
+        <Button
           title="Anterior"
           onPress={() => router.back()}
           variant="outline"
@@ -48,15 +48,11 @@ export function ModulePageNavigation({
             params: { moduleId, page: nextPage.id },
           }}
           asChild>
-          <PrimaryButton
-            title="Próxima"
-            onPress={() => {}}
-            style={styles.navButton}
-          />
+          <Button title="Próxima" onPress={() => {}} style={styles.navButton} />
         </Link>
       ) : (
         <Link replace href={`/(tabs)/education/modules/${moduleId}`} asChild>
-          <PrimaryButton
+          <Button
             title="Finalizar Módulo 🎉"
             onPress={() => {}}
             style={styles.navButton}

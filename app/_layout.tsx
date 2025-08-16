@@ -3,16 +3,17 @@ import { ThemedView } from "@/components/ui/ThemedView";
 import { FontSize, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { initializeNotifications } from "@/services/notificationService";
+import { initializeSettings } from "@/state/settingsStore";
 import { ThemeProvider } from "@/state/ThemeContext";
 import { useUserStore } from "@/state/userStore";
+import * as Sentry from "@sentry/react-native";
 import { Slot, SplashScreen, usePathname, useRouter } from "expo-router";
 import LottieView from "lottie-react-native";
-import React, { JSX, useEffect } from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import * as Sentry from '@sentry/react-native';
 
 Sentry.init({
-  dsn: 'https://edcb99ad8ca7e66368e6d1f07687a130@o4509852568584192.ingest.de.sentry.io/4509852571074640',
+  dsn: "https://edcb99ad8ca7e66368e6d1f07687a130@o4509852568584192.ingest.de.sentry.io/4509852571074640",
 
   // Adds more context data to events (IP address, cookies, user, etc.)
   // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
@@ -21,7 +22,10 @@ Sentry.init({
   // Configure Session Replay
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1,
-  integrations: [Sentry.mobileReplayIntegration(), Sentry.feedbackIntegration()],
+  integrations: [
+    Sentry.mobileReplayIntegration(),
+    Sentry.feedbackIntegration(),
+  ],
 
   // uncomment the line below to enable Spotlight (https://spotlightjs.com)
   // spotlight: __DEV__,
@@ -62,6 +66,7 @@ export default Sentry.wrap(function RootLayout() {
     );
     init();
     initializeNotifications();
+    initializeSettings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

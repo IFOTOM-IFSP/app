@@ -56,7 +56,7 @@ export default function GeneralSettingsScreen() {
         text: "Sim",
         style: "default",
         onPress: async () => {
-          await userActions.resetName();
+          await userActions.resetUser();
           router.replace("./(auth)/enter-name");
         },
       },

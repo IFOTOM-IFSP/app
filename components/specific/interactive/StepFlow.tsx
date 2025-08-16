@@ -14,7 +14,6 @@ type Step = { label: string; title: string; description: string };
 type StepFlowProps = { title?: string; description?: string; steps: Step[] };
 
 export function StepFlow({ title, description, steps }: StepFlowProps) {
-  // 1. Cores dinâmicas do tema
   const cardBg = useThemeValue("card");
   const primaryText = useThemeValue("text");
   const secondaryText = useThemeValue("textSecondary");

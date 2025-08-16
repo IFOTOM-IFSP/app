@@ -13,7 +13,7 @@ import { ThemedText } from "./ThemedText";
 export type ThemedInputProps = TextInputProps & {
   variant?: "default" | "solved" | "error";
   style?: StyleProp<ViewStyle>;
-  label?: string; // Optional label prop for future use
+  label?: string; 
 };
 
 export function ThemedInput({

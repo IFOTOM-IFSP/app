@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { PageListItem } from "@/components/specific/modules/PageListItem";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
 import { ThemedText } from "@/components/ui/ThemedText";
 import {
   BorderRadius,
@@ -45,7 +45,7 @@ export default function ModuleDetailScreen() {
           style={{ fontSize: FontSize.xl }}
         />
 
-        {module.pages.map((page, index) => (
+        {module.pages.map((page: any, index: any) => (
           <PageListItem
             key={page.id}
             page={page}
@@ -61,7 +61,7 @@ export default function ModuleDetailScreen() {
               params: { moduleId: module.id, page: firstPageId },
             }}
             asChild>
-            <PrimaryButton title="Começar Módulo" onPress={() => {}} />
+            <Button title="Começar Módulo" onPress={() => {}} />
           </Link>
 
           {nextModule && (
@@ -71,7 +71,7 @@ export default function ModuleDetailScreen() {
                 params: { moduleId: nextModule.id },
               }}
               asChild>
-              <PrimaryButton
+              <Button
                 title={`Próximo Módulo: ${nextModule.title}`}
                 variant="outline"
                 onPress={() => {}}

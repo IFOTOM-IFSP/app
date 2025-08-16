@@ -1,43 +1,42 @@
-// Localização: src/components/ui/SelectionInput.tsx
-
 import { ThemedText } from "@/components/ui/ThemedText";
 import { BorderRadius, FontSize, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Icon } from "./icon/Icon";
 
-interface Option {
+interface Option<T> {
   label: string;
-  value: any;
+  value: T;
 }
 
-interface SelectionInputProps {
+interface SelectionInputProps<T> {
   label: string;
-  options: Option[];
-  selectedValue: any;
-  onSelect: (value: any) => void;
+  options: Option<T>[];
+  selectedValue: T | undefined; 
+  onSelect: (value: T) => void;
+  placeholder?: string;
 }
 
-export function SelectionInput({
+export function SelectionInput<T>({
   label,
   options,
   selectedValue,
   onSelect,
-}: SelectionInputProps) {
+  placeholder = "Selecione...",
+}: SelectionInputProps<T>) {
   const borderColor = useThemeValue("border");
   const textColor = useThemeValue("text");
   const secondaryTextColor = useThemeValue("textSecondary");
 
   const selectedLabel =
-    options.find((opt) => opt.value === selectedValue)?.label || "Selecione...";
+    options.find((opt) => opt.value === selectedValue)?.label || placeholder;
 
   const showOptions = () => {
     Alert.alert(
-      label, 
-      "Escolha uma das opções abaixo:", 
+      label,
+      "Escolha uma das opções abaixo:",
       [
-        // Mapeia as opções para os botões do alerta
         ...options.map((option) => ({
           text: option.label,
           onPress: () => onSelect(option.value),
@@ -61,7 +60,12 @@ export function SelectionInput({
         <ThemedText style={[styles.buttonText, { color: textColor }]}>
           {selectedLabel}
         </ThemedText>
-        <Feather name="chevron-down" size={20} color={secondaryTextColor} />
+        <Icon
+          library="Feather"
+          name="chevron-down"
+          size={20}
+          color={secondaryTextColor}
+        />
       </TouchableOpacity>
     </View>
   );

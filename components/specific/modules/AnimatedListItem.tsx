@@ -1,7 +1,7 @@
 import ContentCard, {
   CONTENT_CARD_HEIGHT,
 } from "@/components/common/ContentCard";
-import { Module } from "@/schema/contentSchema";
+import { Module } from "@/models";
 import { Link } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import { Animated, useWindowDimensions } from "react-native";

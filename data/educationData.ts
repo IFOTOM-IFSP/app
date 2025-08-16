@@ -1,16 +1,5 @@
-import { ThemeColorName } from '@/constants/Colors';
-import { Ionicons } from '@expo/vector-icons';
+import { HubItem } from "@/models";
 
-export interface HubItem {
-  id: string;
-  title: string;
-  subtitle: string;
-  iconName: keyof typeof Ionicons.glyphMap;
-  iconColorName: ThemeColorName;
-  iconBackgroundColorName: ThemeColorName;
-  route: string;
-  actionText?: string;
-}
 
 export const EDUCATION_HUB_ITEMS: HubItem[] = [
   {
@@ -54,3 +43,5 @@ export const EDUCATION_HUB_ITEMS: HubItem[] = [
     actionText: 'Explorar',
   },
 ];
+
+export { HubItem };

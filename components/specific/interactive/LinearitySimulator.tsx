@@ -1,5 +1,5 @@
 import { ChartContainer } from "@/components/specific/interactive/ChartContainer";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
 import { ThemedText } from "@/components/ui/ThemedText";
 import {
   BorderRadius,
@@ -124,12 +124,12 @@ export function LinearitySimulator({
           </ThemedText>
         </View>
         <View style={styles.buttonContainer}>
-          <PrimaryButton
+          <Button
             title="Adicionar Outlier"
             onPress={addOutlier}
             style={{ flex: 1 }}
           />
-          <PrimaryButton
+          <Button
             title="Resetar"
             onPress={reset}
             variant="outline"

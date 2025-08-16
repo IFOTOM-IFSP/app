@@ -1,5 +1,6 @@
 import { InteractiveCard } from "@/components/common/InteractiveCard";
-import { IconContainer } from "@/components/ui/IconContainer";
+import { Icon } from "@/components/ui/icon/Icon";
+import { IconContainer } from "@/components/ui/icon/IconContainer";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
@@ -12,6 +13,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 
+// O tipo do nome do ícone continua o mesmo
 type IconName = React.ComponentProps<typeof FontAwesome5>["name"];
 
 type CardData = {
@@ -29,16 +31,21 @@ interface InfoCardsProps {
 function InfoCard({ title, description, icon }: CardData) {
   const accentColor = useThemeValue("primary");
   const iconBgColor = useThemeValue("primaryBackground");
-
   const { width: screenWidth } = useWindowDimensions();
-
   const cardWidth = screenWidth * 0.75;
 
   return (
     <InteractiveCard title={title} style={[styles.card, { width: cardWidth }]}>
       {icon && (
-        <IconContainer color={iconBgColor} style={{ borderRadius: 50 }}>
-          <FontAwesome5 name={icon} size={24} color={accentColor} />
+        <IconContainer
+          backgroundColor={iconBgColor}
+          style={{ marginBottom: Margin.md }}>
+          <Icon
+            library="FontAwesome5"
+            name={icon}
+            size={24}
+            color={accentColor}
+          />
         </IconContainer>
       )}
       <ThemedText style={styles.cardDescription}>{description}</ThemedText>
@@ -97,11 +104,11 @@ const styles = StyleSheet.create({
   card: {
     marginRight: Margin.md,
     padding: Padding.xl,
-    alignContent: "center",
     justifyContent: "center",
   },
   cardDescription: {
     fontSize: FontSize.sm,
     lineHeight: 20,
+    textAlign: "center",
   },
 });

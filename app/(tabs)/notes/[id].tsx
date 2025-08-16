@@ -156,9 +156,6 @@ export default function NoteDetailScreen() {
   const handleDeleteTask = (taskId: string) =>
     setTasks((current) => current.filter((t) => t.id !== taskId));
 
-  // --- Funções de Renderização ---
-
-  // Componente reutilizável para o cabeçalho do conteúdo
   const TitleHeader = () => (
     <View style={styles.titleContainer}>
       <TextInput
@@ -224,7 +221,6 @@ export default function NoteDetailScreen() {
     </ScrollView>
   );
 
-  // --- JSX Principal ---
   if (isLoading && !currentNote && !isNewNote) {
     return (
       <ThemedView style={styles.loadingContainer}>
@@ -239,7 +235,7 @@ export default function NoteDetailScreen() {
       style={styles.container}
       keyboardVerticalOffset={headerHeight}>
       <ScreenLayout>
-        {noteType === "task" ? renderChecklist() : renderStandardNote()}{" "}
+        {noteType === "task" ? renderChecklist() : renderStandardNote()}
         <TouchableOpacity
           style={[
             styles.saveButton,
@@ -264,7 +260,7 @@ export default function NoteDetailScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   loadingContainer: { flex: 1, justifyContent: "center", alignItems: "center" },
-  scrollContainer: { flexGrow: 1 },
+  scrollContainer: { flexGrow: 1, padding: Padding.lg },
   titleContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

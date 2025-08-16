@@ -1,23 +1,25 @@
 import { ThemedInput, ThemedInputProps } from "@/components/ui/ThemedInput";
 import { ThemedText } from "@/components/ui/ThemedText";
-import { Colors } from "@/constants/Colors";
-import { FontSize, Margin } from "@/constants/Styles";
+import { FontSize, FontWeight, Margin, Spacing } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
-type ControlledInputProps<T extends FieldValues> = ThemedInputProps & {
+type ControlledFormFieldProps<T extends FieldValues> = ThemedInputProps & {
   name: Path<T>;
   control: Control<T>;
+  label: string;
 };
 
-export function ControlledInput<T extends FieldValues>({
+export function ControlledFormField<T extends FieldValues>({
   name,
   control,
-  ...themedInputProps 
-}: ControlledInputProps<T>) {
+  label,
+  ...themedInputProps
+}: ControlledFormFieldProps<T>) {
   const destructiveColor = useThemeValue("warning");
+  const labelColor = useThemeValue("textSecondary");
 
   return (
     <Controller
@@ -26,34 +28,40 @@ export function ControlledInput<T extends FieldValues>({
       render={({
         field: { onChange, onBlur, value },
         fieldState: { error },
-      }) => {
-        
-        const displayValue =
-          typeof value === "number" && isNaN(value) ? "" : String(value ?? "");
-
-        return (
-          <>
+      }) => (
+        <View style={styles.container}>
+          <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
           <ThemedInput
             {...themedInputProps}
-            value={value?.toString() ?? ""}
+            value={value}
             onBlur={onBlur}
             onChangeText={onChange}
-            style={
-              error ? { borderColor: destructiveColor, borderWidth: 1 } : {}
-            }
+            style={[
+              themedInputProps.style,
+              error && { borderColor: destructiveColor, borderWidth: 1 },
+            ]}
           />
           {error && (
-            <ThemedText style={styles.errorText}>{error.message}</ThemedText>
+            <ThemedText style={[styles.errorText, { color: destructiveColor }]}>
+              {error.message}
+            </ThemedText>
           )}
-        </>
-      )}}
+        </View>
+      )}
     />
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: Margin.md,
+  },
+  label: {
+    fontSize: FontSize.md,
+    fontWeight: FontWeight.medium,
+    marginBottom: Spacing.sm,
+  },
   errorText: {
-    color: Colors.light.warning,
     fontSize: FontSize.xs,
     marginTop: Margin.xs,
     marginLeft: Margin.xs,

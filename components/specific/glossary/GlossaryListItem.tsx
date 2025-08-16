@@ -24,11 +24,10 @@ export function GlossaryListItem({
   isExpanded,
   onToggle,
 }: GlossaryListItemProps) {
-  // Cores do tema
-  const cardBg = useThemeValue("cardBackground");
+  const cardBg = useThemeValue("card");
   const textColor = useThemeValue("text");
   const textSecondary = useThemeValue("textSecondary");
-  const accentColor = useThemeValue("accentPurple");
+  const accentColor = useThemeValue("primary");
 
   return (
     <View style={[styles.card, { backgroundColor: cardBg }]}>

@@ -1,4 +1,4 @@
-import { Reference } from "@/schema/referenceSchema";
+import { Reference } from "@/models";
 
 export const referencesData: Reference[] = [
   {
@@ -127,7 +127,7 @@ export const referencesData: Reference[] = [
     accessDate: "21 abr 2025",
   },
   {
-    type: 'artigo', // Assumindo que este é um artigo de revista científica
+    type: 'artigo', 
     authors: "Lima, L.S., (2013)",
     title: "Lei de Lambert–Beer",
     journal: "Rev. Ciência Elem.",
@@ -137,20 +137,20 @@ export const referencesData: Reference[] = [
     year: 2013,
     doi: "10.24927/rce2013.047",
     url: "http://doi.org/10.24927/rce2013.047",
-    accessDate: "N/A", // Se não tiver data de acesso no original
+    accessDate: "N/A", 
   },
   {
     type: 'site',
     organization: "Sinergia Científica.",
     title: "Espectrofotômetro: para que serve, como funciona, quais são seus componentes?",
     url: "https://www.sinergiacientifica.com.br/espectrofotometro-para-que-serve-como-funciona-quais-sao-seus-componentes/",
-    accessDate: "21 jun. 2025", // Data atual
+    accessDate: "21 jun. 2025", 
   },
   {
     type: 'site',
     organization: "SPLABOR.",
     title: "O que é um espectrofotômetro e para que ele é usado?",
     url: "https://www.splabor.com.br/blog/guia-do-comprador/o-que-e-um-espectrofotometro-e-para-que-ele-e-usado/",
-    accessDate: "21 jun. 2025", // Data atual
+    accessDate: "21 jun. 2025", 
   },
 ];

@@ -24,24 +24,32 @@ const BackButton: React.FC<BackButtonProps> = ({
   textStyle,
 }) => {
   const router = useRouter();
-
   const backgroundColor = useThemeValue("primary");
   const foregroundColor = useThemeValue("textWhite");
 
   const handlePress = () => {
     if (path) {
-      router.replace(path)
+      router.replace(path);
     } else {
       router.back();
     }
   };
 
-  if (!!title) {
-    return (
-      <TouchableOpacity
-        style={[styles.containerWithButton, { backgroundColor }, style]}
-        onPress={handlePress}>
-        <Octicons name="arrow-left" size={20} color={foregroundColor} />
+  const containerStyle = [
+    styles.baseContainer,
+    title ? styles.containerWithTitle : styles.containerWithoutTitle,
+    { backgroundColor },
+    style,
+  ];
+
+  return (
+    <TouchableOpacity style={containerStyle} onPress={handlePress}>
+      <Octicons
+        name="arrow-left"
+        size={title ? 20 : 24}
+        color={foregroundColor}
+      />
+      {title && (
         <ThemedText
           style={[
             styles.backButtonText,
@@ -50,35 +58,27 @@ const BackButton: React.FC<BackButtonProps> = ({
           ]}>
           {title}
         </ThemedText>
-      </TouchableOpacity>
-    );
-  } else {
-    return (
-      <TouchableOpacity
-        style={[styles.containerWithoutTitle, { backgroundColor }, style]}
-        onPress={handlePress}>
-        <Octicons name="arrow-left" size={24} color={foregroundColor} />
-      </TouchableOpacity>
-    );
-  }
+      )}
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
-  containerWithButton: {
-    maxWidth: 200,
+  baseContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
     padding: 8,
+  },
+  containerWithTitle: {
+    maxWidth: 200,
     gap: 6,
   },
   containerWithoutTitle: {
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
     width: 40,
     height: 40,
+    padding: 0,
   },
   backButtonText: {
     fontSize: 18,

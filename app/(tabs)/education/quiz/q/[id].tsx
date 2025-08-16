@@ -1,11 +1,9 @@
-// Localização: src/app/(tabs)/education/quiz/q/[id].tsx
-
 import { QuizActiveScreen } from "@/components/specific/quiz/QuizActiveScreen";
 import { QuizResultsScreen } from "@/components/specific/quiz/QuizResultsScreen";
 import BackButton from "@/components/ui/BackButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
-import { quizData } from "@/data/quizData";
+import { quizData } from "@/data/index";
 import { useQuizActions } from "@/state/quizStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";

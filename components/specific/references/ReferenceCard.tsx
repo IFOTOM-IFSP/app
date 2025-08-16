@@ -12,10 +12,10 @@ import {
   ArticleReference,
   BookReference,
   DissertationReference,
-  GenericOnlineReference,
+  OnlineMediaReference as GenericOnlineReference,
   Reference,
   WebsiteReference,
-} from "@/schema/referenceSchema";
+} from "@/models";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";
