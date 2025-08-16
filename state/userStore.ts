@@ -1,3 +1,4 @@
+import { handleError } from '@/services/errorHandler';
 import {
   isFirstLaunch as checkFirstLaunch,
   clearFirstLaunch,
@@ -10,27 +11,27 @@ interface UserState {
   name: string | null;
   isFirstLaunch: boolean;
   isLoading: boolean;
-  actions: {
-    init: () => Promise<void>;
-    saveName: (name: string) => Promise<void>;
-    resetName: () => Promise<void>
-    deleteAllData: () => Promise<void>
-  };
 }
 
-export const useUserStore = create<UserState>((set, get) => ({
+interface UserActions {
+  init: () => Promise<void>;
+  saveName: (name: string) => Promise<void>;
+  resetUser: () => Promise<void>;
+  deleteAllData: () => Promise<void>;
+}
+
+
+export const useUserStore = create<UserState & { actions: UserActions }>((set, get) => ({
   name: null,
   isFirstLaunch: true,
   isLoading: true, 
   
- 
   actions: {
     init: async () => {
       if (get().isLoading === false) {
               return;
             }
       try {
-         
         console.log("Zustand [userStore]: Inicializando... Buscando dados do DB.");
         const [name, firstLaunch] = await Promise.all([
           getUserName(),
@@ -40,7 +41,7 @@ export const useUserStore = create<UserState>((set, get) => ({
         set({ name, isFirstLaunch: firstLaunch, isLoading: false });
         console.log("Zustand [userStore]: Inicialização completa.");
       } catch (error) {
-        console.error("Zustand [userStore]: Falha ao inicializar a store", error);
+        handleError(error, 'userStore:init');
         set({ isLoading: false }); 
       }
     },
@@ -51,25 +52,27 @@ export const useUserStore = create<UserState>((set, get) => ({
         set({ name: newName, isFirstLaunch: false });
         console.log("Zustand [userStore]: Nome salvo na store e no DB.");
       } catch (error) {
-        console.error("Zustand [userStore]: Falha ao salvar o nome.", error);
-        throw error;
+        throw handleError(error, 'userStore:saveName', { userName: newName });
       }
     },
-    resetName: async () => {
+
+    resetUser: async () => {
       try {
         await clearFirstLaunch(); 
         set({ name: null, isFirstLaunch: true });
         console.log("Zustand [userStore]: Nome de usuário limpo na store e no DB.");
       } catch (error) {
-        console.error("Zustand [userStore]: Falha ao limpar o nome.", error);
-        throw error;
+        throw handleError(error, 'userStore:resetUser');
       }
     },
     deleteAllData: async () => {
-       console.log("Lógica para deletar todos os dados do usuário executada.");
+       
        set({ name: null, isFirstLaunch: true });
     },
   }
 }));
 
-export const useUserStoreActions = () => useUserStore((state) => state.actions);
+export const useUserActions = () => useUserStore((state) => state.actions);
+export const useUserName = () => useUserStore((state) => state.name);
+export const useIsFirstLaunch = () => useUserStore((state) => state.isFirstLaunch);
+export const useIsUserLoading = () => useUserStore((state) => state.isLoading);

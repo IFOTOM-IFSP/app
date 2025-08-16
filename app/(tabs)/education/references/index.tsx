@@ -5,7 +5,7 @@ import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import ReferenceCard from "@/components/specific/references/ReferenceCard";
 import { referencesData } from "@/data/referencesData";
-import { Reference, ReferenceType } from "@/schema/referenceSchema";
+import { Reference, ReferenceType } from "@/models";
 import React, { useMemo, useState } from "react";
 
 export default function ReferencesScreen() {

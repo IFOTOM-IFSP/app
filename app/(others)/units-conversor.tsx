@@ -3,7 +3,7 @@ import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { ConverterCard } from "@/components/specific/converter/ConverterCard";
 import { UnitInput } from "@/components/specific/converter/UnitInput";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
 import { ThemedText } from "@/components/ui/ThemedText";
 import {
   BorderRadius,
@@ -209,7 +209,7 @@ export default function ConverterScreen() {
             }
             placeholder="Normalmente 1"
           />
-          <PrimaryButton
+          <Button
             title="Calcular Concentração"
             onPress={calculateFromBeer}
             style={{ marginTop: Margin.sm }}

@@ -1,5 +1,3 @@
-// FilterTabs.tsx (versão atualizada com título)
-
 import { FontSize, FontWeight, Margin } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";
@@ -24,7 +22,7 @@ interface FilterTabsProps<T> {
 }
 
 const FilterTabs = <T,>({
-  title, // Prop do título desestruturada
+  title,
   data,
   selectedValue,
   onSelect,

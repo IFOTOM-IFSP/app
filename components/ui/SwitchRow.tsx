@@ -1,43 +1,70 @@
-import { FontSize, FontWeight, Padding } from "@/constants/Styles";
+import { FontSize, FontWeight } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";
-import { StyleSheet, Switch, View } from "react-native";
+import {
+  StyleSheet,
+  Switch,
+  TextStyle,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
 import { ThemedText } from "./ThemedText";
 
 export interface SwitchRowProps {
   label: string;
   value: boolean;
   onValueChange: (value: boolean) => void;
+  style?: ViewStyle;
+  labelStyle?: TextStyle;
 }
 
-export function SwitchRow({ label, value, onValueChange }: SwitchRowProps) {
+export function SwitchRow({
+  label,
+  value,
+  onValueChange,
+  style,
+  labelStyle,
+}: SwitchRowProps) {
   const accentColor = useThemeValue("primary");
   const trackColor = useThemeValue("disabledBackground");
+  const thumbColor = useThemeValue("textWhite");
+
+  const handlePress = () => {
+    onValueChange(!value);
+  };
 
   return (
-    <View style={styles.container}>
-      <ThemedText style={styles.label}>{label}</ThemedText>
+    <TouchableOpacity
+      style={[styles.container, style]}
+      onPress={handlePress}
+      activeOpacity={0.8}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: value }}
+      accessibilityLabel={label}>
+      <ThemedText style={[styles.label, { flex: 1 }, labelStyle]}>
+        {label}
+      </ThemedText>
       <Switch
         value={value}
         onValueChange={onValueChange}
         trackColor={{ false: trackColor, true: accentColor }}
-        thumbColor={"#ffffff"}
+        thumbColor={thumbColor}
         ios_backgroundColor={trackColor}
+        accessibilityElementsHidden
+        importantForAccessibility="no-hide-descendants"
       />
-    </View>
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: Padding.sm,
+    justifyContent: "space-between",
   },
   label: {
     fontSize: FontSize.md,
     fontWeight: FontWeight.medium,
-    flex: 1,
   },
 });

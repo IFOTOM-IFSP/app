@@ -1,5 +1,5 @@
 import BackButton from "@/components/ui/BackButton";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { PrimaryButton } from "@/components/ui/Button";
 import { QuizOption } from "@/components/ui/QuizOption";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";

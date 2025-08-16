@@ -1,5 +1,5 @@
 import { AuthLayout } from "@/components/layouts/AuthLayout";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { useRouter } from "expo-router";
@@ -26,7 +26,7 @@ export default function WelcomeScreen(): JSX.Element {
         <ThemedText style={styles.tagline}>
           Análises espectrofotométricas na sua mão.
         </ThemedText>
-        <PrimaryButton
+        <Button
           title="Vamos lá!"
           onPress={handleProceed}
           style={styles.proceedButtonCustom}

@@ -10,7 +10,7 @@ import { ThemedView } from "@/components/ui/ThemedView";
 
 import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
 import {
   BorderRadius,
   FontSize,
@@ -79,7 +79,7 @@ export default function AboutScreen() {
             <ThemedText style={styles.paragraph}>
               {PROJECT_DATA.institution.description}
             </ThemedText>
-            <PrimaryButton
+            <Button
               style={styles.actionButton}
               onPress={() => openURL(PROJECT_DATA.institution.websiteUrl)}
               icon={

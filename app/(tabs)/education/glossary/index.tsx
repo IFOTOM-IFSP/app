@@ -1,5 +1,3 @@
-// screens/GlossaryListScreen.tsx
-
 import FilterTabs from "@/components/common/FilterTabs";
 import SearchComponent from "@/components/common/SearchComponent";
 import ThemedFlatList from "@/components/common/ThemedFlatList";

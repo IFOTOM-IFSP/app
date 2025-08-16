@@ -1,5 +1,5 @@
-import IconButton from "@/components/ui/IconButton";
-import { ThemedIcon } from "@/components/ui/ThemedIcon";
+import { IconLibrary } from "@/components/ui/icon/Icon";
+import { IconButton } from "@/components/ui/icon/IconButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { FontSize, FontWeight, Margin, Spacing } from "@/constants/Styles";
 import React from "react";
@@ -9,7 +9,7 @@ interface SectionItem {
   id: string;
   label: string;
   iconName: string;
-  iconComponent: React.ComponentType<any>;
+  iconLibrary: IconLibrary;
   onPress: () => void;
 }
 
@@ -31,17 +31,13 @@ export function UsefulSections({
         {sections.map((section) => {
           return (
             <View key={section.id} style={styles.iconButtonWrapper}>
+              {/* 3. Usando a nova API do IconButton */}
               <IconButton
                 onPress={section.onPress}
-                labelText={section.label}
-                iconElement={
-                  <ThemedIcon
-                    iconComponent={section.iconComponent}
-                    name={section.iconName}
-                    size={26}
-                  />
-                }
-                iconOnly={false}
+                label={section.label}
+                iconName={section.iconName}
+                iconLibrary={section.iconLibrary}
+                iconSize={26}
                 accessibilityLabel={"Ir para tela " + section.label}
               />
             </View>
@@ -66,10 +62,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "flex-start",
-
     margin: -Spacing.md / 2,
   },
-
   iconButtonWrapper: {
     width: "25%",
     padding: Spacing.md / 2,

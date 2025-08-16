@@ -1,4 +1,4 @@
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { BorderRadius, FontSize, Padding, Spacing } from "@/constants/Styles";
@@ -6,7 +6,7 @@ import { useThemeValue } from "@/hooks/useThemeValue";
 import { useNotesActions, useNotesStore } from "@/state/notesStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Plus } from "lucide-react-native";
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -19,7 +19,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { ChecklistItem, ChecklistItemRow } from "./ChecklistItemRow"; 
+import { ChecklistItem, ChecklistItemRow } from "./ChecklistItemRow";
 export default function NewNoteScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{
@@ -163,7 +163,7 @@ export default function NewNoteScreen() {
               borderTopColor: borderColor,
             },
           ]}>
-          <PrimaryButton
+          <Button
             title="Guardar Nota"
             onPress={handleSave}
             loading={isLoading}

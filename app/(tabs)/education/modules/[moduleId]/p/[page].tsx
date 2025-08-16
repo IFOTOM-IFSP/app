@@ -66,7 +66,7 @@ export default function ModuleContentPage(): React.ReactElement | null {
           </ThemedText>
         </View>
 
-        {pageContent.content.map((block) => (
+        {pageContent.content.map((block: any) => (
           <ContentBlockRenderer key={block.id} block={block} />
         ))}
       </ScrollView>

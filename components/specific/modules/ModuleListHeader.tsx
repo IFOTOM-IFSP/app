@@ -15,11 +15,7 @@ export default function ModuleListHeader({ title }: ModuleListHeaderProps) {
   const tintColor = useThemeValue("tint");
 
   return (
-    <ThemedView
-      style={[
-        styles.container,
-        { shadowColor, borderBottomColor: "transparent" },
-      ]}>
+    <ThemedView style={[styles.container]}>
       <TitleSection title={title || "Módulos de Aprendizado"} />
     </ThemedView>
   );
@@ -33,8 +29,5 @@ const styles = StyleSheet.create({
       height: 1,
     },
     shadowOpacity: 0.05,
-    shadowRadius: 15,
-    elevation: 2,
-    borderBottomWidth: 1,
   },
 });

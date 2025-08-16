@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     marginBottom: Margin.sm,
     flexDirection: "row",
     alignItems: "center",
-    borderWidth: 0.2,
+    borderWidth: 0.1,
   },
   mainButton: {
     flexDirection: "row",

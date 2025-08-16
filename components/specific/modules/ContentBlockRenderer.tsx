@@ -3,16 +3,18 @@ import {
   ContentBlock,
   ImageContent,
   InteractiveContent,
+  ListContent,
   TextContent,
   VideoContent,
-} from "@/schema/contentSchema";
+} from "@/models";
 import React from "react";
 
-import { CodeBlock } from "@/components/specific/renderers/CodeBlock";
-import { ImageBlock } from "@/components/specific/renderers/ImageBlock";
-import { InteractiveBlock } from "@/components/specific/renderers/InteractiveBlock";
-import { TextBlock } from "@/components/specific/renderers/TextBlock";
-import { VideoBlock } from "@/components/specific/renderers/VideoBlock";
+import { CodeBlock } from "@/components/specific/contentBlocks/CodeBlock";
+import { ImageBlock } from "@/components/specific/contentBlocks/ImageBlock";
+import { InteractiveBlock } from "@/components/specific/contentBlocks/InteractiveBlock";
+import { TextBlock } from "@/components/specific/contentBlocks/TextBlock";
+import { VideoBlock } from "@/components/specific/contentBlocks/VideoBlock";
+import { ListBlock } from "../contentBlocks/ListBlock";
 
 type ContentBlockRendererProps = {
   block: ContentBlock;
@@ -36,6 +38,9 @@ export const ContentBlockRenderer: React.FC<ContentBlockRendererProps> = ({
 
     case "interactive":
       return <InteractiveBlock block={block as InteractiveContent} />;
+
+    case "list":
+      return <ListBlock block={block as ListContent} />;
 
     default:
       console.warn(

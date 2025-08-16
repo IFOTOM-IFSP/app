@@ -5,7 +5,7 @@ import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import { QuizListItem } from "@/components/specific/quiz/QuizListItem";
 import { Margin } from "@/constants/Styles";
-import { quizData } from "@/data/quizData";
+import { quizData } from "@/data/index";
 import { useQuizResults } from "@/hooks/useQuizResults";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { moduleTitles } from "@/utils/module-helpers";

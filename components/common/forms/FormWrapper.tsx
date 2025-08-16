@@ -1,4 +1,4 @@
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
 import { Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";
@@ -36,7 +36,7 @@ export function FormWrapper({
       </ScrollView>
 
       <View style={[styles.footer, { borderTopColor: borderColor }]}>
-        <PrimaryButton
+        <Button
           title={buttonTitle}
           onPress={onSubmit}
           disabled={isSubmitting}

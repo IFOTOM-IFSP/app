@@ -1,4 +1,3 @@
-import { Tag } from "@/components/ui/Tag";
 import { ThemedText } from "@/components/ui/ThemedText";
 import {
   BorderRadius,
@@ -17,6 +16,7 @@ import { ChecklistItem } from "./ChecklistItemRow";
 interface NoteListItemProps {
   item: Note;
   onPress: () => void;
+  variant?: "full" | "compact";
 }
 
 const getNoteTypeDetails = (note: Note, colors: any) => {
@@ -76,45 +76,40 @@ function renderContentSummary(note: Note, textColor: string): React.ReactNode {
   );
 }
 
-export function NoteListItem({ item, onPress }: NoteListItemProps) {
+export function NoteListItem({
+  item,
+  onPress,
+  variant = "full",
+}: NoteListItemProps) {
   const colors = {
     card: useThemeValue("card"),
     textSecondary: useThemeValue("textSecondary"),
     tagAnalysisBg: useThemeValue("primaryBackground"),
     tagAnalysisText: useThemeValue("primary"),
-    tagQuickBg: useThemeValue("secondaryBackground"),
-    tagQuickText: useThemeValue("secondary"),
-    tagTaskBg: useThemeValue("pinkBackground"),
-    tagTaskText: useThemeValue("pink"),
+    tagQuickBg: useThemeValue("pinkBackground"),
+    tagQuickText: useThemeValue("pink"),
+    tagTaskBg: useThemeValue("secondaryBackground"),
+    tagTaskText: useThemeValue("secondary"),
   };
   const typeDetails = getNoteTypeDetails(item, colors);
+  const isCompact = variant === "compact";
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={[styles.noteItem, { backgroundColor: colors.card }]}>
-      <ThemedText style={styles.noteTitle} numberOfLines={1}>
-        {item.title}
-      </ThemedText>
-      <View style={styles.noteContent}>
-        {renderContentSummary(item, colors.textSecondary)}
-      </View>
-      <View style={styles.noteFooter}>
-        <View style={styles.tagsContainer}>
-          <Tag
-            icon={typeDetails.icon}
-            text={typeDetails.text}
-            backgroundColor={typeDetails.bgColor}
-            textColor={typeDetails.textColor}
-          />
-          {item.type === "analysis" && item.analysisName && (
-            <Tag
-              text={item.analysisName}
-              backgroundColor={colors.tagAnalysisBg}
-              textColor={colors.tagAnalysisText}
-            />
-          )}
-        </View>
+      style={[
+        styles.noteItem,
+        {
+          backgroundColor: isCompact ? "transparent" : colors.card,
+          padding: isCompact ? Padding.md : Padding.lg,
+        },
+      ]}>
+      <View style={styles.header}>
+        <ThemedText
+          style={[styles.noteTitle, isCompact && styles.noteTitleCompact]}
+          numberOfLines={1}>
+          {item.title}
+        </ThemedText>
         <ThemedText style={[styles.noteDate, { color: colors.textSecondary }]}>
           {new Date(item.updatedAt).toLocaleDateString("pt-BR", {
             day: "2-digit",
@@ -122,20 +117,61 @@ export function NoteListItem({ item, onPress }: NoteListItemProps) {
           })}
         </ThemedText>
       </View>
+
+      {isCompact ? (
+        <View style={{ alignItems: "flex-start" }}>
+          {/* <Tag
+            size="sm"
+            iconName={typeDetails.icon}
+            text={typeDetails.text}
+            backgroundColor={typeDetails.bgColor}
+            textColor={typeDetails.textColor}
+          /> */}
+        </View>
+      ) : (
+        <>
+          <View style={styles.noteContent}>
+            {renderContentSummary(item, colors.textSecondary)}
+          </View>
+          <View style={styles.noteFooter}>
+            <View style={styles.tagsContainer}>
+              {/* <Tag
+                icon={typeDetails.icon}
+                text={typeDetails.text}
+                backgroundColor={typeDetails.bgColor}
+                textColor={typeDetails.textColor}
+              /> */}
+              {/* {item.type === "analysis" && item.analysisName && (
+                // <Tag
+                //   text={item.analysisName}
+                //   // backgroundColor={colors.tagAnalysisBg}
+                //   // textColor={colors.tagAnalysisText}
+                // />
+              )} */}
+            </View>
+          </View>
+        </>
+      )}
     </TouchableOpacity>
   );
 }
 const styles = StyleSheet.create({
-  noteItem: {
+  noteItemFull: {
     padding: Padding.md,
     borderRadius: BorderRadius.lg,
     gap: Spacing.md,
   },
-  noteTitle: { fontSize: FontSize.lg, fontWeight: FontWeight.bold },
+  noteItemCompact: {
+    padding: Padding.md,
+    borderBottomWidth: 1,
+    gap: Spacing.sm,
+    borderRadius: BorderRadius.lg,
+  },
   noteContent: {
     fontSize: FontSize.md,
     minHeight: 38,
     justifyContent: "center",
+    borderRadius: BorderRadius.lg,
   },
   noteFooter: {
     flexDirection: "row",
@@ -149,9 +185,24 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: "wrap",
   },
-  noteDate: {
-    fontSize: FontSize.sm,
-    fontWeight: "500",
-    marginLeft: Spacing.sm,
+
+  headerCompact: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
+  noteItem: { gap: Spacing.sm },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  noteTitle: {
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.bold,
+    flexShrink: 1,
+    marginRight: Spacing.sm,
+  },
+  noteTitleCompact: { fontSize: FontSize.md, fontWeight: FontWeight.medium },
+  noteDate: { fontSize: FontSize.sm, fontWeight: "500" },
 });

@@ -1,4 +1,4 @@
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { PrimaryButton } from "@/components/ui/Button";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";

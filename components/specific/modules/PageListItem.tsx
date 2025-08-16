@@ -1,4 +1,5 @@
-import { IconContainer } from "@/components/ui/IconContainer";
+import { Icon } from "@/components/ui/icon/Icon";
+import { IconContainer } from "@/components/ui/icon/IconContainer";
 import { ThemedText } from "@/components/ui/ThemedText";
 import {
   BorderRadius,
@@ -9,7 +10,6 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -28,8 +28,8 @@ export function PageListItem({
   const cardBg = useThemeValue("card");
   const tint = useThemeValue("tint");
   const iconText = useThemeValue("buttonText");
-  const chevron = useThemeValue("disabledText");
-  const subtitle = useThemeValue("textSecondary");
+  const chevronColor = useThemeValue("disabledText");
+  const subtitleColor = useThemeValue("textSecondary");
   const shadow = useThemeValue("shadow");
 
   return (
@@ -47,7 +47,9 @@ export function PageListItem({
             styles.pageItemCard,
             { backgroundColor: cardBg, shadowColor: shadow },
           ]}>
-          <IconContainer color={tint} style={styles.itemIconContainer}>
+          <IconContainer
+            backgroundColor={tint}
+            style={styles.itemIconContainer}>
             <ThemedText style={[styles.itemNumberText, { color: iconText }]}>
               {displayNumber}
             </ThemedText>
@@ -57,17 +59,17 @@ export function PageListItem({
             <ThemedText style={styles.itemTitle} numberOfLines={1}>
               {page.title || `Conteúdo ${displayNumber}`}
             </ThemedText>
-            <ThemedText style={[styles.itemSubtitle, { color: subtitle }]}>
+            <ThemedText style={[styles.itemSubtitle, { color: subtitleColor }]}>
               Toque para abrir esta seção
             </ThemedText>
           </View>
 
           <View style={styles.itemActionContainer}>
-            <Ionicons
+            <Icon
+              library="Ionicons"
               name="chevron-forward-outline"
               size={22}
-              color={chevron}
-              accessible={false}
+              color={chevronColor}
             />
           </View>
         </View>
@@ -88,10 +90,10 @@ const styles = StyleSheet.create({
     elevation: 2,
     width: "100%",
     minHeight: 80,
+    alignItems: "center",
   },
   itemIconContainer: {
     marginRight: Margin.md,
-    // O justifyContent: 'center' já está dentro do componente IconContainer
   },
   itemNumberText: {
     fontSize: FontSize.lg,
@@ -99,7 +101,6 @@ const styles = StyleSheet.create({
   },
   itemTextContainer: {
     flex: 1,
-    // 2. ADICIONADO! Centraliza o título e subtítulo verticalmente.
     justifyContent: "center",
   },
   itemTitle: {
@@ -113,7 +114,6 @@ const styles = StyleSheet.create({
   },
   itemActionContainer: {
     marginLeft: Margin.sm,
-
     justifyContent: "center",
   },
 });

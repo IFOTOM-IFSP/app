@@ -13,7 +13,6 @@ import React, { useMemo, useState } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
-// As interfaces estão perfeitas.
 interface InputConfig {
   label: string;
   min: number;

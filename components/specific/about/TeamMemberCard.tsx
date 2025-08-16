@@ -1,5 +1,3 @@
-// /components/specific/about/TeamMemberCard.tsx
-
 import { ThemedText } from "@/components/ui/ThemedText";
 import {
   BorderRadius,
@@ -9,8 +7,8 @@ import {
   Padding,
   Spacing,
 } from "@/constants/Styles";
-import { TeamMember } from "@/data/aboutScreenData";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { TeamMember } from "@/models";
 import { openURL } from "@/utils/linkingUtils";
 import { AntDesign } from "@expo/vector-icons";
 import React from "react";

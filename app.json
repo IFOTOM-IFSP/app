@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lucasbiazon.iFOTOM"
     },
     "android": {
       "adaptiveIcon": {
@@ -75,7 +76,15 @@
           "enableBackgroundRemoteNotifications": false
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "react-native",
+          "organization": "ifsp-campus-campinas"
+        }
+      ]
     ],
     "scheme": "myapp",
     "extra": {

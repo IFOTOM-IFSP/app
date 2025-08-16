@@ -1,6 +1,6 @@
 import { AuthLayout } from "@/components/layouts/AuthLayout";
-import { FormInput } from "@/components/ui/FormInput";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { Button } from "@/components/ui/Button";
+import { FormField } from "@/components/ui/form/FormInput";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { useUserStore } from "@/state/userStore";
@@ -64,8 +64,9 @@ export default function EnterNameScreen(): JSX.Element {
           <ThemedText style={[styles.subtitle]}>
             Isso nos ajudará a personalizar sua experiência no iFOTOM.
           </ThemedText>
-          <FormInput
+          <FormField
             placeholder="Digite seu nome ou apelido"
+            label="Seu nome ou apelido"
             value={name}
             onChangeText={setName}
             autoCapitalize="words"
@@ -74,7 +75,7 @@ export default function EnterNameScreen(): JSX.Element {
             onSubmitEditing={handleSaveNameAndProceed}
             editable={!isSaving}
           />
-          <PrimaryButton
+          <Button
             title="Salvar e Continuar"
             onPress={handleSaveNameAndProceed}
             style={styles.actionButtonCustom}
@@ -97,7 +98,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "flex-start",
     width: "100%",
-
     paddingTop: Platform.OS === "ios" ? Padding.lg : 0,
     paddingBottom: Padding.lg,
   },

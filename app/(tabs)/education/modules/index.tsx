@@ -2,7 +2,7 @@ import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import AnimatedListItem from "@/components/specific/modules/AnimatedListItem";
 import HeaderIndex from "@/components/specific/modules/ModuleListHeader";
 import { Padding } from "@/constants/Styles";
-import { MODULES_DATA } from "@/data/modulesData";
+import { MODULES_DATA } from "@/data";
 import { default as React, useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
 

@@ -6,8 +6,9 @@ import {
   Margin,
   Padding,
 } from "@/constants/Styles";
-import { Article } from "@/data/articleData";
+import { ARTICLE_DATA } from "@/data/articleData";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { Article } from "@/models";
 import { openURL } from "@/utils/linkingUtils";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";

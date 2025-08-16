@@ -8,7 +8,7 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { ImageContent } from "@/schema/contentSchema";
+import { ImageContent } from "@/models";
 import { ImageBackground } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef, useState } from "react";

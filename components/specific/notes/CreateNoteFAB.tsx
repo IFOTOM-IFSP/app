@@ -8,14 +8,12 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { getAnalysisHistory, SavedAnalysis } from "@/storage/analysisStorage";
+// import { getAnalysisHistory, SavedAnalysis } from "@/storage/analysisStorage";
 import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
 import { FlaskConical, ListChecks, Notebook, Plus } from "lucide-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  ActivityIndicator,
-  FlatList,
   Modal,
   Pressable,
   StyleSheet,
@@ -75,62 +73,62 @@ const TemplateMenuModal = ({ isVisible, onClose, onSelect }: any) => {
   );
 };
 
-const AnalysisSelectorModal = ({ isVisible, onClose, onSelect }: any) => {
-  const [analyses, setAnalyses] = useState<SavedAnalysis[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const cardColor = useThemeValue("card");
-  const textColor = useThemeValue("text");
+// const AnalysisSelectorModal = ({ isVisible, onClose, onSelect }: any) => {
+//   const [analyses, setAnalyses] = useState<SavedAnalysis[]>([]);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const cardColor = useThemeValue("card");
+//   const textColor = useThemeValue("text");
 
-  useEffect(() => {
-    if (isVisible) {
-      setIsLoading(true);
-      getAnalysisHistory()
-        .then(setAnalyses)
-        .catch(console.error)
-        .finally(() => setIsLoading(false));
-    }
-  }, [isVisible]);
+//   useEffect(() => {
+//     if (isVisible) {
+//       setIsLoading(true);
+//       getAnalysisHistory()
+//         .then(setAnalyses)
+//         .catch(console.error)
+//         .finally(() => setIsLoading(false));
+//     }
+//   }, [isVisible]);
 
-  return (
-    <Modal visible={isVisible} transparent={true} animationType="fade">
-      <ModalBackdrop onClose={onClose} />
-      <View style={styles.modalContainer}>
-        <View
-          style={[
-            styles.modalContent,
-            { backgroundColor: cardColor, maxHeight: "70%" },
-          ]}>
-          <ThemedText style={styles.modalTitle}>
-            Associar a uma Análise
-          </ThemedText>
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <FlatList
-              data={analyses}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.templateButton}
-                  onPress={() => onSelect(item)}>
-                  <FlaskConical size={24} color={textColor} />
-                  <ThemedText style={styles.templateTitle}>
-                    {item.analysisSetup.analysisName || `Análise #${item.id}`}
-                  </ThemedText>
-                </TouchableOpacity>
-              )}
-              ListEmptyComponent={
-                <ThemedText style={{ textAlign: "center" }}>
-                  Nenhuma análise encontrada.
-                </ThemedText>
-              }
-            />
-          )}
-        </View>
-      </View>
-    </Modal>
-  );
-};
+//   return (
+//     <Modal visible={isVisible} transparent={true} animationType="fade">
+//       <ModalBackdrop onClose={onClose} />
+//       <View style={styles.modalContainer}>
+//         <View
+//           style={[
+//             styles.modalContent,
+//             { backgroundColor: cardColor, maxHeight: "70%" },
+//           ]}>
+//           <ThemedText style={styles.modalTitle}>
+//             Associar a uma Análise
+//           </ThemedText>
+//           {isLoading ? (
+//             <ActivityIndicator />
+//           ) : (
+//             <FlatList
+//               data={analyses}
+//               keyExtractor={(item) => item.id.toString()}
+//               renderItem={({ item }) => (
+//                 <TouchableOpacity
+//                   style={styles.templateButton}
+//                   onPress={() => onSelect(item)}>
+//                   <FlaskConical size={24} color={textColor} />
+//                   <ThemedText style={styles.templateTitle}>
+//                     {item.analysisSetup.analysisName || `Análise #${item.id}`}
+//                   </ThemedText>
+//                 </TouchableOpacity>
+//               )}
+//               ListEmptyComponent={
+//                 <ThemedText style={{ textAlign: "center" }}>
+//                   Nenhuma análise encontrada.
+//                 </ThemedText>
+//               }
+//             />
+//           )}
+//         </View>
+//       </View>
+//     </Modal>
+//   );
+// };
 
 export function CreateNoteFAB() {
   const router = useRouter();
@@ -150,14 +148,14 @@ export function CreateNoteFAB() {
     }
   };
 
-  const handleAnalysisSelected = (analysis: SavedAnalysis) => {
-    setAnalysisSelectorVisible(false);
-    router.push(
-      `/notes/new?template=analysis&analysisId=${
-        analysis.id
-      }&analysisName=${encodeURIComponent(analysis.analysisSetup.analysisName)}`
-    );
-  };
+  // const handleAnalysisSelected = (analysis: SavedAnalysis) => {
+  //   setAnalysisSelectorVisible(false);
+  //   router.push(
+  //     `/notes/new?template=analysis&analysisId=${
+  //       analysis.id
+  //     }&analysisName=${encodeURIComponent(analysis.analysisSetup.analysisName)}`
+  //   );
+  // };
 
   return (
     <>
@@ -166,11 +164,11 @@ export function CreateNoteFAB() {
         onClose={() => setTemplateMenuVisible(false)}
         onSelect={handleSelectTemplate}
       />
-      <AnalysisSelectorModal
+      {/* <AnalysisSelectorModal
         isVisible={isAnalysisSelectorVisible}
         onClose={() => setAnalysisSelectorVisible(false)}
         onSelect={handleAnalysisSelected}
-      />
+      /> */}
 
       <TouchableOpacity
         style={[
