@@ -1,8 +1,8 @@
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { FontSize, Padding } from "@/constants/Styles";
+import { useNotifications } from "@/hooks/useNotifications";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { initializeNotifications } from "@/services/notificationService";
 import { initializeSettings } from "@/state/settingsStore";
 import { ThemeProvider } from "@/state/ThemeContext";
 import { useUserStore } from "@/state/userStore";
@@ -60,12 +60,12 @@ export default Sentry.wrap(function RootLayout() {
   const init = useUserStore((state) => state.actions.init);
   const router = useRouter();
   const pathname = usePathname();
+  useNotifications();
   useEffect(() => {
     console.log(
       "ROOT_LAYOUT [EFFECT INIT]: Chamando init da store (APENAS UMA VEZ)..."
     );
     init();
-    initializeNotifications();
     initializeSettings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

@@ -22,7 +22,7 @@ export function EducationHeroCard() {
         </ThemedText>
       </View>
       <Image
-        source={require("@/assets/images/education.png")}
+        source={require("@/assets/images/education.webp")}
         style={styles.heroIllustration}
         resizeMode="contain"
       />
