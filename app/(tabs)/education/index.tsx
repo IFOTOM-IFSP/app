@@ -2,9 +2,9 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
+import { EducationHeroCard } from "@/components/education/EducationHeroCard";
+import { HubListItem } from "@/components/education/HubListItem";
 import { EducationLayout } from "@/components/layouts/EducationLayout";
-import { EducationHeroCard } from "@/components/specific/education/EducationHeroCard";
-import { HubListItem } from "@/components/specific/education/HubListItem";
 import { ThemedText } from "@/components/ui/ThemedText";
 
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";

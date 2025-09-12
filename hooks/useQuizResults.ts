@@ -1,10 +1,10 @@
+import type { QuizResult } from '@/storage/quizResultsStorage';
 import {
   useHighScores as useHighScoresSelector,
   useIsQuizLoading as useIsQuizLoadingSelector,
   useQuizActions,
   useQuizResults as useQuizResultsSelector
-} from '@/state/quizStore';
-import type { QuizResult } from '@/storage/quizResultsStorage';
+} from '@/store/quizStore';
 import { useEffect } from 'react';
 
 interface UseQuizResultsReturn {

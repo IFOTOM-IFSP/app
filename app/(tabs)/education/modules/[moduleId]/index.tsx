@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 
 import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { PageListItem } from "@/components/specific/modules/PageListItem";
+import { PageListItem } from "@/components/modules/PageListItem";
 import { Button } from "@/components/ui/Button";
 import { ThemedText } from "@/components/ui/ThemedText";
 import {

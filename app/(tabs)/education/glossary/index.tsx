@@ -3,7 +3,7 @@ import SearchComponent from "@/components/common/SearchComponent";
 import ThemedFlatList from "@/components/common/ThemedFlatList";
 import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { GlossaryListItem } from "@/components/specific/glossary/GlossaryListItem";
+import { GlossaryListItem } from "@/components/glossary/GlossaryListItem";
 import { Padding } from "@/constants/Styles";
 import { glossaryData } from "@/data/glossaryData";
 import React, { useMemo, useState } from "react";

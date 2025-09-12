@@ -1,19 +1,57 @@
-import { ScreenLayout } from "@/components/layouts/ScreenLayout";
+import { Margin, Padding } from "@/constants/Styles";
+import { INFO_CARD_DATA } from "@/data/analysisData";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { useRouter } from "expo-router";
+import AnalysisHeader from "@/src/components/analysis/analysisHeader";
+import ButtonFooter from "@/src/components/analysis/ButtonFooter";
+import CardMain from "@/src/components/analysis/cardMain";
+import { InfoCard } from "@/src/components/analysis/InfoCard";
+import { ThemedView } from "@/src/components/ui/ThemedView";
+import { useUserName } from "@/store/userStore";
+import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 
-export default function AnalysisScreen() {
-  const router = useRouter();
-  const backgroundColor = useThemeValue("background");
-  const tintColor = useThemeValue("tint");
+export default function AnalysisPage() {
+  const colorsGradient = useThemeValue("authGradient");
+  const colorsBackground = useThemeValue("card");
+  const name = useUserName();
+  const handleMenuPress = () => {
+    console.log("Menu button pressed");
+  };
 
   return (
-    <ScreenLayout>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {/* Add your analysis content here */}
+    <ThemedView style={{ flex: 1 }}>
+      <LinearGradient colors={colorsGradient}>
+        <AnalysisHeader handleMenuPress={handleMenuPress} name={name} />
+        <CardMain />
+      </LinearGradient>
+      <ScrollView style={{ paddingHorizontal: Padding.lg }}>
+        <View style={styles.gridContainer}>
+          {INFO_CARD_DATA.map((item) => (
+            <InfoCard
+              title={item.title}
+              subtitle={item.subtitle}
+              largeNumber={item.largeNumber}
+              smallIcon={item.smallIcon}
+              route={item.route}
+              key={item.title}
+            />
+          ))}
+        </View>
+
+        <ButtonFooter />
       </ScrollView>
-    </ScreenLayout>
+    </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  gridContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+
+    paddingTop: Margin.md,
+    width: "100%",
+  },
+});

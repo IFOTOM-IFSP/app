@@ -4,10 +4,10 @@
     "slug": "iFOTOM",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon.jpg",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/splash_icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#A25CC7"
     },
@@ -20,7 +20,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/splash_icon.png",
         "backgroundColor": "#A25CC7"
       },
       "permissions": [
@@ -56,9 +56,9 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/splash-icon.png",
+          "image": "./assets/images/splash_icon.png",
           "dark": {
-            "image": "./assets/splash-icon-dark.png"
+            "image": "./assets/images/splash_icon.png"
           },
           "imageWidth": 500,
           "imageHeight": 700
@@ -70,9 +70,6 @@
         {
           "color": "#ffffff",
           "defaultChannel": "default",
-          "sounds": [
-            "./assets/a.wav"
-          ],
           "enableBackgroundRemoteNotifications": false
         }
       ],

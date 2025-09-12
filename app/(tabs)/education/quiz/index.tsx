@@ -3,7 +3,7 @@ import SearchComponent from "@/components/common/SearchComponent";
 import ThemedFlatList from "@/components/common/ThemedFlatList";
 import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { QuizListItem } from "@/components/specific/quiz/QuizListItem";
+import { QuizListItem } from "@/components/quiz/QuizListItem";
 import { Margin } from "@/constants/Styles";
 import { quizData } from "@/data/index";
 import { useQuizResults } from "@/hooks/useQuizResults";

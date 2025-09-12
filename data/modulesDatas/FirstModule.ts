@@ -286,7 +286,7 @@ export const firstModule: Module = {
           {
             id: 'aplicacoes-imagem',
             type: 'image',
-            src: require('@/assets/images/aplicacoes-espectro.jpg'),
+            src: require('@/assets/images/spectrum_applications.jpg'),
             alt: 'Diversas aplicações da espectrofotometria em diferentes campos.',
             caption: 'A versatilidade da espectrofotometria a torna indispensável em muitos setores.',
             width: 320,

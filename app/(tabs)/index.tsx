@@ -1,48 +1,56 @@
-import { AntDesign, FontAwesome5, SimpleLineIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { HomeHeader } from "@/components/specific/home/HomeHeader";
-import { StartAnalysisCard } from "@/components/specific/home/StartAnalysisCard";
+import { HomeHeader } from "@/components/home/HomeHeader";
+import { StartAnalysisCard } from "@/components/home/StartAnalysisCard";
 import { Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 
-import { useUserStore } from "@/state/userStore";
+import {
+  UsefulSections,
+  UsefulSectionsProps,
+} from "@/components/common/UsefulSections";
+import { useUserStore } from "@/store/userStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type AppRouter = ReturnType<typeof useRouter>;
-const getUsefulSectionsData = (router: AppRouter) => [
-  {
-    id: "ar-scan",
-    label: "AR Scan",
-    iconName: "vr-cardboard",
-    iconComponent: FontAwesome5,
-    onPress: () => console.log("AR Scan Pressionado"),
-  },
-  {
-    id: "about",
-    label: "sobre",
-    iconName: "exclamationcircleo",
-    iconComponent: AntDesign,
-    onPress: () => router.push("/about"),
-  },
-  {
-    id: "doubts",
-    label: "Dúvidas",
-    iconName: "question",
-    iconComponent: SimpleLineIcons,
-    onPress: () => router.push("/doubts"),
-  },
-  {
-    id: "more",
-    label: "Mais",
-    iconName: "options",
-    iconComponent: SimpleLineIcons,
-    onPress: () => router.push("/options"),
-  },
-];
+const getUsefulSectionsData = (router: AppRouter): UsefulSectionsProps => {
+  return {
+    sections: [
+      {
+        id: "espectrofototometros",
+        label: "Espectrofotômetros",
+        iconName: "camera-document",
+        iconLibrary: "MaterialCommunityIcons",
+        onPress: () => console.log("AR Scan Pressionado"),
+      },
+      {
+        id: "about",
+        label: "Guia rápido",
+        iconName: "running",
+        iconLibrary: "FontAwesome5",
+        onPress: () => router.push("/about"),
+      },
+      {
+        id: "doubts",
+        label: "Dúvidas",
+        iconName: "question",
+        iconLibrary: "SimpleLineIcons",
+        onPress: () => router.push("/doubts"),
+      },
+      {
+        id: "more",
+        label: "Mais",
+        iconName: "options",
+        iconLibrary: "SimpleLineIcons",
+        onPress: () => router.push("/options"),
+      },
+    ],
+    title: true,
+  };
+};
 
 export default function HomeScreen() {
   const userName = useUserStore((state) => state.name);
@@ -68,10 +76,6 @@ export default function HomeScreen() {
   //   noteActions.init();
   //   analysisActions.fetchAllAnalyses();
   // }, [analysisActions, noteActions]);
-  const handleStartAnalysis = () => {
-    console.log("Botão SIM para iniciar análise clicado");
-    router.push("/analysis/index");
-  };
 
   const handleSettingsPress = () => {
     router.push("/settings");
@@ -94,8 +98,14 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}>
         <HomeHeader userName={userName} onSettingsPress={handleSettingsPress} />
-        <StartAnalysisCard onPress={handleStartAnalysis} />
-        {/* <UsefulSections title={true} sections={getUsefulSectionsData} /> */}
+        <StartAnalysisCard
+          href="/analysis"
+          sharedTransitionTag="analysis-card-main"
+        />
+        <UsefulSections
+          title={usefulSectionsData.title}
+          sections={usefulSectionsData.sections}
+        />
         {/* <HistoryToggleList
           notes={notes}
           analyses={analyses}

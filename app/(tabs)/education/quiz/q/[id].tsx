@@ -1,10 +1,10 @@
-import { QuizActiveScreen } from "@/components/specific/quiz/QuizActiveScreen";
-import { QuizResultsScreen } from "@/components/specific/quiz/QuizResultsScreen";
+import { QuizActiveScreen } from "@/components/quiz/QuizActiveScreen";
+import { QuizResultsScreen } from "@/components/quiz/QuizResultsScreen";
 import BackButton from "@/components/ui/BackButton";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { quizData } from "@/data/index";
-import { useQuizActions } from "@/state/quizStore";
+import { useQuizActions } from "@/store/quizStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet } from "react-native";

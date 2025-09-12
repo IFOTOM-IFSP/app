@@ -2,13 +2,13 @@ import { ScreenLayout } from "@/components/layouts/ScreenLayout";
 import {
   ChecklistItem,
   ChecklistItemRow,
-} from "@/components/specific/notes/ChecklistItemRow";
+} from "@/components/notes/ChecklistItemRow";
 import { ThemedText } from "@/components/ui/ThemedText";
 import { ThemedView } from "@/components/ui/ThemedView";
 import { FontSize, Padding, Spacing } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { useNotesActions, useNotesStore } from "@/state/notesStore";
 import { Note } from "@/storage/notesStorage";
+import { useNotesActions, useNotesStore } from "@/store/notesStore";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Plus, Save, Trash2 } from "lucide-react-native";

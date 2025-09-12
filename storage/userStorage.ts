@@ -21,7 +21,6 @@ async function getUserDB(): Promise<SQLiteDatabase> {
       INSERT OR IGNORE INTO user_profile (id, name, firstLaunchDone) VALUES (${USER_PROFILE_ID}, NULL, 0);
     `);
     
-    console.log("SQLite [userStorage]: Tabela 'user_profile' pronta.");
     return userDbInstance;
   } catch (error) {
     handleError(error, 'userStorage:getUserDB');

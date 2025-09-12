@@ -3,7 +3,7 @@ import SearchComponent from "@/components/common/SearchComponent";
 import ThemedFlatList from "@/components/common/ThemedFlatList";
 import TitleSection from "@/components/common/TitleSection";
 import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import ReferenceCard from "@/components/specific/references/ReferenceCard";
+import ReferenceCard from "@/components/references/ReferenceCard";
 import { referencesData } from "@/data/referencesData";
 import { Reference, ReferenceType } from "@/models";
 import React, { useMemo, useState } from "react";

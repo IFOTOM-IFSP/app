@@ -49,7 +49,7 @@ async function scheduleDailyReminder(): Promise<void> {
         channelId: NOTIFICATION_CHANNEL_ID,
       },
     });
-    console.log('Serviço: Notificação diária agendada para as 12:00.');
+
   } catch (error) {
     handleError(error, 'notificationsService:scheduleDailyReminder');
     throw error;
@@ -94,7 +94,6 @@ export const notificationsService = {
     try {
       await Notifications.cancelAllScheduledNotificationsAsync();
       await AsyncStorage.setItem(NOTIFICATIONS_ENABLED_KEY, 'false');
-      console.log('Serviço: Notificações canceladas.');
     } catch (error) {
       handleError(error, 'notificationsService:disable');
       throw error;

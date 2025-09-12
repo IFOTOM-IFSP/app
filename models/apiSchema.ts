@@ -1,3 +1,12 @@
+/*
+ * ----------------------------------------------------------------------
+ * Ficheiro: src/models/apiSchema.ts (Corrigido)
+ * ----------------------------------------------------------------------
+ * Define todas as interfaces e tipos para a comunicação com a API do back-end.
+ */
+
+// --- Tipos de Dados Fundamentais ---
+
 export interface ApiSampleFrame {
   id: string; 
   type: 'standard' | 'unknown';
@@ -7,7 +16,9 @@ export interface ApiSampleFrame {
   timestamps_sec?: number[];
 }
 
-export type SpectrumPoint = [number, number]; 
+export type SpectrumPoint = [number, number];
+
+// --- Estruturas de Requisição ---
 
 export interface ReferenceProcessingRequest {
   dark_frames_base64: string[];
@@ -24,12 +35,13 @@ export interface AnalysisRequest {
   target_wavelength?: number;
   scan_range?: [number, number];
   optical_path_cm?: number;
-  
   calibration_curve?: {
     slope: number;
     intercept: number;
   };
 }
+
+// --- Estruturas de Resposta ---
 
 export interface ApiCalibrationCurve {
   r_squared: number;
@@ -38,27 +50,29 @@ export interface ApiCalibrationCurve {
   intercept: number;
 }
 
-
+/**
+ * O resultado processado para uma única amostra.
+ * CORRIGIDO: Adicionadas as propriedades `type` e `concentration`.
+ */
 export interface ApiSampleResult {
   sample_id: string;
+  type: 'standard' | 'unknown'; // Essencial para filtrar os resultados
+  concentration?: number; // A concentração original para amostras padrão
   sample_absorbance?: number;
-  calculated_concentration?: number;
+  calculated_concentration?: number; // A concentração calculada para amostras desconhecidas
   spectrum_data?: SpectrumPoint[]; 
 }
-
 
 export interface ApiAnalysisResult {
   calibration_curve?: ApiCalibrationCurve;
   sample_results: ApiSampleResult[]; 
 }
 
-
 export interface AnalysisResponse {
   status: 'success' | 'error';
   results?: ApiAnalysisResult;
   error?: string;
 }
-
 
 export interface ReferenceProcessingResponse {
   status: 'success' | 'error';
