@@ -3,7 +3,6 @@ import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
 
 const analysisFormMap = {
   quantitative: QuantitativeConfig,
@@ -20,21 +19,13 @@ export default function AnalysisConfigurationScreen() {
 
   return (
     <ScreenLayout>
-      <View style={styles.container}>
-        {AnalysisFormComponent ? (
-          <AnalysisFormComponent />
-        ) : (
-          <ThemedText>
-            Erro: Tipo de análise '{String(analysisFormId)}' desconhecido.
-          </ThemedText>
-        )}
-      </View>
+      {AnalysisFormComponent ? (
+        <AnalysisFormComponent />
+      ) : (
+        <ThemedText>
+          Erro: Tipo de análise '{String(analysisFormId)}' desconhecido.
+        </ThemedText>
+      )}
     </ScreenLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

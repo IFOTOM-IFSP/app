@@ -17,10 +17,6 @@ interface FormWrapperProps {
   isSubmitting?: boolean;
 }
 
-/**
- * Um wrapper de layout para telas de formulário. Inclui KeyboardAvoidingView,
- * uma área de rolagem para os campos e um rodapé fixo com o botão de submissão.
- */
 export function FormWrapper({
   children,
   onSubmit,
@@ -34,7 +30,9 @@ export function FormWrapper({
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}>
+      {/* O ScrollView agora tem um estilo próprio para ocupar o espaço */}
       <ScrollView
+        style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}>
@@ -60,12 +58,17 @@ export function FormWrapper({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignContent: "center",
+    justifyContent: "center",
+  },
+  scrollView: {
+    flex: 1,
   },
   scrollContent: {
     paddingVertical: Padding.sm,
     paddingHorizontal: Padding.md,
-    flexGrow: 1,
   },
+  // O rodapé fixo para o botão.
   footer: {
     padding: Padding.md,
     borderTopWidth: 1,

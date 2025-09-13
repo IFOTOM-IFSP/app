@@ -7,13 +7,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { ControlledFormField } from "@/src/components/common/forms/ControlledInput";
-import { ControlledSwitch } from "@/src/components/common/forms/ControlledSwitch";
 import { FormSection } from "@/src/components/configuration/FormSection";
-import { FormWrapper } from "@/src/components/common/forms/FormWrapper";
-import TitleSection from "@/src/components/common/TitleSection";
-import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { SelectionInput } from "@/src/components/ui/SelectionInput";
+import { View } from "react-native";
+import { ControlledFormField } from "./ControlledFormField";
+import { ControlledSwitch } from "./ControlledSwitch";
+import { FormWrapper } from "./FormWrapper";
 
 export default function AnalysisConfigurationScreen() {
   const {
@@ -57,15 +56,16 @@ export default function AnalysisConfigurationScreen() {
   const profileOptions = profiles.map((p) => ({ label: p.name, value: p.id }));
 
   return (
-    <ScreenLayout>
-      <TitleSection
+    <View>
+      {/* <TitleSection
         title="Configurar Análise"
         subtitle="Preencha os detalhes para iniciar sua análise quantitativa."
-      />
+        style={{ padding: 0 }}
+      /> */}
       <FormWrapper
         buttonTitle="Próximo Passo"
         onSubmit={handleSubmit(onSubmit)}
-        isSubmitting={!isValid || status === "calibrating"}>
+        isSubmitting={status === "calibrating"}>
         <FormSection title="Informações Básicas">
           <ControlledFormField
             name="analysisName"
@@ -139,6 +139,6 @@ export default function AnalysisConfigurationScreen() {
           )}
         </FormSection>
       </FormWrapper>
-    </ScreenLayout>
+    </View>
   );
 }

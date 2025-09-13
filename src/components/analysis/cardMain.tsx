@@ -12,7 +12,7 @@ export default function CardMain() {
     <TouchableOpacity
       style={[styles.analysisStart, { backgroundColor: cardColor }]}
       activeOpacity={0.9}
-      onPress={() => router.push("/(tabs)/analysis/create/index")}>
+      onPress={() => router.push("/(tabs)/analysis/create")}>
       <View style={styles.textContainerCard}>
         <ThemedText style={[styles.titleCard, { color: textWhite }]}>
           Iniciar análise

@@ -45,7 +45,7 @@ export const useAnalysisFlowStore = create<AnalysisFlowState>((set, get) => ({
       get().actions.resetFlow();
       get().actions.updateData({ analysisType });
       set({ step: "configuring" });
-      router.push({
+      router.navigate({
         pathname: "/(tabs)/analysis/create/[analysisFormId]",
         params: { analysisFormId: analysisType },
       });

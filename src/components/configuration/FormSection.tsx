@@ -16,9 +16,6 @@ interface FormSectionProps extends ViewProps {
   children: React.ReactNode;
 }
 
-/**
- * Um container visual para agrupar campos de formulário relacionados sob um título.
- */
 export function FormSection({ title, children, style }: FormSectionProps) {
   const cardBackgroundColor = useThemeValue("card");
   const borderColor = useThemeValue("border");
@@ -38,10 +35,12 @@ export function FormSection({ title, children, style }: FormSectionProps) {
 
 const styles = StyleSheet.create({
   container: {
-    borderWidth: 1,
-    borderRadius: BorderRadius.lg,
-    padding: Padding.lg,
-    marginBottom: Margin.lg,
+    borderWidth: 0.3,
+    borderRadius: BorderRadius.sm,
+    paddingHorizontal: Padding.md,
+    paddingTop: Padding.lg,
+    width: "100%",
+    paddingBottom: Padding.md,
   },
   title: {
     fontSize: FontSize.lg,

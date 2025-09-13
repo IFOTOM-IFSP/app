@@ -38,7 +38,6 @@ export default function AnalysisPage() {
             />
           ))}
         </View>
-
         <ButtonFooter />
       </ScrollView>
     </ThemedView>

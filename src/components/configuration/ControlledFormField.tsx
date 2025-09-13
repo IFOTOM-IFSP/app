@@ -55,6 +55,7 @@ export function ControlledFormField<T extends FieldValues>({
 const styles = StyleSheet.create({
   container: {
     marginBottom: Margin.md,
+    width: "100%",
   },
   label: {
     fontSize: FontSize.md,
