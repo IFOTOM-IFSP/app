@@ -1,5 +1,5 @@
-import TitleSection from "@/components/common/TitleSection";
-import { ThemedView } from "@/components/ui/ThemedView";
+import TitleSection from "@/src/components/common/TitleSection";
+import { ThemedView } from "@/src/components/ui/ThemedView";
 import { Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";

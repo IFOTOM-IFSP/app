@@ -1,6 +1,6 @@
-import { ChartContainer } from "@/components/interactive/ChartContainer";
-import { Button } from "@/components/ui/Button";
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ChartContainer } from "@/src/components/interactive/ChartContainer";
+import { Button } from "@/src/components/ui/Button";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,

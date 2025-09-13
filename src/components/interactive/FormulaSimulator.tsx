@@ -1,6 +1,6 @@
-import { InteractiveCard } from "@/components/common/InteractiveCard";
-import { ThemedInput } from "@/components/ui/ThemedInput";
-import { ThemedText } from "@/components/ui/ThemedText";
+import { InteractiveCard } from "@/src/components/common/InteractiveCard";
+import { ThemedInput } from "@/src/components/ui/ThemedInput";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React, { useEffect, useState } from "react";

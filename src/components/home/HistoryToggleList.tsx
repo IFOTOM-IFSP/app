@@ -1,5 +1,5 @@
-import { SwitchRow } from "@/components/ui/SwitchRow";
-import { ThemedText } from "@/components/ui/ThemedText";
+import { SwitchRow } from "@/src/components/ui/SwitchRow";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { FontSize, FontWeight, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 

@@ -1,4 +1,4 @@
-import { InteractiveCard } from "@/components/common/InteractiveCard";
+import { InteractiveCard } from "@/src/components/common/InteractiveCard";
 import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";

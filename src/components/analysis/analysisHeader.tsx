@@ -1,5 +1,5 @@
-import { IconButton } from "@/components/ui/icon/IconButton";
-import { ThemedText } from "@/components/ui/ThemedText";
+import { IconButton } from "@/src/components/ui/icon/IconButton";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { FontWeight, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";

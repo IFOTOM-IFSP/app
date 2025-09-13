@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -6,12 +6,14 @@ import {
   Margin,
   Padding,
 } from "@/constants/Styles";
-import { Quiz } from "@/data/quizData";
+
+
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { Feather } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { Quiz } from "@/models";
 
 interface QuizListItemProps {
   item: Quiz;

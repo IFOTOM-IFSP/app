@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { FontSize, Margin, Spacing } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { Ionicons } from "@expo/vector-icons";

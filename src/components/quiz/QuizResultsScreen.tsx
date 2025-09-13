@@ -1,8 +1,8 @@
-import { PrimaryButton } from "@/components/ui/Button";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { Button } from "@/src/components/ui/Button";
+import { ThemedText } from "@/src/components/ui/ThemedText";
+import { ThemedView } from "@/src/components/ui/ThemedView";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -49,16 +49,12 @@ export function QuizResultsScreen({
       <ThemedText style={[styles.summaryText, { color: textSecondaryColor }]}>
         Você acertou {correctCount} de {totalQuestions} questões.
       </ThemedText>
-      <PrimaryButton
+      <Button
         title="Tentar Novamente"
         onPress={onRestart}
         style={{ marginBottom: Margin.sm }}
       />
-      <PrimaryButton
-        title="Voltar aos Quizzes"
-        onPress={onGoBack}
-        variant="outline"
-      />
+      <Button title="Voltar aos Quizzes" onPress={onGoBack} variant="outline" />
     </ThemedView>
   );
 }

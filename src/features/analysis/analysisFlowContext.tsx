@@ -2,6 +2,8 @@ import { router } from "expo-router";
 import { Alert } from "react-native";
 import { create } from "zustand";
 
+import { useBaselineStore } from "@/store/baselineStore";
+
 type AnalysisStep =
   | "idle"
   | "configuring"
@@ -15,80 +17,145 @@ interface AnalysisData {
   analysisType?: string;
   hasCalibratedSpectrometer?: boolean;
   hasDefinedCurve?: boolean;
-  darkSignalImages?: any;
-  whiteSignalImages?: any;
 }
 
 interface AnalysisFlowState {
   step: AnalysisStep;
   data: AnalysisData;
-  startAnalysis: (analysisType: string) => void;
-  handleConfigurationStep: () => void;
-  updateData: (newData: Partial<AnalysisData>) => void;
+  actions: {
+    startAnalysis: (analysisType: string) => void;
+    handleConfigurationStep: (configData: Partial<AnalysisData>) => void;
+    updateData: (newData: Partial<AnalysisData>) => void;
+    completeWavelengthCalibration: () => void;
+    completeCurveBuilding: () => void;
+    completeBaselineCapture: () => void;
+    navigateToResults: () => void;
+    resetFlow: () => void;
+  };
 }
 
 export const useAnalysisFlowStore = create<AnalysisFlowState>((set, get) => ({
   step: "idle",
-  data: {
-    hasCalibratedSpectrometer: false,
-    hasDefinedCurve: true,
-  },
+  data: {},
+  actions: {
+    /**
+     * Reseta o fluxo e inicia uma nova análise, navegando para a tela de configuração.
+     */
+    startAnalysis: (analysisType) => {
+      get().actions.resetFlow();
+      get().actions.updateData({ analysisType });
+      set({ step: "configuring" });
+      router.push({
+        pathname: "/(tabs)/analysis/create/[analysisFormId]",
+        params: { analysisFormId: analysisType },
+      });
+    },
 
-  updateData: (newData) => {
-    set((state) => ({
-      data: { ...state.data, ...newData },
-    }));
-  },
+    /**
+     * Atualiza o estado interno do fluxo com novos dados.
+     */
+    updateData: (newData) => {
+      set((state) => ({
+        data: { ...state.data, ...newData },
+      }));
+    },
 
-  startAnalysis: (analysisType) => {
-    get().updateData({ analysisType });
-    set({ step: "configuring" });
+    /**
+     * Chamado após o formulário de configuração ser preenchido.
+     * Decide qual é a primeira etapa do fluxo.
+     */
+    handleConfigurationStep: (configData) => {
+      get().actions.updateData(configData);
+      const { data } = get();
 
-    router.push({
-      pathname: "/analysis/[analysisFormsConfiguration]",
-      params: { analysisFormsConfiguration: analysisType },
-    });
-  },
+      if (!data.hasCalibratedSpectrometer) {
+        set({ step: "calibrating_wavelength" });
+        router.push("/(tabs)/analysis/create/calibrate");
+        return;
+      }
+      // Se já está calibrado, pula para a próxima verificação
+      get().actions.completeWavelengthCalibration();
+    },
 
-  handleConfigurationStep: () => {
-    const { data } = get();
+    /**
+     * Chamado quando a etapa de calibração do espectrômetro é concluída.
+     */
+    completeWavelengthCalibration: () => {
+      get().actions.updateData({ hasCalibratedSpectrometer: true });
+      const { data } = get();
 
-    if (!data.hasCalibratedSpectrometer) {
-      set({ step: "calibrating_wavelength" });
-      router.push("/analysis/wave_length_peak_setup");
-      return;
-    }
+      if (!data.hasDefinedCurve) {
+        set({ step: "building_curve" });
+        router.push("/(tabs)/analysis/create/build-curve");
+        return;
+      }
+      // Se a curva já existe, pula para a próxima verificação
+      get().actions.completeCurveBuilding();
+    },
 
-    if (!data.hasDefinedCurve) {
-      set({ step: "building_curve" });
-      router.push("/analysis/curve_builder");
-      return;
-    }
+    /**
+     * Chamado quando a etapa de construção de curva é concluída.
+     */
+    completeCurveBuilding: () => {
+      get().actions.updateData({ hasDefinedCurve: true });
+      const { darkSignalImages, whiteSignalImages } =
+        useBaselineStore.getState();
 
-    if (data.darkSignalImages && data.whiteSignalImages) {
-      Alert.alert(
-        "Linha de Base Existente",
-        "Deseja usá-la ou medir novamente?",
-        [
-          {
-            text: "Usar Existente",
-            onPress: () => {
-              set({ step: "measuring_sample" });
-              router.push("/analysis/measurement_sample");
+      if (darkSignalImages && whiteSignalImages) {
+        Alert.alert(
+          "Linha de Base Existente",
+          "Deseja usá-la ou medir novamente?",
+          [
+            {
+              text: "Usar Existente",
+              onPress: () => {
+                set({ step: "measuring_sample" });
+                router.push("/(tabs)/analysis/create/measure");
+              },
             },
-          },
-          {
-            text: "Medir Novamente",
-            onPress: () => {
-              set({ step: "capturing_base" });
-              router.push("/analysis/capture_base");
+            {
+              text: "Medir Novamente",
+              onPress: () => {
+                set({ step: "capturing_base" });
+                router.push("/(tabs)/analysis/create/baseline");
+              },
             },
-          },
-        ]
-      );
-    } else {
-      set({ step: "capturing_base" });
-      router.push("/analysis/capture_base");
-    }
+          ]
+        );
+      } else {
+        set({ step: "capturing_base" });
+        router.push("/(tabs)/analysis/create/baseline");
+      }
+    },
+
+    /**
+     * Chamado quando a captura da linha de base (branco/escuro) é concluída.
+     */
+    completeBaselineCapture: () => {
+      set({ step: "measuring_sample" });
+      router.push("/(tabs)/analysis/create/measure");
+    },
+
+    /**
+     * Navega para a tela final de resultados.
+     */
+    navigateToResults: () => {
+      set({ step: "results" });
+      // Assumindo que você criará uma tela de resultados em /create/results.tsx
+      router.push("/(tabs)/analysis/view/results");
+    },
+
+    /**
+     * Limpa o estado do fluxo para uma nova análise.
+     */
+    resetFlow: () => {
+      set({ step: "idle", data: {} });
+    },
   },
 }));
+
+// Hooks para facilitar o uso no restante do aplicativo
+export const useAnalysisFlowState = () =>
+  useAnalysisFlowStore((state) => ({ step: state.step, data: state.data }));
+export const useAnalysisFlowActions = () =>
+  useAnalysisFlowStore((state) => state.actions);

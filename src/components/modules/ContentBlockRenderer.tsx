@@ -9,11 +9,11 @@ import {
 } from "@/models";
 import React from "react";
 
-import { CodeBlock } from "@/components/contentBlocks/CodeBlock";
-import { ImageBlock } from "@/components/contentBlocks/ImageBlock";
-import { InteractiveBlock } from "@/components/contentBlocks/InteractiveBlock";
-import { TextBlock } from "@/components/contentBlocks/TextBlock";
-import { VideoBlock } from "@/components/contentBlocks/VideoBlock";
+import { CodeBlock } from "@/src/components/contentBlocks/CodeBlock";
+import { ImageBlock } from "@/src/components/contentBlocks/ImageBlock";
+import { InteractiveBlock } from "@/src/components/contentBlocks/InteractiveBlock";
+import { TextBlock } from "@/src/components/contentBlocks/TextBlock";
+import { VideoBlock } from "@/src/components/contentBlocks/VideoBlock";
 import { ListBlock } from "../contentBlocks/ListBlock";
 
 type ContentBlockRendererProps = {

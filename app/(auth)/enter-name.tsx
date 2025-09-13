@@ -1,8 +1,8 @@
-import { AuthLayout } from "@/components/layouts/AuthLayout";
-import { Button } from "@/components/ui/Button";
-import { FormField } from "@/components/ui/form/FormInput";
-import { ThemedText } from "@/components/ui/ThemedText";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
+import { AuthLayout } from "@/src/components/layouts/AuthLayout";
+import { Button } from "@/src/components/ui/Button";
+import { FormField } from "@/src/components/ui/form/FormInput";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
 import React, { JSX, useState } from "react";

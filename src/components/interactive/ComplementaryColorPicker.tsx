@@ -1,5 +1,5 @@
-import { InteractiveCard } from "@/components/common/InteractiveCard";
-import { ThemedText } from "@/components/ui/ThemedText";
+import { InteractiveCard } from "@/src/components/common/InteractiveCard";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,

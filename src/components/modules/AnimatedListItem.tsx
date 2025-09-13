@@ -1,6 +1,6 @@
 import ContentCard, {
   CONTENT_CARD_HEIGHT,
-} from "@/components/common/ContentCard";
+} from "@/src/components/common/ContentCard";
 import { Module } from "@/models";
 import { Link } from "expo-router";
 import React, { useEffect, useRef } from "react";

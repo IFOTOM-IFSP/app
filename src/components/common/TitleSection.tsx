@@ -1,5 +1,5 @@
-import BackButton from "@/components/ui/BackButton";
-import { ThemedText } from "@/components/ui/ThemedText";
+import BackButton from "@/src/components/ui/BackButton";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { FontSize, FontWeight, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";

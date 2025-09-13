@@ -1,6 +1,6 @@
-import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import AnimatedListItem from "@/components/modules/AnimatedListItem";
-import HeaderIndex from "@/components/modules/ModuleListHeader";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import AnimatedListItem from "@/src/components/modules/AnimatedListItem";
+import HeaderIndex from "@/src/components/modules/ModuleListHeader";
 import { Padding } from "@/constants/Styles";
 import { MODULES_DATA } from "@/data";
 import { default as React, useRef } from "react";

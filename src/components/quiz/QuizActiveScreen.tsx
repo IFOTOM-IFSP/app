@@ -1,8 +1,3 @@
-import BackButton from "@/components/ui/BackButton";
-import { PrimaryButton } from "@/components/ui/Button";
-import { QuizOption } from "@/components/ui/QuizOption";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
 import {
   BorderRadius,
   FontSize,
@@ -10,10 +5,15 @@ import {
   Margin,
   Padding,
 } from "@/constants/Styles";
-import { Question, Quiz } from "@/data/quizData";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { Question, Quiz } from "@/models";
+import BackButton from "@/src/components/ui/BackButton";
+import { QuizOption } from "@/src/components/ui/QuizOption";
+import { ThemedText } from "@/src/components/ui/ThemedText";
+import { ThemedView } from "@/src/components/ui/ThemedView";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { Button } from "../ui/Button";
 
 interface QuizActiveScreenProps {
   quiz: Quiz;
@@ -114,7 +114,7 @@ export function QuizActiveScreen({
       </ScrollView>
 
       <View style={[styles.footer, { borderTopColor: borderColor }]}>
-        <PrimaryButton
+        <Button
           title={
             currentQuestionIndex === quiz.questions.length - 1
               ? "Finalizar"

@@ -1,306 +1,144 @@
 import { AnalysisSetupFormData, analysisSetupSchema } from "@/models/analysis";
+import { useAnalysisFlowActions } from "@/src/features/analysis/analysisFlowContext";
 import { useAnalysisStore } from "@/store/analysisStore";
-import { useBaselineStore } from "@/store/baselineStore";
 import { useCurveStore } from "@/store/curveStore";
 import { useProfileStore } from "@/store/profileStore";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Picker } from "@react-native-picker/picker";
-import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Alert,
-  Button,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { ScreenLayout } from "../layouts/ScreenLayout";
 
-export default function QuantitativeConfig() {
+import { ControlledFormField } from "@/src/components/common/forms/ControlledInput";
+import { ControlledSwitch } from "@/src/components/common/forms/ControlledSwitch";
+import { FormSection } from "@/src/components/configuration/FormSection";
+import { FormWrapper } from "@/src/components/common/forms/FormWrapper";
+import TitleSection from "@/src/components/common/TitleSection";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { SelectionInput } from "@/src/components/ui/SelectionInput";
+
+export default function AnalysisConfigurationScreen() {
   const {
-    profiles,
     loadProfiles,
+    profiles,
     isLoading: profilesLoading,
   } = useProfileStore();
-  const { curves, loadCurves } = useCurveStore();
-  const {
-    darkSignalImages,
-    whiteSignalImages,
-    isLoaded,
-    loadBaselineFromStorage,
-  } = useBaselineStore();
-  const { startAnalysis } = useAnalysisStore();
-
-  useEffect(() => {
-    if (!isLoaded) {
-      loadBaselineFromStorage();
-    }
-  }, [isLoaded, loadBaselineFromStorage]);
+  const { loadCurves, curves } = useCurveStore();
+  const { handleConfigurationStep } = useAnalysisFlowActions();
+  const { startAnalysis, status } = useAnalysisStore();
 
   const {
     control,
     handleSubmit,
     watch,
-    formState: { errors, isValid },
+    formState: { isValid, errors },
   } = useForm<AnalysisSetupFormData>({
     resolver: zodResolver(analysisSetupSchema),
     mode: "onBlur",
+    defaultValues: {
+      analysisName: "",
+      substance: "",
+      hasDefinedCurve: false,
+      hasCalibratedSpectrometer: false,
+    },
   });
-
-  const router = useRouter();
 
   const hasDefinedCurve = watch("hasDefinedCurve");
   const hasCalibratedSpectrometer = watch("hasCalibratedSpectrometer");
 
+  useEffect(() => {
+    loadProfiles();
+    loadCurves();
+  }, []);
+
   const onSubmit = (data: AnalysisSetupFormData) => {
     startAnalysis(data);
-    console.log("Formulário submetido:", data);
-
-    if (!data.hasCalibratedSpectrometer) {
-      router.push("/app/(tabs)/analysis/wave_length_peak_setup");
-      return;
-    }
-
-    if (!data.hasDefinedCurve) {
-      router.push("/(tabs)/analysis/CurveBuilder");
-      return;
-    }
-
-    if (darkSignalImages && whiteSignalImages) {
-      console.log("Linha de base encontrada. Perguntando ao usuário...");
-      Alert.alert(
-        "Linha de Base Existente",
-        "Encontramos medições de escuro e branco salvas. Deseja usá-las ou medir novamente?",
-        [
-          {
-            text: "Usar Existente",
-            onPress: () => router.push("/(tabs)/analysis/measurement-sample"),
-          },
-          {
-            text: "Medir Novamente",
-            onPress: () => router.push("/(tabs)/analysis/capture-base"),
-          },
-        ]
-      );
-    } else {
-      console.log("Linha de base não encontrada. Navegando para a captura.");
-      router.push("/(tabs)/analysis/capture-base");
-    }
+    handleConfigurationStep(data);
   };
+
+  const profileOptions = profiles.map((p) => ({ label: p.name, value: p.id }));
 
   return (
     <ScreenLayout>
-      <View style={styles.container}>
-        <Text style={styles.title}>Configurar Análise Quantitativa</Text>
-
-        {/* Nome da Análise */}
-        <Text style={styles.label}>Nome da Análise</Text>
-        <Controller
-          control={control}
-          name="analysisName"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-        />
-        {errors.analysisName && (
-          <Text style={styles.error}>{errors.analysisName.message}</Text>
-        )}
-
-        {/* Nome da Substância */}
-        <Text style={styles.label}>Substância Analisada</Text>
-        <Controller
-          control={control}
-          name="substance"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={value}
-            />
-          )}
-        />
-        {errors.substance && (
-          <Text style={styles.error}>{errors.substance.message}</Text>
-        )}
-
-        {/* Comprimento de Onda */}
-        <Text style={styles.label}>Comprimento de Onda (λ) em nm</Text>
-        <Controller
-          control={control}
-          name="wavelength"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.input}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              value={String(value || "")}
-              keyboardType="numeric"
-            />
-          )}
-        />
-        {errors.wavelength && (
-          <Text style={styles.error}>{errors.wavelength.message}</Text>
-        )}
-
-        {/* Pergunta 1: Curva de Calibração */}
-        <View style={styles.switchContainer}>
-          <Text style={styles.label}>Já possui uma curva de calibração?</Text>
-          <Controller
+      <TitleSection
+        title="Configurar Análise"
+        subtitle="Preencha os detalhes para iniciar sua análise quantitativa."
+      />
+      <FormWrapper
+        buttonTitle="Próximo Passo"
+        onSubmit={handleSubmit(onSubmit)}
+        isSubmitting={!isValid || status === "calibrating"}>
+        <FormSection title="Informações Básicas">
+          <ControlledFormField
+            name="analysisName"
             control={control}
-            name="hasDefinedCurve"
-            render={({ field: { onChange, value } }) => (
-              <Switch value={value} onValueChange={onChange} />
-            )}
+            label="Nome da Análise"
+            placeholder="Ex: Análise de Glicose"
           />
-        </View>
-
-        {hasDefinedCurve && (
-          <View style={styles.conditionalContainer}>
-            <Text style={styles.label}>Coeficiente Angular (m)</Text>
-            <Controller
-              name="slope_m"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={String(value || "")}
-                  keyboardType="numeric"
-                />
-              )}
-            />
-            <Text style={styles.label}>Coeficiente Linear (b)</Text>
-            <Controller
-              name="intercept_b"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={String(value || "")}
-                  keyboardType="numeric"
-                />
-              )}
-            />
-            {errors.slope_m && (
-              <Text style={styles.error}>{errors.slope_m.message}</Text>
-            )}
-          </View>
-        )}
-
-        {/* Pergunta 2: Aparelho Calibrado */}
-        <View style={styles.switchContainer}>
-          <Text style={styles.label}>O aparelho já foi calibrado?</Text>
-          <Controller
+          <ControlledFormField
+            name="substance"
             control={control}
+            label="Substância"
+            placeholder="Ex: Glicose"
+          />
+          <ControlledFormField
+            name="wavelength"
+            control={control}
+            label="Comprimento de Onda (nm)"
+            placeholder="Ex: 540"
+            keyboardType="numeric"
+          />
+        </FormSection>
+
+        <FormSection title="Calibração do Equipamento">
+          <ControlledSwitch
             name="hasCalibratedSpectrometer"
-            render={({ field: { onChange, value } }) => (
-              <Switch value={value} onValueChange={onChange} />
-            )}
+            control={control}
+            label="Já possui um perfil de calibração?"
           />
-        </View>
+          {hasCalibratedSpectrometer && (
+            <Controller
+              name="selectedProfileId"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <SelectionInput
+                  label="Perfil do Espectrômetro"
+                  options={profileOptions}
+                  selectedValue={value}
+                  onSelect={onChange}
+                  placeholder={
+                    profilesLoading ? "Carregando..." : "Selecione um perfil"
+                  }
+                />
+              )}
+            />
+          )}
+        </FormSection>
 
-        {hasCalibratedSpectrometer && (
-          <View style={styles.conditionalContainer}>
-            <Text style={styles.label}>Aparelho (Perfil Salvo)</Text>
-            <View style={styles.pickerContainer}>
-              <Controller
+        <FormSection title="Curva de Calibração">
+          <ControlledSwitch
+            name="hasDefinedCurve"
+            control={control}
+            label="Já possui uma curva de calibração?"
+          />
+          {hasDefinedCurve && (
+            <>
+              <ControlledFormField
+                name="slope_m"
                 control={control}
-                name="selectedProfileId"
-                render={({ field: { onChange, value } }) => (
-                  <Picker
-                    selectedValue={value}
-                    onValueChange={onChange}
-                    enabled={!profilesLoading}>
-                    <Picker.Item
-                      label="Selecione um perfil..."
-                      value={undefined}
-                    />
-                    {profiles.map((p) => (
-                      <Picker.Item key={p.id} label={p.name} value={p.id} />
-                    ))}
-                  </Picker>
-                )}
+                label="Coeficiente Angular (m)"
+                placeholder="Valor da inclinação da reta"
+                keyboardType="numeric"
               />
-            </View>
-            {errors.selectedProfileId && (
-              <Text style={styles.error}>
-                {errors.selectedProfileId.message}
-              </Text>
-            )}
-          </View>
-        )}
-
-        <View style={{ marginTop: 20 }}>
-          <Button
-            title="Próximo"
-            onPress={handleSubmit(onSubmit)}
-            disabled={!isValid}
-          />
-        </View>
-      </View>
+              <ControlledFormField
+                name="intercept_b"
+                control={control}
+                label="Coeficiente Linear (b)"
+                placeholder="Valor do intercepto"
+                keyboardType="numeric"
+              />
+            </>
+          )}
+        </FormSection>
+      </FormWrapper>
     </ScreenLayout>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: "#333",
-  },
-  input: {
-    backgroundColor: "#f0f0f0",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 5,
-  },
-  pickerContainer: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
-    backgroundColor: "#f0f0f0",
-  },
-  switchContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  conditionalContainer: {
-    padding: 15,
-    backgroundColor: "#fafafa",
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: "#eee",
-    marginBottom: 10,
-  },
-  error: {
-    color: "red",
-    marginBottom: 10,
-  },
-});

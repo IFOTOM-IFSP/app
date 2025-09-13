@@ -1,9 +1,9 @@
-import FilterTabs from "@/components/common/FilterTabs";
-import SearchComponent from "@/components/common/SearchComponent";
-import ThemedFlatList from "@/components/common/ThemedFlatList";
-import TitleSection from "@/components/common/TitleSection";
-import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import ReferenceCard from "@/components/references/ReferenceCard";
+import FilterTabs from "@/src/components/common/FilterTabs";
+import SearchComponent from "@/src/components/common/SearchComponent";
+import ThemedFlatList from "@/src/components/common/ThemedFlatList";
+import TitleSection from "@/src/components/common/TitleSection";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import ReferenceCard from "@/src/components/references/ReferenceCard";
 import { referencesData } from "@/data/referencesData";
 import { Reference, ReferenceType } from "@/models";
 import React, { useMemo, useState } from "react";

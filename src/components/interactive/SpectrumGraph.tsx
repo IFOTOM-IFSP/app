@@ -1,4 +1,4 @@
-import { ChartContainer } from "@/components/interactive/ChartContainer";
+import { ChartContainer } from "@/src/components/interactive/ChartContainer";
 import { BorderRadius, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";

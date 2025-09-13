@@ -2,16 +2,16 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
-import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { HomeHeader } from "@/components/home/HomeHeader";
-import { StartAnalysisCard } from "@/components/home/StartAnalysisCard";
 import { Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { HomeHeader } from "@/src/components/home/HomeHeader";
+import { StartAnalysisCard } from "@/src/components/home/StartAnalysisCard";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 
 import {
   UsefulSections,
   UsefulSectionsProps,
-} from "@/components/common/UsefulSections";
+} from "@/src/components/common/UsefulSections";
 import { useUserStore } from "@/store/userStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 

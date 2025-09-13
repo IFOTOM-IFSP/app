@@ -1,5 +1,5 @@
-import { CustomTabBar } from "@/components/layouts/CustomTabBar";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { CustomTabBar } from "@/src/components/layouts/CustomTabBar";
 import { Tabs } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";

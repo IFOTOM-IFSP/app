@@ -1,5 +1,5 @@
-import { ThemedInput } from "@/components/ui/ThemedInput";
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedInput } from "@/src/components/ui/ThemedInput";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,

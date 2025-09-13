@@ -1,7 +1,7 @@
-import { AuthLayout } from "@/components/layouts/AuthLayout";
-import { Button } from "@/components/ui/Button";
-import { ThemedText } from "@/components/ui/ThemedText";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
+import { AuthLayout } from "@/src/components/layouts/AuthLayout";
+import { Button } from "@/src/components/ui/Button";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useRouter } from "expo-router";
 import React, { JSX } from "react";
 import { Image, StyleSheet, View } from "react-native";

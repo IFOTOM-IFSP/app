@@ -1,5 +1,5 @@
-import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
+import { ThemedText } from "@/src/components/ui/ThemedText";
+import { ThemedView } from "@/src/components/ui/ThemedView";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import React from "react";
 import { StyleSheet } from "react-native";

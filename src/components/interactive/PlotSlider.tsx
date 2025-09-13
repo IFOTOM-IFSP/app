@@ -1,4 +1,4 @@
-import { FunctionExplorer } from "@/components/interactive/FunctionExplorer";
+import { FunctionExplorer } from "@/src/components/interactive/FunctionExplorer";
 import React from "react";
 
 interface PlotSliderProps {

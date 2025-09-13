@@ -1,9 +1,14 @@
-import { ThemedText } from "@/src/components/ui/ThemedText";
-import { BorderRadius, FontSize, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { Icon } from "@/src/components/ui/icon/Icon";
 import React from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
-import { Icon } from "./icon/Icon";
+import {
+  BorderRadius,
+  FontSize,
+  Margin,
+  Padding,
+} from "../../../constants/Styles";
+import { useThemeValue } from "../../../hooks/useThemeValue";
+import { ThemedText } from "../ui/ThemedText";
 
 interface Option<T> {
   label: string;
@@ -13,11 +18,15 @@ interface Option<T> {
 interface SelectionInputProps<T> {
   label: string;
   options: Option<T>[];
-  selectedValue: T | undefined; 
+  selectedValue: T | undefined;
   onSelect: (value: T) => void;
   placeholder?: string;
 }
 
+/**
+ * Um componente de entrada que simula um dropdown, exibindo uma lista de opções
+ * em um Alert nativo quando pressionado.
+ */
 export function SelectionInput<T>({
   label,
   options,
@@ -73,7 +82,7 @@ export function SelectionInput<T>({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: Padding.lg,
+    marginBottom: Margin.sm,
   },
   label: {
     fontSize: FontSize.md,
@@ -87,6 +96,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: BorderRadius.lg,
     padding: Padding.md,
+    minHeight: 50,
   },
   buttonText: {
     fontSize: FontSize.md,

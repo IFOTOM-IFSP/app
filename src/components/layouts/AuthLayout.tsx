@@ -1,6 +1,6 @@
 import { FontSize, FontWeight, Padding } from "@/constants/Styles";
 
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 import React, { JSX } from "react";

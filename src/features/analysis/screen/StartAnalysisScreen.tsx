@@ -1,27 +1,35 @@
+import {
+  BorderRadius,
+  FontSize,
+  FontWeight,
+  Margin,
+  Padding,
+  Spacing,
+} from "@/constants/Styles";
 import { TYPES_ANALYSIS_DATA } from "@/data/analysisData";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import AnalysisInfoModal from "@/src/components/analysis/modalTypes";
+import TitleSection from "@/src/components/common/TitleSection";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
-import BackButton from "@/src/components/ui/BackButton";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { useAnalysisFlowActions } from "@/src/features/analysis/analysisFlowContext";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
-export default function AnalysisStart() {
-  const router = useRouter();
+export default function StartAnalysisScreen() {
+  const { startAnalysis } = useAnalysisFlowActions();
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedAnalysisIndex, setSelectedAnalysisIndex] = useState(0);
-  const backgroundColor = useThemeValue("card");
-  const text = useThemeValue("text");
-  const tint = useThemeValue("tint");
 
-  const handleNavigation = (id: string) => {
-    router.push({
-      pathname: "/analysis/[analysisFormsConfiguration]",
-      params: { analysisFormsConfiguration: id },
-    });
+  const cardBackgroundColor = useThemeValue("card");
+  const tintColor = useThemeValue("tint");
+  const textSecondaryColor = useThemeValue("textSecondary");
+  const shadowColor = useThemeValue("shadow");
+  const disabledBgColor = useThemeValue("disabledBackground");
+
+  const handleStartAnalysis = (analysisType: string) => {
+    startAnalysis(analysisType);
   };
 
   const openInfoModal = (index: number) => {
@@ -31,69 +39,45 @@ export default function AnalysisStart() {
 
   return (
     <ScreenLayout>
-      <View style={styles.header}>
-        <BackButton color={text} style={styles.baseContainer} />
-        <View style={styles.headerTitleContainer}>
-          <View style={[styles.stepBadge, { backgroundColor: tint }]}>
-            <Text style={styles.stepBadgeText}>1</Text>
-          </View>
-          <ThemedText style={styles.headerTitle}>Tipo de Análise</ThemedText>
-        </View>
-        <View style={{ width: 40 }} />
-      </View>
+      <TitleSection
+        title="Tipo de Análise"
+        subtitle="Para começar, escolha o que você quer fazer."
+      />
 
-      <ThemedText style={styles.instructions}>
-        Para começar, escolha o que você quer fazer.
-      </ThemedText>
-
-      <View>
-        <View style={styles.buttonContainer}>
-          {TYPES_ANALYSIS_DATA.map((item, index) => (
+      <View style={styles.buttonContainer}>
+        {TYPES_ANALYSIS_DATA.map((item, index) => (
+          <TouchableOpacity
+            key={item.id}
+            style={[
+              styles.buttonRow,
+              { backgroundColor: cardBackgroundColor, shadowColor },
+              !item.enabled && { backgroundColor: disabledBgColor },
+            ]}
+            disabled={!item.enabled}
+            onPress={() => handleStartAnalysis(item.id)}
+            activeOpacity={0.8}>
             <View
-              key={item.id}
-              style={[
-                styles.buttonRow,
-                !item.enabled && styles.disabledRow,
-                {
-                  backgroundColor,
-                },
-              ]}>
-              <TouchableOpacity
-                style={[styles.button, !item.enabled && styles.buttonDisabled]}
-                disabled={!item.enabled}
-                onPress={() => handleNavigation(item.id)}>
-                <View style={[styles.iconContainer, { backgroundColor: tint }]}>
-                  <MaterialCommunityIcons
-                    name={item.icon as any}
-                    size={28}
-                    color={"white"}
-                  />
-                </View>
-                <View>
-                  <ThemedText
-                    style={[
-                      styles.buttonText,
-                      !item.enabled && styles.buttonTextDisabled,
-                    ]}>
-                    {item.title}
-                  </ThemedText>
-                  <ThemedText
-                    style={[
-                      styles.buttonSubtext,
-                      !item.enabled && styles.buttonTextDisabled,
-                    ]}>
-                    ({item.subtitle})
-                  </ThemedText>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.infoIcon}
-                onPress={() => openInfoModal(index)}>
-                <Feather name="info" size={24} color="#6B7280" />
-              </TouchableOpacity>
+              style={[styles.iconContainer, { backgroundColor: tintColor }]}>
+              <MaterialCommunityIcons
+                name={item.icon as any}
+                size={32}
+                color={"white"}
+              />
             </View>
-          ))}
-        </View>
+            <View style={styles.textContainer}>
+              <ThemedText style={styles.buttonText}>{item.title}</ThemedText>
+              <ThemedText
+                style={[styles.buttonSubtext, { color: textSecondaryColor }]}>
+                {item.subtitle}
+              </ThemedText>
+            </View>
+            <TouchableOpacity
+              style={styles.infoIcon}
+              onPress={() => openInfoModal(index)}>
+              <Feather name="info" size={24} color={textSecondaryColor} />
+            </TouchableOpacity>
+          </TouchableOpacity>
+        ))}
       </View>
 
       <AnalysisInfoModal
@@ -105,105 +89,56 @@ export default function AnalysisStart() {
       <Image
         source={require("@/assets/images/m_set_type.png")}
         style={styles.image}
+        resizeMode="contain"
       />
     </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    justifyContent: "space-between",
-    marginBottom: 24,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  baseContainer: {
-    padding: 0,
-    backgroundColor: "transparent",
-  },
-  headerTitleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  stepBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 10,
-  },
-  stepBadgeText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  iconContainer: {
-    paddingLeft: 20,
-    paddingRight: 25,
-    height: "100%",
-    paddingVertical: 16,
-    borderBottomLeftRadius: 8,
-    borderTopLeftRadius: 8,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-    width: 80,
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: "bold",
-  },
-  instructions: {
-    fontSize: 16,
-    color: "#6B7280",
-    textAlign: "center",
-    marginBottom: 32,
-    width: "90%",
-  },
   buttonContainer: {
-    width: "100%",
+    marginTop: Margin.md,
   },
   buttonRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 16,
-    borderRadius: 8,
+    marginBottom: Margin.md,
+    borderRadius: BorderRadius.lg,
+    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
-  disabledRow: {
-    backgroundColor: "#c4c6c9af",
-  },
-  button: {
-    flex: 1,
-    height: 80,
-    flexDirection: "row",
+  iconContainer: {
+    padding: Padding.md,
+    height: "100%",
+    justifyContent: "center",
     alignItems: "center",
+    borderTopLeftRadius: BorderRadius.lg,
+    borderBottomLeftRadius: BorderRadius.lg,
   },
-  buttonDisabled: {
-    backgroundColor: "transparent",
+  textContainer: {
+    flex: 1,
+    paddingHorizontal: Padding.md,
   },
   buttonText: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: FontSize.lg,
+    fontWeight: FontWeight.semiBold,
   },
   buttonSubtext: {
-    fontSize: 14,
-
-    marginTop: 2,
+    fontSize: FontSize.sm,
+    marginTop: Spacing.xs,
   },
-  buttonTextDisabled: {},
   infoIcon: {
-    padding: 16,
+    padding: Padding.md,
   },
   image: {
-    width: "100%",
-    height: 200,
-    resizeMode: "contain",
-    marginTop: 32,
     position: "absolute",
-    bottom: 105,
-    left: -130,
+    bottom: -20,
+    left: -150,
+    width: "100%",
+    height: 250,
+    opacity: 0.5,
+    zIndex: -1,
   },
 });

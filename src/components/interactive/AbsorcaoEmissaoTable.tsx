@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,

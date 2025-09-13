@@ -1,6 +1,6 @@
-import { Icon } from "@/components/ui/icon/Icon";
-import { IconContainer } from "@/components/ui/icon/IconContainer";
-import { ThemedText } from "@/components/ui/ThemedText";
+import { Icon } from "@/src/components/ui/icon/Icon";
+import { IconContainer } from "@/src/components/ui/icon/IconContainer";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,

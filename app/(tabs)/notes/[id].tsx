@@ -1,12 +1,12 @@
-import { ScreenLayout } from "@/components/layouts/ScreenLayout";
+import { FontSize, Padding, Spacing } from "@/constants/Styles";
+import { useThemeValue } from "@/hooks/useThemeValue";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import {
   ChecklistItem,
   ChecklistItemRow,
-} from "@/components/notes/ChecklistItemRow";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
-import { FontSize, Padding, Spacing } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+} from "@/src/components/notes/ChecklistItemRow";
+import { ThemedText } from "@/src/components/ui/ThemedText";
+import { ThemedView } from "@/src/components/ui/ThemedView";
 import { Note } from "@/storage/notesStorage";
 import { useNotesActions, useNotesStore } from "@/store/notesStore";
 import { useHeaderHeight } from "@react-navigation/elements";

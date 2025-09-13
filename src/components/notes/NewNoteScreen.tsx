@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/Button";
-import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
+import { Button } from "@/src/components/ui/Button";
+import { ThemedText } from "@/src/components/ui/ThemedText";
+import { ThemedView } from "@/src/components/ui/ThemedView";
 import { BorderRadius, FontSize, Padding, Spacing } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { useNotesActions, useNotesStore } from "@/store/notesStore";

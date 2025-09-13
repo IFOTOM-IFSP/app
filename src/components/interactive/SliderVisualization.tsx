@@ -1,7 +1,7 @@
 import {
   FunctionExplorer,
   FunctionExplorerProps,
-} from "@/components/interactive/FunctionExplorer";
+} from "@/src/components/interactive/FunctionExplorer";
 import React from "react";
 
 type SliderVisualizationProps = Omit<

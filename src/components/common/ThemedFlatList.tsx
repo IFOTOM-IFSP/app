@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import React from "react";
 import { FlatList, FlatListProps, StyleSheet, View } from "react-native";
