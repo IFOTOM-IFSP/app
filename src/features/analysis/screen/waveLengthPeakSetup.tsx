@@ -26,9 +26,9 @@ import { CalibrationMeasurement } from "../../../../models/analysis";
 import { useAnalysisStore } from "../../../../store/analysisStore";
 import { useProfileStore } from "../../../../store/profileStore";
 import TitleSection from "../../../components/common/TitleSection";
+import { FormField } from "../../../components/form/FormInput";
 import { ScreenLayout } from "../../../components/layouts/ScreenLayout";
 import { Button } from "../../../components/ui/Button";
-import { FormField } from "../../../components/ui/form/FormInput";
 import { ThemedText } from "../../../components/ui/ThemedText";
 import { useAnalysisFlowActions } from "../analysisFlowContext";
 

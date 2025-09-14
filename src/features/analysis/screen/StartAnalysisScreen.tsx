@@ -1,13 +1,55 @@
 import { TYPES_ANALYSIS_DATA } from "@/data/analysisData";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import AnalysisInfoModal from "@/src/components/analysis/modalTypes";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import BackButton from "@/src/components/ui/BackButton";
+import { InfoModal } from "@/src/components/ui/InfoModal";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAnalysisFlowActions } from "../analysisFlowContext";
+
+const parseCiteText = (text: string) => {
+  if (!text) return "";
+  return text.toString().replace("", "");
+};
+
+type AnalysisDataItem = {
+  title: string;
+  keyQuestion: string;
+  explanation: string;
+  howItWorks: string[];
+  useCases: string[];
+};
+
+const ModalContent = ({ item }: { item: AnalysisDataItem | undefined }) => {
+  if (!item) return null;
+
+  return (
+    <>
+      <ThemedText style={styles.modalKeyQuestion}>
+        "{item.keyQuestion}"
+      </ThemedText>
+      <ThemedText style={styles.modalExplanation}>
+        {item.explanation}
+      </ThemedText>
+
+      <ThemedText style={styles.modalSectionHeader}>Como funciona?</ThemedText>
+      {item.howItWorks.map((step: string, index: number) => (
+        <ThemedText key={index} style={styles.modalListItem}>
+          • {parseCiteText(step)}
+        </ThemedText>
+      ))}
+
+      <ThemedText style={styles.modalSectionHeader}>Casos de Uso</ThemedText>
+      {item.useCases.map((useCase: string, index: number) => (
+        <ThemedText key={index} style={styles.modalListItem}>
+          • {useCase}
+        </ThemedText>
+      ))}
+    </>
+  );
+};
 
 export default function AnalysisStart() {
   const [isModalVisible, setModalVisible] = useState(false);
@@ -17,14 +59,16 @@ export default function AnalysisStart() {
   const text = useThemeValue("text");
   const tint = useThemeValue("tint");
 
-  const handleStartAnalysis = (analysisType: string) => {
-    startAnalysis(analysisType);
-  };
-
   const openInfoModal = (index: number) => {
     setSelectedAnalysisIndex(index);
     setModalVisible(true);
   };
+
+  const handleStartAnalysis = (analysisType: string) => {
+    startAnalysis(analysisType);
+  };
+
+  const selectedAnalysisData = TYPES_ANALYSIS_DATA[selectedAnalysisIndex];
 
   return (
     <ScreenLayout>
@@ -91,12 +135,16 @@ export default function AnalysisStart() {
           ))}
         </View>
       </View>
-      <AnalysisInfoModal
+
+      <InfoModal
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
-        data={TYPES_ANALYSIS_DATA}
-        initialIndex={selectedAnalysisIndex}
+        title={selectedAnalysisData?.title || ""}
+        content={
+          <ModalContent item={selectedAnalysisData as AnalysisDataItem} />
+        }
       />
+
       <View style={styles.imageContainer}>
         <Image
           source={require("@/assets/images/m_set_type.png")}
@@ -187,7 +235,6 @@ const styles = StyleSheet.create({
   },
   buttonSubtext: {
     fontSize: 14,
-
     marginTop: 2,
   },
   buttonTextDisabled: {},
@@ -204,5 +251,32 @@ const styles = StyleSheet.create({
     width: 140,
     height: 200,
     resizeMode: "contain",
+  },
+  modalKeyQuestion: {
+    fontSize: 18,
+    fontStyle: "italic",
+    textAlign: "center",
+    marginBottom: 16,
+    opacity: 0.8,
+  },
+  modalExplanation: {
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 24,
+  },
+  modalSectionHeader: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 16,
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#E5E7EB",
+    paddingBottom: 4,
+  },
+  modalListItem: {
+    fontSize: 15,
+    lineHeight: 22,
+    marginBottom: 6,
+    opacity: 0.9,
   },
 });

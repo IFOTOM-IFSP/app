@@ -26,7 +26,6 @@ export default function HistoryDetailScreen() {
     );
   }
 
-  // A UI desta tela é essencialmente a mesma da ResultsScreen, mas usando `selectedAnalysis`
   return (
     <ResultsDisplay
       setupData={selectedAnalysis.setupData}

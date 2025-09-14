@@ -7,23 +7,32 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { ThemedText } from "@/src/components/ui/ThemedText";
 import React from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
+import { ThemedText } from "../ui/ThemedText";
 
 interface FormSectionProps extends ViewProps {
   title?: string;
   children: React.ReactNode;
+  variant?: "default" | "compact";
 }
 
-export function FormSection({ title, children, style }: FormSectionProps) {
+export function FormSection({
+  title,
+  children,
+  style,
+  variant = "default",
+}: FormSectionProps) {
   const cardBackgroundColor = useThemeValue("card");
   const borderColor = useThemeValue("border");
+
+  const containerStyle =
+    variant === "compact" ? styles.containerCompact : styles.containerDefault;
 
   return (
     <View
       style={[
-        styles.container,
+        containerStyle,
         { backgroundColor: cardBackgroundColor, borderColor },
         style,
       ]}>
@@ -34,13 +43,20 @@ export function FormSection({ title, children, style }: FormSectionProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  containerDefault: {
+    borderWidth: 1,
+    borderRadius: BorderRadius.lg,
+    padding: Padding.lg,
+    marginBottom: Margin.lg,
+  },
+  containerCompact: {
     borderWidth: 0.3,
     borderRadius: BorderRadius.sm,
     paddingHorizontal: Padding.md,
     paddingTop: Padding.lg,
     width: "100%",
     paddingBottom: Padding.md,
+    marginBottom: Margin.lg,
   },
   title: {
     fontSize: FontSize.lg,

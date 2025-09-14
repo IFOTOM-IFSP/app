@@ -13,7 +13,7 @@ import { ThemedText } from "./ThemedText";
 export type ThemedInputProps = TextInputProps & {
   variant?: "default" | "solved" | "error";
   style?: StyleProp<ViewStyle>;
-  label?: string; 
+  label?: string;
 };
 
 export function ThemedInput({
@@ -66,7 +66,7 @@ export function ThemedInput({
 const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
-    borderRadius: BorderRadius.md,
+    borderRadius: BorderRadius.sm,
     padding: Padding.sm,
     fontSize: FontSize.md,
     textAlign: "left",

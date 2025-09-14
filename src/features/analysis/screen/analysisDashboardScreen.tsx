@@ -1,10 +1,10 @@
 import { Margin, Padding } from "@/constants/Styles";
 import { INFO_CARD_DATA } from "@/data/analysisData";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import AnalysisHeader from "@/src/components/analysis/analysisHeader";
-import ButtonFooter from "@/src/components/analysis/ButtonFooter";
-import CardMain from "@/src/components/analysis/cardMain";
-import { InfoCard } from "@/src/components/analysis/InfoCard";
+import AnalysisHeader from "@/src/components/analysis/dashboard/analysisHeader";
+import ButtonFooter from "@/src/components/analysis/dashboard/ButtonFooter";
+import CardMain from "@/src/components/analysis/dashboard/cardMain";
+import { InfoCard } from "@/src/components/analysis/dashboard/InfoCard";
 import { ThemedView } from "@/src/components/ui/ThemedView";
 import { useUserName } from "@/store/userStore";
 import { LinearGradient } from "expo-linear-gradient";

@@ -1,11 +1,11 @@
-import QuantitativeConfig from "@/src/components/configuration/QuantitativeConfig";
+import QuantitativeFormsScreen from "@/src/components/analysis/screenForms/QuantitativeConfig";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 
 const analysisFormMap = {
-  quantitative: QuantitativeConfig,
+  quantitative: QuantitativeFormsScreen,
   // scan: SpectralScanConfig,
   // kinetic: KineticAnalysisConfig,
 };
