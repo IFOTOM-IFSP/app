@@ -1,6 +1,6 @@
 import { Camera, CameraView, PermissionStatus } from "expo-camera";
 import * as Crypto from "expo-crypto";
-import { Plus, X } from "lucide-react-native";
+import { Info, Plus, X } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -25,10 +25,11 @@ import { useThemeValue } from "../../../../hooks/useThemeValue";
 import { CalibrationMeasurement } from "../../../../models/analysis";
 import { useAnalysisStore } from "../../../../store/analysisStore";
 import { useProfileStore } from "../../../../store/profileStore";
-import TitleSection from "../../../components/common/TitleSection";
 import { FormField } from "../../../components/form/FormInput";
 import { ScreenLayout } from "../../../components/layouts/ScreenLayout";
+import BackButton from "../../../components/ui/BackButton";
 import { Button } from "../../../components/ui/Button";
+import { InfoModal } from "../../../components/ui/InfoModal";
 import { ThemedText } from "../../../components/ui/ThemedText";
 import { useAnalysisFlowActions } from "../analysisFlowContext";
 
@@ -82,6 +83,7 @@ export default function CalibrateWavelengthScreen() {
   const cameraRef = useRef<CameraView>(null);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
   const [currentPoint, setCurrentPoint] = useState({
     name: "",
     wavelength: "",
@@ -104,13 +106,15 @@ export default function CalibrateWavelengthScreen() {
   const textColor = useThemeValue("text");
   const secondaryTextColor = useThemeValue("textSecondary");
   const borderColor = useThemeValue("border");
+  const tintColor = useThemeValue("tint");
+  const primaryColor = useThemeValue("primary");
 
   useEffect(() => {
     Camera.requestCameraPermissionsAsync().then(({ status }) =>
       setPermission(status)
     );
     resetAnalysis();
-  }, []);
+  }, [resetAnalysis]);
 
   const handleStartCapture = () => {
     if (!currentPoint.name || !currentPoint.wavelength) {
@@ -146,7 +150,7 @@ export default function CalibrateWavelengthScreen() {
         imageUris: validUris,
       });
       setShowCamera(false);
-    } catch (e) {
+    } catch (_error) {
       Alert.alert("Erro", "Não foi possível capturar as imagens.");
     } finally {
       setIsCapturing(false);
@@ -213,11 +217,46 @@ export default function CalibrateWavelengthScreen() {
     );
   }
 
+  const handleCloseInfoModal = () => setIsInfoModalVisible(false);
+
   return (
     <ScreenLayout>
-      <TitleSection
-        title="Calibrar Equipamento"
-        subtitle="Adicione pontos de referência com lasers ou fontes de luz de comprimento de onda conhecido."
+      <View style={styles.header}>
+        <BackButton color={textColor} style={styles.baseContainer} />
+        <View style={styles.headerTitleContainer}>
+          <View style={[styles.stepBadge, { backgroundColor: tintColor }]}>
+            <Text style={styles.stepBadgeText}>3</Text>
+          </View>
+          <ThemedText style={[styles.headerTitle, { color: textColor }]}>
+            Calibrar Equipamento
+          </ThemedText>
+        </View>
+        <TouchableOpacity
+          style={styles.infoButton}
+          onPress={() => setIsInfoModalVisible(true)}>
+          <Info size={22} color={secondaryTextColor} />
+        </TouchableOpacity>
+      </View>
+
+      <ThemedText style={[styles.instructions, { color: secondaryTextColor }]}>
+        Registre pelo menos dois pontos de referência capturando o feixe de lasers ou fontes com comprimentos de onda conhecidos.
+      </ThemedText>
+
+      <InfoModal
+        visible={isInfoModalVisible}
+        onClose={handleCloseInfoModal}
+        title="Calibração do equipamento"
+        icon={<Info size={40} color={primaryColor} />}
+        content={
+          "Nesta etapa, calibramos o espectrofotômetro usando fontes de comprimento de onda conhecido. Esses pontos garantem que as leituras de lambda estejam alinhadas antes de medir as amostras."
+        }
+        actions={
+          <Button
+            title="Entendi"
+            onPress={handleCloseInfoModal}
+            style={styles.modalActionButton}
+          />
+        }
       />
 
       <Modal
@@ -252,25 +291,28 @@ export default function CalibrateWavelengthScreen() {
         </View>
       </Modal>
 
-      <FlatList
-        data={calibrationMeasurements}
-        renderItem={({ item }) => <MeasurementItem item={item} />}
-        keyExtractor={(item) => item.laserName}
-        ListHeaderComponent={
-          <TouchableOpacity
-            style={[styles.addButton, { borderColor: secondaryTextColor }]}
-            onPress={() => setIsModalVisible(true)}>
-            <Plus size={20} color={textColor} />
-            <ThemedText>Adicionar Ponto de Calibração</ThemedText>
-          </TouchableOpacity>
-        }
-        ListEmptyComponent={
-          <ThemedText style={styles.emptyText}>
-            Nenhum ponto adicionado.
-          </ThemedText>
-        }
-        contentContainerStyle={{ flexGrow: 1 }}
-      />
+      <View style={styles.listContainer}>
+        <FlatList
+          data={calibrationMeasurements}
+          renderItem={({ item }) => <MeasurementItem item={item} />}
+          keyExtractor={(item) => item.laserName}
+          ListHeaderComponent={
+            <TouchableOpacity
+              style={[styles.addButton, { borderColor: secondaryTextColor }]}
+              onPress={() => setIsModalVisible(true)}>
+              <Plus size={20} color={textColor} />
+              <ThemedText>Adicionar Ponto de Calibração</ThemedText>
+            </TouchableOpacity>
+          }
+          ListEmptyComponent={
+            <ThemedText style={[styles.emptyText, { color: secondaryTextColor }]}>
+              Nenhum ponto adicionado.
+            </ThemedText>
+          }
+          style={styles.list}
+          contentContainerStyle={styles.listContent}
+        />
+      </View>
 
       <View style={[styles.footer, { borderTopColor: borderColor }]}>
         {calibrationMeasurements.length < 2 && (
@@ -318,6 +360,9 @@ const styles = StyleSheet.create({
     borderRadius: BorderRadius.lg,
     gap: Spacing.md,
   },
+  modalActionButton: {
+    marginTop: Margin.md,
+  },
   addButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -330,10 +375,65 @@ const styles = StyleSheet.create({
     gap: Spacing.sm,
   },
   emptyText: { textAlign: "center", marginTop: Margin.lg, color: "#888" },
-  footer: { padding: Padding.md, borderTopWidth: 1 },
+  footer: {
+    paddingTop: Padding.md,
+    paddingBottom: Padding.lg,
+    borderTopWidth: 1,
+    gap: Spacing.sm,
+  },
   infoText: {
     textAlign: "center",
     marginBottom: Margin.sm,
     fontSize: FontSize.sm,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: Margin.lg,
+    width: "100%",
+  },
+  baseContainer: {
+    padding: 0,
+    backgroundColor: "transparent",
+  },
+  headerTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  stepBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 10,
+  },
+  stepBadgeText: {
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 16,
+  },
+  headerTitle: {
+    fontSize: FontSize.xl,
+    fontWeight: FontWeight.semiBold,
+  },
+  infoButton: {
+    padding: Spacing.xs,
+  },
+  instructions: {
+    fontSize: FontSize.md,
+    lineHeight: 22,
+    marginBottom: Margin.lg,
+  },
+  listContainer: {
+    flex: 1,
+  },
+  list: {
+    flex: 1,
+  },
+  listContent: {
+    flexGrow: 1,
+    paddingBottom: Padding.lg,
   },
 });
