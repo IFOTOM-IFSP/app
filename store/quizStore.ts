@@ -1,9 +1,9 @@
 import { handleError } from '@/services/errorHandler';
 import {
-  getAllQuizResults as dbGetAllQuizResults,
-  saveQuizResult as dbSaveQuizResult,
-  type QuizResult,
-} from '@/storage/quizResultsStorage';
+    getAllQuizResults as dbGetAllQuizResults,
+    saveQuizResult as dbSaveQuizResult,
+    type QuizResult,
+} from '@/src/native/storage/quizResultsStorage';
 import { create } from 'zustand';
 
 type HighScores = {

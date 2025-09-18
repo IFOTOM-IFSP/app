@@ -1,0 +1,156 @@
+diff --git a/gradle/wrapper/gradle-wrapper.properties b/gradle/wrapper/gradle-wrapper.properties
+index 1111111..2222222 100644
+--- a/gradle/wrapper/gradle-wrapper.properties
++++ b/gradle/wrapper/gradle-wrapper.properties
+@@ -1,5 +1,6 @@
+-distributionUrl=https\://services.gradle.org/distributions/gradle-8.6-all.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-8.10.2-all.zip
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
++# Atualizado para compatibilidade com AGP 8.7.x e Kotlin 2.1.x
+diff --git a/android/build.gradle b/android/build.gradle
+index 3333333..4444444 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
+@@ -1,25 +1,30 @@
+-// build.gradle (raiz) — versões antigas
+-buildscript {
+-    ext {
+-        buildToolsVersion = findProperty('android.buildToolsVersion') ?: '34.0.0'
+-        minSdkVersion = 23
+-        compileSdkVersion = 34
+-        targetSdkVersion = 34
+-        kotlinVersion = '1.9.24'
+-    }
+-    repositories {
+-        google()
+-        mavenCentral()
+-    }
+-    dependencies {
+-        classpath "com.android.tools.build:gradle:8.5.2"
+-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
+-    }
+-}
++// build.gradle (Project) — atualizado p/ AGP 8.7.x e Kotlin 2.1.x
++plugins {
++    id 'com.android.application' version '8.7.2' apply false
++    id 'com.android.library'     version '8.7.2' apply false
++    id 'org.jetbrains.kotlin.android' version '2.1.10' apply false
++}
+ 
+ allprojects {
+     repositories {
+         google()
+         mavenCentral()
+     }
+ }
++
++// Caso seu projeto ainda use blocos antigos (buildscript { ... }),
++// mantenha apenas UM modelo (plugins {} OU buildscript{}). Este arquivo
++// migra para o modelo "plugins {}". Remova duplicatas se existirem.
+diff --git a/android/app/build.gradle b/android/app/build.gradle
+index 5555555..6666666 100644
+--- a/android/app/build.gradle
++++ b/android/app/build.gradle
+@@ -1,10 +1,41 @@
+ apply plugin: "com.android.application"
+ apply plugin: "org.jetbrains.kotlin.android"
+ 
+ android {
+-    compileSdkVersion 34
++    // Alinhar com toolchain moderno
++    compileSdkVersion 35
+ 
+     defaultConfig {
+         applicationId "com.seuapp"
+-        minSdkVersion 23
+-        targetSdkVersion 34
++        minSdkVersion 23
++        targetSdkVersion 35
+         versionCode 1
+         versionName "1.0"
+     }
++
++    // Garantir Java 17
++    compileOptions {
++        sourceCompatibility JavaVersion.VERSION_17
++        targetCompatibility JavaVersion.VERSION_17
++    }
++
++    // (Se você usa namespace aqui, mantenha-o)
++    // namespace "com.seuapp"
+ }
+ 
++// Kotlin 2.1 + JVM 17
++kotlin {
++    jvmToolchain(17)
++}
++
++tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
++    kotlinOptions {
++        jvmTarget = '17'
++        // Garante API/Language compatíveis com expo-dev-launcher que pede Kotlin 2.1
++        languageVersion = "2.1"
++        apiVersion = "2.1"
++        // Opcional: warnings mais verbosos para ajudar em migrações
++        freeCompilerArgs += [
++            "-Xjvm-default=all",
++        ]
++    }
++}
+diff --git a/android/gradle.properties b/android/gradle.properties
+index 7777777..8888888 100644
+--- a/android/gradle.properties
++++ b/android/gradle.properties
+@@ -1,4 +1,12 @@
+ org.gradle.jvmargs=-Xmx4096m -Dfile.encoding=UTF-8
+ android.useAndroidX=true
+ android.enableJetifier=true
++
++# Assegurar Java 17 no Gradle (opcional se o Android Studio já estiver em 17)
++# Comente a linha abaixo se não souber o caminho do seu JDK.
++# org.gradle.java.home=/path/para/jdk17
++
++# Evita falhas por feature preview de Gradle 9
++android.nonTransitiveRClass=true
+
+diff --git a/android/settings.gradle b/android/settings.gradle
+index 1111111..2222222 100644
+--- a/android/settings.gradle
++++ b/android/settings.gradle
+@@ -1,3 +1,36 @@
++// ✅ Garante que os plugins (Kotlin/AGP) e artefatos do Expo/RN sejam resolvidos
++pluginManagement {
++  repositories {
++    gradlePluginPortal()
++    google()
++    mavenCentral()
++  }
++}
++
++// ✅ Todos os repositórios para dependências (inclui Expo/RN locais em node_modules)
++dependencyResolutionManagement {
++  // Pode ser PREFER_SETTINGS ou FAIL_ON_PROJECT_REPOS.
++  // Mantemos SETTINGS e declaramos tudo aqui para evitar repositórios "espalhados"
++  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
++  repositories {
++    google()
++    mavenCentral()
++
++    // --- Repositórios necessários para React Native ---
++    maven { url "$rootDir/../node_modules/react-native/android" }
++    maven { url "$rootDir/../node_modules/jsc-android/dist" }
++
++    // --- Repositórios necessários para Expo Modules (host.exp.exponent / expo.modules.*) ---
++    maven { url "$rootDir/../node_modules/expo/modules/android/maven" }
++    // Alguns módulos do Expo (ex: câmera) publicam AARs em maven local também:
++    maven { url "$rootDir/../node_modules/expo-camera/android/maven" }
++
++    // Outras libs populares (às vezes requisitadas por dependências transitivas)
++    maven { url "https://www.jitpack.io" }
++  }
++}
++
++// (o restante do seu settings.gradle pode seguir igual)

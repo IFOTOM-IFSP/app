@@ -7,7 +7,7 @@ import {
 } from "@/src/components/notes/ChecklistItemRow";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { ThemedView } from "@/src/components/ui/ThemedView";
-import { Note } from "@/storage/notesStorage";
+import { Note } from "@/src/native/storage/notesStorage";
 import { useNotesActions, useNotesStore } from "@/store/notesStore";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { useLocalSearchParams, useRouter } from "expo-router";

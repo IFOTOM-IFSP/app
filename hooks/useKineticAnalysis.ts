@@ -4,8 +4,8 @@ import type {
   ApiSampleFrame,
   ReferenceProcessingResponse
 } from '@/models/apiSchema';
-import { apiService } from '@/services/apiService';
 import { handleError } from '@/services/errorHandler';
+import { apiService } from '@/services/http';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 

@@ -1,9 +1,9 @@
-import type { QuizResult } from '@/storage/quizResultsStorage';
+import type { QuizResult } from '@/src/native/storage/quizResultsStorage';
 import {
-  useHighScores as useHighScoresSelector,
-  useIsQuizLoading as useIsQuizLoadingSelector,
-  useQuizActions,
-  useQuizResults as useQuizResultsSelector
+    useHighScores as useHighScoresSelector,
+    useIsQuizLoading as useIsQuizLoadingSelector,
+    useQuizActions,
+    useQuizResults as useQuizResultsSelector
 } from '@/store/quizStore';
 import { useEffect } from 'react';
 

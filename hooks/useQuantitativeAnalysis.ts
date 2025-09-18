@@ -10,8 +10,8 @@ import type {
   ApiSampleFrame,
   ReferenceProcessingResponse
 } from '@/models/apiSchema';
-import { apiService } from '@/services/apiService';
 import { handleError } from '@/services/errorHandler';
+import { apiService } from '@/services/http';
 import type { CalibrationCurve } from '@/storage/calibrationStorage';
 import { useCalibrationActions } from '@/store/calibrationStore';
 import { useCallback, useState } from 'react';

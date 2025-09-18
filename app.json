@@ -15,34 +15,37 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.lucasbiazon.iFOTOM",
       "infoPlist": {
-        "NSCameraUsageDescription": "Precisamos da c\u00e2mera para an\u00e1lises espectrofotom\u00e9tricas."
-      }
+        "NSCameraUsageDescription": "Precisamos da câmera para capturar espectros."
+      },
+      "bundleIdentifier": "com.anonymous.iFOTOM"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/splash_icon.png",
-        "backgroundColor": "#A25CC7"
-      },
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
-      "package": "com.lucasbiazon.iFOTOM"
+      "package": "com.anonymous.iFOTOM"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "./plugins/withExpoMavenRepos",
+      "expo-build-properties",
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "Precisamos da câmera para análises."
+        }
+      ],
       "expo-router",
       [
         "expo-camera",
         {
-          "cameraPermission": "Permitir que $(PRODUCT_NAME) acesse sua c\u00e2mera.",
+          "cameraPermission": "Permitir que $(PRODUCT_NAME) acesse sua câmera.",
           "microphonePermission": "Permitir que $(PRODUCT_NAME) acesse seu microfone.",
           "recordAudioAndroid": true
         }
@@ -83,12 +86,6 @@
           "url": "https://sentry.io/",
           "project": "react-native",
           "organization": "ifsp-campus-campinas"
-        }
-      ],
-      [
-        "react-native-vision-camera",
-        {
-          "cameraPermissionText": "Precisamos da c\u00e2mera para capturar espectros."
         }
       ],
       "./plugins/withSpectroFramePlugin"

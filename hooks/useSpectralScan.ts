@@ -2,7 +2,7 @@ import type {
   AnalysisRequest,
   AnalysisResponse
 } from '@/models/apiSchema';
-import { apiService } from '@/services/apiService';
+import { apiService } from '@/services/http';
 import { useCallback, useState } from 'react';
 
 

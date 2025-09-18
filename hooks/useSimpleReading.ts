@@ -1,13 +1,11 @@
 
-import { useState, useCallback } from 'react';
-import { apiService } from '@/services/apiService';
-import { handleError } from '@/services/errorHandler';
-import type { 
-  ApiSampleFrame, 
-  AnalysisResponse, 
-  ReferenceProcessingResponse, 
-  AnalysisRequest 
+import type {
+  AnalysisRequest,
+  AnalysisResponse,
+  ReferenceProcessingResponse
 } from '@/models/apiSchema';
+import { apiService } from '@/services/http';
+import { useCallback, useState } from 'react';
 
 export type SimpleReadingStatus = 
   | 'idle'               

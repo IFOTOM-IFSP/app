@@ -1,16 +1,16 @@
-import ThemedFlatList from "@/src/components/common/ThemedFlatList";
 import { Margin, Padding, Spacing } from "@/constants/Styles";
+import ThemedFlatList from "@/src/components/common/ThemedFlatList";
 import { useNotesActions, useNotesStore } from "@/store/notesStore";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 
+import { useThemeValue } from "@/hooks/useThemeValue";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { CreateNoteFAB } from "@/src/components/notes/CreateNoteFAB";
 import { NoteListItem } from "@/src/components/notes/NoteListItem";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { Note } from "@/storage/notesStorage";
+import { Note } from "@/src/native/storage/notesStorage";
 
 export default function NotesListScreen() {
   const router = useRouter();

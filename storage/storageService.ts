@@ -3,7 +3,7 @@ import { CalibrationCurve } from '@/models/CalibrationCurve';
 import { DualBeamImages } from '@/store/analysisStore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
-import { SpectrometerProfile } from '../models/SpectrometerProfile';
+import { SpectrometerProfile } from '../../../models/SpectrometerProfile';
 
 const PROFILES_KEY = 'spectrometer_profiles';
 const CURVES_KEY = 'calibration_curves';
