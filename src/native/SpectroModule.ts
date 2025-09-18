@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { VisionCameraProxy, useFrameProcessor, type Frame } from 'react-native-vision-camera'; // eslint-disable-line import/no-unresolved
+import { VisionCameraProxy, useFrameProcessor, type Frame } from 'react-native-vision-camera';
 import { runOnJS } from 'react-native-reanimated';
 
 export type RegionOfInterest = {
