@@ -122,8 +122,8 @@ const withAndroidSpectroManifest = (config) =>
       const mainApp = apps[0];
 
       // 4) Providers do snippet
-      const snippetApp = AndroidConfig.Manifest.getMainApplicationOrThrow(snippetManifest);
-      const snippetProviders = snippetApp.provider ?? [];
+      const snippetProviders =
+        snippetManifest?.manifest?.application?.flatMap((app) => app.provider ?? []) ?? [];
       if (!snippetProviders.length) return modConfig;
 
       // 5) Garante array de providers no main
