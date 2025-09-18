@@ -3,30 +3,43 @@ const { withDangerousMod } = require('@expo/config-plugins');
 const fs = require('fs');
 const path = require('path');
 
-const EXPO_REPO_LINE = 'maven { url = uri("$rootDir/../node_modules/expo/modules/android/maven") }';
+const EXPO_REMOTE_REPO_LINE = 'maven { url = uri("https://packages.expo.dev") }';
+const EXPO_LOCAL_REPO_LINE = 'maven { url = uri("$rootDir/../node_modules/expo/modules/android/maven") }';
 const RN_REPO_LINE = 'maven { url = uri("$rootDir/../node_modules/react-native/android") }';
+
+const withIndentation = (lines, indent = '    ') => lines.map((line) => `${indent}${line}`);
+
+const pluginManagementRepositories = withIndentation([
+  'gradlePluginPortal()',
+  'google()',
+  'mavenCentral()',
+  EXPO_REMOTE_REPO_LINE,
+  EXPO_LOCAL_REPO_LINE,
+  RN_REPO_LINE,
+]);
 
 const PLUGIN_MGMT_BLOCK = [
   'pluginManagement {',
   '  repositories {',
-  '    gradlePluginPortal()',
-  '    google()',
-  '    mavenCentral()',
-  `    ${EXPO_REPO_LINE}`,
-  `    ${RN_REPO_LINE}`,
+  ...pluginManagementRepositories,
   '  }',
   '  includeBuild("../node_modules/@react-native/gradle-plugin")',
   '}',
 ].join('\n');
 
+const dependencyRepositories = withIndentation([
+  'google()',
+  'mavenCentral()',
+  EXPO_REMOTE_REPO_LINE,
+  EXPO_LOCAL_REPO_LINE,
+  RN_REPO_LINE,
+]);
+
 const DEP_RESOLUTION_BLOCK = [
   'dependencyResolutionManagement {',
   '  repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)',
   '  repositories {',
-  '    google()',
-  '    mavenCentral()',
-  `    ${EXPO_REPO_LINE}`,
-  `    ${RN_REPO_LINE}`,
+  ...dependencyRepositories,
   '  }',
   '}',
 ].join('\n');
@@ -82,6 +95,64 @@ function findMatchingBrace(source, openKeywordEndIndex) {
   return -1;
 }
 
+function ensureExpoRepositoryInPluginManagement(contents) {
+  const remoteLine = `    ${EXPO_REMOTE_REPO_LINE}`;
+  const pmStart = contents.indexOf('pluginManagement {');
+  if (pmStart === -1) return contents;
+
+  const pmEnd = findMatchingBrace(contents, pmStart);
+  if (pmEnd === -1) return contents;
+
+  const block = contents.slice(pmStart, pmEnd);
+  if (!block.includes('repositories {')) return contents;
+  if (block.includes(remoteLine)) return contents;
+
+  let updatedBlock;
+  if (block.includes('    mavenCentral()')) {
+    updatedBlock = block.replace('    mavenCentral()', `    mavenCentral()\n${remoteLine}`);
+  } else {
+    const repoIdx = block.indexOf('repositories {');
+    if (repoIdx === -1) return contents;
+    const insertPos = block.indexOf('\n', repoIdx);
+    const before = block.slice(0, insertPos + 1);
+    const after = block.slice(insertPos + 1);
+    updatedBlock = `${before}${remoteLine}\n${after}`;
+  }
+
+  return `${contents.slice(0, pmStart)}${updatedBlock}${contents.slice(pmEnd)}`;
+}
+
+function ensureExpoRepositoryInDependencyBlock(contents) {
+  const remoteLine = `    ${EXPO_REMOTE_REPO_LINE}`;
+  if (contents.includes(remoteLine)) return contents;
+
+  const localLine = `    ${EXPO_LOCAL_REPO_LINE}`;
+  const blockStart = contents.indexOf('dependencyResolutionManagement {');
+  if (blockStart === -1) return contents;
+
+  const blockEnd = findMatchingBrace(contents, blockStart);
+  if (blockEnd === -1) return contents;
+
+  const block = contents.slice(blockStart, blockEnd);
+  if (block.includes(remoteLine)) return contents;
+
+  let updatedBlock;
+  if (block.includes(localLine)) {
+    updatedBlock = block.replace(localLine, `${remoteLine}\n${localLine}`);
+  } else if (block.includes('    mavenCentral()')) {
+    updatedBlock = block.replace('    mavenCentral()', `    mavenCentral()\n${remoteLine}`);
+  } else {
+    const repoIdx = block.indexOf('repositories {');
+    if (repoIdx === -1) return contents;
+    const insertPos = block.indexOf('\n', repoIdx);
+    const before = block.slice(0, insertPos + 1);
+    const after = block.slice(insertPos + 1);
+    updatedBlock = `${before}${remoteLine}\n${after}`;
+  }
+
+  return `${contents.slice(0, blockStart)}${updatedBlock}${contents.slice(blockEnd)}`;
+}
+
 module.exports = (config) =>
   withDangerousMod(config, [
     'android',
@@ -94,9 +165,11 @@ module.exports = (config) =>
       contents = upsertBlock(contents, '^\\s*pluginManagement\\s*\\{', PLUGIN_MGMT_BLOCK);
       // redundância defensiva: se já existe pluginManagement mas faltou o includeBuild, injeta dentro
       contents = ensureInsidePluginManagement(contents, 'includeBuild("../node_modules/@react-native/gradle-plugin")');
+      contents = ensureExpoRepositoryInPluginManagement(contents);
 
       // 2) Garante dependencyResolutionManagement (repos)
       contents = upsertBlock(contents, '^\\s*dependencyResolutionManagement\\s*\\{', DEP_RESOLUTION_BLOCK);
+      contents = ensureExpoRepositoryInDependencyBlock(contents);
 
       // 3) Garante plugins { id("com.facebook.react.settings") } + extensions.configure(...)
       contents = upsertBlock(contents, '^\\s*plugins\\s*\\{[\\s\\S]*?\\}', SETTINGS_PLUGIN_BLOCK);
