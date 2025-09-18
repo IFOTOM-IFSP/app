@@ -1,35 +1,60 @@
+import { Padding } from "@/constants/Styles";
+import { useThemeValue } from "@/hooks/useThemeValue";
+import { Button } from "@/src/components/ui/Button";
 import React from "react";
 import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
+  View,
 } from "react-native";
 
 interface FormWrapperProps {
   children: React.ReactNode;
   buttonTitle?: string;
   isSubmitting?: boolean;
-  keyboardVerticalOffset?: number;
+  onSubmit: () => void; // Adicionamos a função de submit aqui
 }
 
 export function FormWrapper({
   children,
   buttonTitle = "Próximo",
   isSubmitting = false,
-  keyboardVerticalOffset = 80,
+  onSubmit,
 }: FormWrapperProps) {
+  const borderColor = useThemeValue("border");
+  const backgroundColor = useThemeValue("background"); // Para o rodapé
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={keyboardVerticalOffset}>
+      keyboardVerticalOffset={80} // Pode ajustar conforme necessário
+    >
+      {/* Área de Rolagem para os campos do formulário */}
       <ScrollView
-        showsVerticalScrollIndicator={false}
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={styles.scrollContent}>
+        showsVerticalScrollIndicator={false}>
         {children}
       </ScrollView>
+
+      {/* Rodapé fixo para o botão */}
+      <View
+        style={[
+          styles.footer,
+          { borderTopColor: borderColor, backgroundColor },
+        ]}>
+        <Button
+          title={buttonTitle}
+          onPress={onSubmit}
+          disabled={isSubmitting}
+          loading={isSubmitting}
+          style={styles.button}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -37,15 +62,18 @@ export function FormWrapper({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: "relative",
+  },
+  scrollView: {
+    flex: 1,
   },
   scrollContent: {
-    paddingBottom: 16,
-    maxHeight: 300,
+    paddingBottom: Padding.lg,
   },
-  buttonContainer: {
-    flex: 1,
-    paddingVertical: 16,
-    backgroundColor: "transparent",
+  footer: {
+    flex: 0.2,
+    padding: Padding.md,
+  },
+  button: {
+    borderRadius: 8,
   },
 });

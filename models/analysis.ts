@@ -11,7 +11,7 @@ export  interface InfoCardData {
   route?: string;
 }
 
-export interface TypesAanalysisData {
+export interface TypesAnalysisData {
     id: string;
     title: string;
     icon: string;
