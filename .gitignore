@@ -9,7 +9,7 @@ dist/
 web-build/
 expo-env.d.ts
 
-# Native
+# Native artifacts
 .kotlin/
 *.orig.*
 *.jks
@@ -17,6 +17,11 @@ expo-env.d.ts
 *.p12
 *.key
 *.mobileprovision
+android/.gradle/
+android/app/build/
+android/build/
+ios/Pods/
+ios/build/
 
 # Metro
 .metro-health-check*
@@ -41,7 +46,3 @@ app-example
 .env.local
 
 .env.local
-
-android/
-
-ios/
