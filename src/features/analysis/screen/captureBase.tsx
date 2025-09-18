@@ -49,7 +49,8 @@ export default function CaptureBaseScreen() {
   const { setBaseline } = useBaselineStore();
 
   const handleCapture = async () => {
-    if (!cameraRef.current || isCapturing) return;
+    const camera = cameraRef.current;
+    if (!camera || isCapturing) return;
 
     setIsCapturing(true);
     setProgress(0);
@@ -61,9 +62,7 @@ export default function CaptureBaseScreen() {
 
     try {
       for (let i = 0; i < CAPTURE_COUNT; i++) {
-        const { sampleUri, refUri } = await captureDualBeamImage(
-          cameraRef.current
-        );
+        const { sampleUri, refUri } = await captureDualBeamImage(camera);
         capturedImages.sampleChannelUris.push(sampleUri);
         capturedImages.referenceChannelUris.push(refUri);
         setProgress(i + 1);

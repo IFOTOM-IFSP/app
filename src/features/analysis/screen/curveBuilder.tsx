@@ -88,8 +88,9 @@ export default function CurveBuilderScreen() {
 
   const handleCaptureStandard = async () => {
     // Validações para garantir que todos os dados necessários estão presentes
+    const camera = cameraRef.current;
     if (
-      !cameraRef.current ||
+      !camera ||
       !setupData ||
       !darkSignalImages ||
       !whiteSignalImages
@@ -111,7 +112,7 @@ export default function CurveBuilderScreen() {
 
     setIsCapturing(true);
     try {
-      const sampleImages = await captureDualBeamImage(cameraRef.current);
+      const sampleImages = await captureDualBeamImage(camera);
       // Chama a ação no store, que cuidará da chamada à API
       await calculateAbsorbanceForStandard({
         concentration: parseFloat(currentConcentration),

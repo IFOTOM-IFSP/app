@@ -56,8 +56,9 @@ export default function MeasurementSampleScreen() {
 
   const handleAnalyze = async () => {
     // --- 1. Validação e Coleta de Dados ---
+    const camera = cameraRef.current;
     if (
-      !cameraRef.current ||
+      !camera ||
       !setupData ||
       !darkSignalImages ||
       !whiteSignalImages
@@ -104,7 +105,7 @@ export default function MeasurementSampleScreen() {
 
     setIsCapturing(true);
     try {
-      const sampleImages = await captureDualBeamImage(cameraRef.current);
+      const sampleImages = await captureDualBeamImage(camera);
 
       await calculateFinalConcentration({
         sampleImages,
