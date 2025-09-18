@@ -1,46 +1,66 @@
 import Foundation
-import AVFoundation
+import CoreVideo
 import VisionCamera
 
-@objc(SpectroFramePlugin)
-public class SpectroFramePlugin: NSObject, FrameProcessorPlugin {
-  public static func callback(_ frame: Frame!, withArgs args: [Any]!) -> Any! {
-    guard let buffer = frame.buffer else { return [] }
-    let roi = parseROI(args: args)
-    let width = CVPixelBufferGetWidthOfPlane(buffer, 0)
-    let height = CVPixelBufferGetHeightOfPlane(buffer, 0)
+@objcMembers
+public class SpectroFramePlugin: FrameProcessorPlugin {
+  public override init() {
+    super.init()
+  }
 
-    CVPixelBufferLockBaseAddress(buffer, .readOnly)
-    defer { CVPixelBufferUnlockBaseAddress(buffer, .readOnly) }
+  public override func callback(_ pixelBuffer: CVPixelBuffer, withArgs args: [AnyHashable: Any]?) -> Any? {
+    let width = CVPixelBufferGetWidth(pixelBuffer)
+    let height = CVPixelBufferGetHeight(pixelBuffer)
 
-    guard let baseAddress = CVPixelBufferGetBaseAddressOfPlane(buffer, 0) else { return [] }
-    let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(buffer, 0)
+    var rx = 0
+    var ry = 0
+    var rw = width
+    var rh = height
 
-    let rx = max(0, min(Int(roi.x), width - 1))
-    let ry = max(0, min(Int(roi.y), height - 1))
-    let rw = max(1, min(Int(roi.w), width - rx))
-    let rh = max(1, min(Int(roi.h), height - ry))
+    let roiValues: [String: Any]
+    if let nested = args?["roi"] as? [String: Any] {
+      roiValues = nested
+    } else if let direct = args as? [String: Any] {
+      roiValues = direct
+    } else {
+      roiValues = [:]
+    }
 
-    var sums = [Double](repeating: 0.0, count: rw)
+    if let value = roiValues["x"] as? NSNumber { rx = value.intValue }
+    if let value = roiValues["y"] as? NSNumber { ry = value.intValue }
+    if let value = (roiValues["width"] ?? roiValues["w"]) as? NSNumber { rw = value.intValue }
+    if let value = (roiValues["height"] ?? roiValues["h"]) as? NSNumber { rh = value.intValue }
 
-    for row in ry..<(ry + rh) {
-      let rowPointer = baseAddress.advanced(by: row * bytesPerRow)
+    let left = max(0, min(rx, width))
+    let top = max(0, min(ry, height))
+    let right = max(left, min(left + max(rw, 0), width))
+    let bottom = max(top, min(top + max(rh, 0), height))
+
+    let roiWidth = max(0, right - left)
+    let roiHeight = max(0, bottom - top)
+    if roiWidth == 0 || roiHeight == 0 {
+      return []
+    }
+
+    CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+    defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
+
+    guard let baseAddress = CVPixelBufferGetBaseAddressOfPlane(pixelBuffer, 0) else {
+      return []
+    }
+    let bytesPerRow = CVPixelBufferGetBytesPerRowOfPlane(pixelBuffer, 0)
+
+    var sums = [Double](repeating: 0.0, count: roiWidth)
+    for row in 0..<roiHeight {
+      let rowPointer = baseAddress.advanced(by: (top + row) * bytesPerRow)
       let pixels = rowPointer.assumingMemoryBound(to: UInt8.self)
-      for column in 0..<rw {
-        sums[column] += Double(pixels[rx + column])
+      for column in 0..<roiWidth {
+        sums[column] += Double(pixels[left + column])
       }
     }
 
     return sums
   }
-
-  private static func parseROI(args: [Any]?) -> (x: Int, y: Int, w: Int, h: Int) {
-    guard let values = args, values.count >= 4 else { return (0, 0, 0, 0) }
-    return (
-      values[0] as? Int ?? 0,
-      values[1] as? Int ?? 0,
-      values[2] as? Int ?? 0,
-      values[3] as? Int ?? 0
-    )
-  }
 }
+
+VISION_EXPORT_SWIFT_FRAME_PROCESSOR(SpectroFramePlugin, spectro_sum_columns)
