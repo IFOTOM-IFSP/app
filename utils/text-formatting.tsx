@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { FontWeight } from "@/constants/Styles";
 import React from "react";
 import { StyleProp, Text, TextStyle } from "react-native";

@@ -1,6 +1,4 @@
-
 import { Alert, Linking } from "react-native";
-
 
 export const openEmail = async (
   email: string,
@@ -22,14 +20,12 @@ export const openEmail = async (
     if (supported) {
       await Linking.openURL(url);
     } else {
-      console.log(`Não foi possível abrir o aplicativo de e-mail. URL: ${url}`);
       Alert.alert(
         "Erro",
         "Não foi possível abrir o aplicativo de e-mail. Por favor, verifique se você tem um configurado."
       );
     }
   } catch (error) {
-    console.error("Erro ao tentar abrir o e-mail:", error);
     Alert.alert("Erro", "Ocorreu um erro ao tentar abrir o e-mail.");
   }
 };
@@ -43,7 +39,6 @@ export const openURL = async (url: string): Promise<void> => {
       Alert.alert("Erro", `Não foi possível abrir este link: ${url}`);
     }
   } catch (error) {
-    console.error("Erro ao tentar abrir URL:", error);
     Alert.alert("Erro", "Ocorreu um erro ao tentar abrir o link.");
   }
 };

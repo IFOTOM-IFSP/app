@@ -1,10 +1,10 @@
-import { Colors, type ThemeColors } from "@/constants/Colors";
-import { useTheme } from "../state/ThemeContext";
+import { AppThemes, type ThemeColors } from "@/constants/Colors";
+import { useColorScheme } from "./useColorScheme";
 
 export function useThemeValue<K extends keyof ThemeColors>(
   key: K
 ): ThemeColors[K] {
-  const { colorTheme } = useTheme();
+  const theme = useColorScheme();
 
-  return Colors[colorTheme][key];
+  return AppThemes[theme][key];
 }

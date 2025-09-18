@@ -1,34 +1,28 @@
-import { ThemedText } from "@/components/ui/ThemedText";
-import { ThemedView } from "@/components/ui/ThemedView";
 import { FontSize, Padding } from "@/constants/Styles";
+import { useNotifications } from "@/hooks/useNotifications";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { initializeNotifications } from "@/services/notificationService";
-import { initializeSettings } from "@/state/settingsStore";
-import { ThemeProvider } from "@/state/ThemeContext";
-import { useUserStore } from "@/state/userStore";
+import { ThemedText } from "@/src/components/ui/ThemedText";
+import { ThemedView } from "@/src/components/ui/ThemedView";
+import { initializeSettings } from "@/store/settingsStore";
+import { ThemeProvider } from "@/store/ThemeContext";
+import { useUserStore } from "@/store/userStore";
 import * as Sentry from "@sentry/react-native";
 import { Slot, SplashScreen, usePathname, useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
 import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
+import { PaperProvider } from "react-native-paper";
 
 Sentry.init({
   dsn: "https://edcb99ad8ca7e66368e6d1f07687a130@o4509852568584192.ingest.de.sentry.io/4509852571074640",
-
-  // Adds more context data to events (IP address, cookies, user, etc.)
-  // For more information, visit: https://docs.sentry.io/platforms/react-native/data-management/data-collected/
   sendDefaultPii: true,
-
-  // Configure Session Replay
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1,
   integrations: [
     Sentry.mobileReplayIntegration(),
     Sentry.feedbackIntegration(),
   ],
-
-  // uncomment the line below to enable Spotlight (https://spotlightjs.com)
-  // spotlight: __DEV__,
 });
 
 SplashScreen.preventAutoHideAsync().catch(console.warn);
@@ -60,21 +54,14 @@ export default Sentry.wrap(function RootLayout() {
   const init = useUserStore((state) => state.actions.init);
   const router = useRouter();
   const pathname = usePathname();
+  useNotifications();
   useEffect(() => {
-    console.log(
-      "ROOT_LAYOUT [EFFECT INIT]: Chamando init da store (APENAS UMA VEZ)..."
-    );
     init();
-    initializeNotifications();
     initializeSettings();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    console.log(
-      `ROOT_LAYOUT [EFFECT NAV]: isLoading=${isLoading}, isFirstLaunch=${isFirstLaunch}, pathname=${pathname}`
-    );
-
     if (isLoading) {
       return;
     }
@@ -83,30 +70,22 @@ export default Sentry.wrap(function RootLayout() {
     const welcomeScreenPath = "/welcome";
 
     if (isFirstLaunch && !authRoutes.includes(pathname)) {
-      console.log(
-        `ROOT_LAYOUT [EFFECT NAV]: Redirecionando para ${welcomeScreenPath} (rota não permitida no fluxo de auth)`
-      );
       router.replace(welcomeScreenPath);
     } else if (
       !isFirstLaunch &&
       authRoutes.some((route) => pathname.startsWith(route))
     ) {
-      console.log(
-        `ROOT_LAYOUT [EFFECT NAV]: Usuário logado tentando acessar rota de auth. Redirecionando para /`
-      );
       router.replace("/");
     }
 
-    console.log("ROOT_LAYOUT [EFFECT NAV]: Escondendo SplashScreen.");
     SplashScreen.hideAsync().catch(console.warn);
   }, [isLoading, isFirstLaunch, pathname, router]);
 
-  console.log(
-    `ROOT_LAYOUT [RENDER]: App está ${isLoading ? "carregando" : "pronto"}.`
-  );
-
   return (
-    <ThemeProvider>{isLoading ? <LoadingScreen /> : <Slot />}</ThemeProvider>
+    <PaperProvider>
+      <StatusBar translucent animated />
+      <ThemeProvider>{isLoading ? <LoadingScreen /> : <Slot />}</ThemeProvider>
+    </PaperProvider>
   );
 });
 

@@ -1,9 +1,9 @@
-import FilterTabs from "@/components/common/FilterTabs";
-import SearchComponent from "@/components/common/SearchComponent";
-import ThemedFlatList from "@/components/common/ThemedFlatList";
-import TitleSection from "@/components/common/TitleSection";
-import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { QuizListItem } from "@/components/specific/quiz/QuizListItem";
+import FilterTabs from "@/src/components/common/FilterTabs";
+import SearchComponent from "@/src/components/common/SearchComponent";
+import ThemedFlatList from "@/src/components/common/ThemedFlatList";
+import TitleSection from "@/src/components/common/TitleSection";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { QuizListItem } from "@/src/components/quiz/QuizListItem";
 import { Margin } from "@/constants/Styles";
 import { quizData } from "@/data/index";
 import { useQuizResults } from "@/hooks/useQuizResults";

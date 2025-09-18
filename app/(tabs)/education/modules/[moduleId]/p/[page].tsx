@@ -1,8 +1,8 @@
-import { ErrorState } from "@/components/common/ErrorState";
-import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { ContentBlockRenderer } from "@/components/specific/modules/ContentBlockRenderer";
-import { ModulePageNavigation } from "@/components/specific/modules/ModulePageNavigation";
-import { ThemedText } from "@/components/ui/ThemedText";
+import { ErrorState } from "@/src/components/common/ErrorState";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { ContentBlockRenderer } from "@/src/components/modules/ContentBlockRenderer";
+import { ModulePageNavigation } from "@/src/components/modules/ModulePageNavigation";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import {

@@ -3,11 +3,11 @@ import { Link, useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import TitleSection from "@/components/common/TitleSection";
-import { ScreenLayout } from "@/components/layouts/ScreenLayout";
-import { PageListItem } from "@/components/specific/modules/PageListItem";
-import { Button } from "@/components/ui/Button";
-import { ThemedText } from "@/components/ui/ThemedText";
+import TitleSection from "@/src/components/common/TitleSection";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { PageListItem } from "@/src/components/modules/PageListItem";
+import { Button } from "@/src/components/ui/Button";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,

@@ -1,6 +1,6 @@
-import { useTheme } from '@/state/ThemeContext';
+import { useTheme } from '@/store/ThemeContext';
 
 export function useColorScheme() {
-  const { colorTheme } = useTheme();
-  return colorTheme;
+  const { theme } = useTheme();
+  return theme;
 }
