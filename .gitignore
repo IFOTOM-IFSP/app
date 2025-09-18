@@ -24,6 +24,8 @@ android/app/build/
 android/build/
 ios/Pods/
 ios/build/
+!plugins/
+!plugins/**
 
 # Metro
 .metro-health-check*
