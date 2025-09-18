@@ -127,13 +127,13 @@ export default function CalibrateWavelengthScreen() {
   };
 
   const handleCapture = async () => {
-    if (!cameraRef.current || isCapturing) return;
-    if (cameraRef.current == null) return;
+    const camera = cameraRef.current;
+    if (!camera || isCapturing) return;
     setIsCapturing(true);
     try {
       const uris = await Promise.all(
         Array.from({ length: CAPTURE_COUNT }).map(async () => {
-          const photo = await cameraRef.current.takePictureAsync({
+          const photo = await camera.takePictureAsync({
             quality: 0.5,
           });
           return photo?.uri;
