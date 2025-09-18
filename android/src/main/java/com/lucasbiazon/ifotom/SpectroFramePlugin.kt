@@ -49,29 +49,74 @@ class SpectroFramePlugin : FrameProcessorPlugin() {
   }
 
   private fun parseRoi(params: Map<String, Any>?): Roi {
-    val container = when (val nested = params?.get("roi")) {
-      is Map<*, *> -> nested
-      else -> params
+    val nested = params?.get("roi")
+    return when (nested) {
+      is Map<*, *> -> parseMap(nested)
+      is List<*> -> parseList(nested)
+      is Array<*> -> parseList(nested.toList())
+      else -> parseMap(params)
     }
+  }
 
-    fun extract(key: String): Int {
-      val value = container?.get(key) ?: return 0
-      return when (value) {
-        is Number -> value.toInt()
-        is String -> value.toDoubleOrNull()?.toInt() ?: 0
-        else -> 0
-      }
-    }
-
+  private fun parseMap(map: Map<*, *>?): Roi {
+    if (map == null) return Roi.ZERO
     return Roi(
-      extract("x"),
-      extract("y"),
-      extract("w"),
-      extract("h")
+      readFirst(map, "x", "left", "0"),
+      readFirst(map, "y", "top", "1"),
+      readFirst(map, "w", "width", "2"),
+      readFirst(map, "h", "height", "3"),
     )
   }
 
-  private data class Roi(val x: Int, val y: Int, val width: Int, val height: Int)
+  private fun parseList(values: List<*>): Roi {
+    if (values.isEmpty()) return Roi.ZERO
+    return Roi(
+      normalize(readValue(values.getOrNull(0))),
+      normalize(readValue(values.getOrNull(1))),
+      normalize(readValue(values.getOrNull(2))),
+      normalize(readValue(values.getOrNull(3))),
+    )
+  }
+
+  private fun readFirst(container: Map<*, *>, vararg keys: String): Int {
+    for (key in keys) {
+      val direct = container[key]
+      val directValue = readValue(direct)
+      if (directValue != Roi.UNSET) {
+        return directValue
+      }
+
+      val numericKey = key.toIntOrNull()
+      if (numericKey != null) {
+        val numeric = container[numericKey]
+        val numericValue = readValue(numeric)
+        if (numericValue != Roi.UNSET) {
+          return numericValue
+        }
+      }
+    }
+    return 0
+  }
+
+  private fun readValue(value: Any?): Int {
+    return when (value) {
+      null -> Roi.UNSET
+      is Number -> value.toInt()
+      is String -> value.toDoubleOrNull()?.toInt() ?: Roi.UNSET
+      else -> Roi.UNSET
+    }
+  }
+
+  private fun normalize(value: Int): Int {
+    return if (value == Roi.UNSET) 0 else value
+  }
+
+  private data class Roi(val x: Int, val y: Int, val width: Int, val height: Int) {
+    companion object {
+      val ZERO = Roi(0, 0, 0, 0)
+      const val UNSET = Int.MIN_VALUE
+    }
+  }
 
   companion object {
     init {

@@ -60,30 +60,67 @@ public final class SpectroFramePlugin: FrameProcessorPlugin {
   private static func parseROI(from arguments: [AnyHashable: Any]?) -> ROI {
     guard let arguments else { return .zero }
 
-    if let nested = arguments["roi"] as? [AnyHashable: Any] {
-      return ROI(
-        x: Self.intValue(from: nested["x"]),
-        y: Self.intValue(from: nested["y"]),
-        width: Self.intValue(from: nested["w"]),
-        height: Self.intValue(from: nested["h"])
-      )
+    if let nested = arguments["roi"] {
+      if let dictionary = nested as? [AnyHashable: Any] {
+        return parseROIdictionary(dictionary)
+      }
+      if let array = nested as? [Any] {
+        return parseROIarray(array)
+      }
     }
 
-    return ROI(
-      x: Self.intValue(from: arguments["x"]),
-      y: Self.intValue(from: arguments["y"]),
-      width: Self.intValue(from: arguments["w"]),
-      height: Self.intValue(from: arguments["h"])
-    )
+    return parseROIdictionary(arguments)
   }
 
-  private static func intValue(from value: Any?) -> Int {
+  private static func parseROIdictionary(_ dictionary: [AnyHashable: Any]) -> ROI {
+    let x = extract(from: dictionary, keys: ["x", "left", 0]) ?? 0
+    let y = extract(from: dictionary, keys: ["y", "top", 1]) ?? 0
+    let width = extract(from: dictionary, keys: ["w", "width", 2]) ?? 0
+    let height = extract(from: dictionary, keys: ["h", "height", 3]) ?? 0
+    return ROI(x: x, y: y, width: width, height: height)
+  }
+
+  private static func parseROIarray(_ array: [Any]) -> ROI {
+    let x = intValue(from: array[safe: 0]) ?? 0
+    let y = intValue(from: array[safe: 1]) ?? 0
+    let width = intValue(from: array[safe: 2]) ?? 0
+    let height = intValue(from: array[safe: 3]) ?? 0
+    return ROI(x: x, y: y, width: width, height: height)
+  }
+
+  private static func extract(from dictionary: [AnyHashable: Any], keys: [AnyHashable]) -> Int? {
+    for key in keys {
+      if let value = dictionary[key], let parsed = intValue(from: value) {
+        return parsed
+      }
+      if let numericKey = (key as? NSString)?.integerValue ?? (key as? NSNumber)?.intValue {
+        if let value = dictionary[NSNumber(value: numericKey)], let parsed = intValue(from: value) {
+          return parsed
+        }
+      }
+    }
+    return nil
+  }
+
+  private static func intValue(from value: Any?) -> Int? {
     if let number = value as? NSNumber {
       return number.intValue
     }
     if let string = value as? NSString {
-      return string.integerValue
+      let trimmed = string.trimmingCharacters(in: .whitespacesAndNewlines)
+      guard !trimmed.isEmpty else { return nil }
+      if let doubleValue = Double(trimmed) {
+        return Int(doubleValue)
+      }
+      return nil
     }
-    return 0
+    return nil
+  }
+}
+
+private extension Array where Element == Any {
+  subscript(safe index: Int) -> Any? {
+    guard indices.contains(index) else { return nil }
+    return self[index]
   }
 }
