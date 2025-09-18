@@ -1,4 +1,4 @@
-import { InfoCardData, TypesAanalysisData } from "@/models/analysis";
+import { InfoCardData, TypesAnalysisData } from "@/models/analysis";
 
 export const INFO_CARD_DATA: InfoCardData[] = [
   {
@@ -31,7 +31,7 @@ export const INFO_CARD_DATA: InfoCardData[] = [
   },
 ];
 
-export const TYPES_ANALYSIS_DATA: TypesAanalysisData[] = [
+export const TYPES_ANALYSIS_DATA: TypesAnalysisData[] = [
     {
       id: "quantitative",
       title: "Análise Quantitativa",

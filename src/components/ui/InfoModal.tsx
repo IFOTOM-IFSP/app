@@ -22,6 +22,8 @@ interface InfoModalProps {
   icon?: ReactNode;
   onDoNotShowAgain?: (value: boolean) => void;
   actions?: ReactNode;
+  imageHeight?: number;
+  imagemWidth?: number;
 }
 
 export const InfoModal = ({
@@ -34,6 +36,8 @@ export const InfoModal = ({
   showDoNotShowAgain = false,
   actions,
   onDoNotShowAgain,
+  imageHeight,
+  imagemWidth,
 }: InfoModalProps) => {
   const backgroundColor = useThemeValue("card");
   const textColor = useThemeValue("text");
@@ -64,7 +68,6 @@ export const InfoModal = ({
           </TouchableOpacity>
 
           <ScrollView contentContainerStyle={styles.scrollContentContainer}>
-            {image && <Image source={image} style={styles.modalImage} />}
             {icon && <View style={styles.iconContainer}>{icon}</View>}
             <Text style={[styles.title, { color: textColor }]}>{title}</Text>
             {typeof content === "string" ? (
@@ -75,6 +78,17 @@ export const InfoModal = ({
               content
             )}
           </ScrollView>
+          {image && (
+            <View style={[styles.containerImage]}>
+              <Image
+                source={image}
+                style={[
+                  styles.modalImage,
+                  { height: imageHeight, width: imagemWidth },
+                ]}
+              />
+            </View>
+          )}
 
           {(showDoNotShowAgain || actions) && (
             <View style={styles.footer}>
@@ -128,11 +142,13 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 60,
   },
+  containerImage: {
+    position: "absolute",
+    bottom: 140,
+    right: 0,
+    left: 0,
+  },
   modalImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: 16,
-    marginBottom: 24,
     resizeMode: "cover",
   },
   title: {

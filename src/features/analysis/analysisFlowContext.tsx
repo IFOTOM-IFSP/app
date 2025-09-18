@@ -38,9 +38,6 @@ export const useAnalysisFlowStore = create<AnalysisFlowState>((set, get) => ({
   step: "idle",
   data: {},
   actions: {
-    /**
-     * Reseta o fluxo e inicia uma nova análise, navegando para a tela de configuração.
-     */
     startAnalysis: (analysisType) => {
       get().actions.resetFlow();
       get().actions.updateData({ analysisType });
@@ -51,19 +48,12 @@ export const useAnalysisFlowStore = create<AnalysisFlowState>((set, get) => ({
       });
     },
 
-    /**
-     * Atualiza o estado interno do fluxo com novos dados.
-     */
     updateData: (newData) => {
       set((state) => ({
         data: { ...state.data, ...newData },
       }));
     },
 
-    /**
-     * Chamado após o formulário de configuração ser preenchido.
-     * Decide qual é a primeira etapa do fluxo.
-     */
     handleConfigurationStep: (configData) => {
       get().actions.updateData(configData);
       const { data } = get();
@@ -73,13 +63,9 @@ export const useAnalysisFlowStore = create<AnalysisFlowState>((set, get) => ({
         router.push("/(tabs)/analysis/create/calibrate");
         return;
       }
-      // Se já está calibrado, pula para a próxima verificação
       get().actions.completeWavelengthCalibration();
     },
 
-    /**
-     * Chamado quando a etapa de calibração do espectrômetro é concluída.
-     */
     completeWavelengthCalibration: () => {
       get().actions.updateData({ hasCalibratedSpectrometer: true });
       const { data } = get();
@@ -89,13 +75,9 @@ export const useAnalysisFlowStore = create<AnalysisFlowState>((set, get) => ({
         router.push("/(tabs)/analysis/create/build-curve");
         return;
       }
-      // Se a curva já existe, pula para a próxima verificação
       get().actions.completeCurveBuilding();
     },
 
-    /**
-     * Chamado quando a etapa de construção de curva é concluída.
-     */
     completeCurveBuilding: () => {
       get().actions.updateData({ hasDefinedCurve: true });
       const { darkSignalImages, whiteSignalImages } =
@@ -128,33 +110,21 @@ export const useAnalysisFlowStore = create<AnalysisFlowState>((set, get) => ({
       }
     },
 
-    /**
-     * Chamado quando a captura da linha de base (branco/escuro) é concluída.
-     */
     completeBaselineCapture: () => {
       set({ step: "measuring_sample" });
       router.push("/(tabs)/analysis/create/measure");
     },
 
-    /**
-     * Navega para a tela final de resultados.
-     */
     navigateToResults: () => {
       set({ step: "results" });
-      // Assumindo que você criará uma tela de resultados em /create/results.tsx
       router.push("/(tabs)/analysis/view/results");
     },
-
-    /**
-     * Limpa o estado do fluxo para uma nova análise.
-     */
     resetFlow: () => {
       set({ step: "idle", data: {} });
     },
   },
 }));
 
-// Hooks para facilitar o uso no restante do aplicativo
 export const useAnalysisFlowState = () =>
   useAnalysisFlowStore((state) => ({ step: state.step, data: state.data }));
 export const useAnalysisFlowActions = () =>

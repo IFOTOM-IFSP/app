@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
 
-import { Margin } from "@/constants/Styles";
+import { Margin, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import BackButton from "@/src/components/ui/BackButton";
 import { Button } from "@/src/components/ui/Button";
@@ -102,6 +102,9 @@ export default function QuantitativeFormsScreen() {
       </ThemedText>
 
       <InfoModal
+        image={require("@/assets/images/m_hands.png")}
+        imageHeight={150}
+        imagemWidth={200}
         visible={isModalVisible}
         onClose={handleModalClose}
         icon={<Feather name="info" size={40} color={primaryColor} />}
@@ -111,12 +114,18 @@ export default function QuantitativeFormsScreen() {
         }
         showDoNotShowAgain={true}
         onDoNotShowAgain={setDontShowAgain}
-        actions={<Button title="Entendi" onPress={handleModalClose} />}
+        actions={
+          <Button
+            title="Entendi"
+            onPress={handleModalClose}
+            style={styles.buttonModal}
+          />
+        }
       />
       <FormWrapper
         buttonTitle="Próximo Passo"
         isSubmitting={status === "calibrating"}
-        keyboardVerticalOffset={80}>
+        onSubmit={handleSubmit(onSubmit)}>
         <FormSection title="Informações Básicas">
           <ControlledFormField
             name="analysisName"
@@ -192,13 +201,6 @@ export default function QuantitativeFormsScreen() {
             </>
           )}
         </FormSection>
-
-        <Button
-          title="Próximo Passo"
-          onPress={handleSubmit(onSubmit)}
-          disabled={status === "calibrating"}
-          loading={status === "calibrating"}
-        />
       </FormWrapper>
     </View>
   );
@@ -248,7 +250,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "100%",
   },
-  buttonContainer: {
-    paddingBottom: 24,
+  buttonModal: {
+    width: "90%",
+    marginBottom: Padding.sm,
+    borderRadius: 8,
   },
 });

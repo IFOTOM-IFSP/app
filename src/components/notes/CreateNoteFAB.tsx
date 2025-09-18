@@ -1,4 +1,3 @@
-import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -8,6 +7,7 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 // import { getAnalysisHistory, SavedAnalysis } from "@/storage/analysisStorage";
 import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
@@ -185,6 +185,7 @@ export function CreateNoteFAB() {
 const styles = StyleSheet.create({
   fab: {
     position: "absolute",
+    botton: 80, 
     right: Spacing.md,
     width: 60,
     height: 60,
