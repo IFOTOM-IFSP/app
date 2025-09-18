@@ -33,8 +33,27 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "./plugins/withExpoMavenRepos",
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "minSdkVersion": 24,
+            "kotlinVersion": "2.0.21",
+            "packagingOptions": {
+              "pickFirst": [
+                "**/libc++_shared.so"
+              ]
+            }
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ],
+      "./plugins/withAndroidGradleBootstrap",
+      "./plugins/withSpectroFramePlugin",
       [
         "react-native-vision-camera",
         {
@@ -87,8 +106,7 @@
           "project": "react-native",
           "organization": "ifsp-campus-campinas"
         }
-      ],
-      "./plugins/withSpectroFramePlugin"
+      ]
     ],
     "scheme": "myapp",
     "extra": {
