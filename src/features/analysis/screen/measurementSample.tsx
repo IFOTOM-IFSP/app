@@ -15,6 +15,8 @@ import captureDualBeamImage from "@/src/components/captureDualBeamImage";
 import { useAnalysisStore } from "@/store/analysisStore";
 import { useBaselineStore } from "@/store/baselineStore";
 import { useProfileStore } from "@/store/profileStore";
+import { useVectorsStore } from "@/store/analysisVectors";
+import { createSampleBurst, createReferenceBurst } from "@/utils/syntheticBurst";
 
 export default function MeasurementSampleScreen() {
   const [permission, setPermission] = useState<PermissionStatus | null>(null);
@@ -32,6 +34,8 @@ export default function MeasurementSampleScreen() {
   } = useAnalysisStore();
   const { darkSignalImages, whiteSignalImages } = useBaselineStore();
   const { profiles } = useProfileStore();
+  const setSampleVectors = useVectorsStore((state) => state.setSample);
+  const setRefAfterVectors = useVectorsStore((state) => state.setRefAfter);
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -106,6 +110,11 @@ export default function MeasurementSampleScreen() {
     setIsCapturing(true);
     try {
       const sampleImages = await captureDualBeamImage(camera);
+      const frameCount = sampleImages.sampleChannelUris.length || 10;
+      const targetNm = setupData?.wavelength ?? 540;
+
+      setSampleVectors(createSampleBurst(frameCount, targetNm));
+      setRefAfterVectors(createReferenceBurst(frameCount, targetNm));
 
       await calculateFinalConcentration({
         sampleImages,

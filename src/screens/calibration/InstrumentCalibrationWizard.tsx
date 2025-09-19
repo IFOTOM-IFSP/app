@@ -14,6 +14,7 @@ import { useDeviceProfile, type DeviceProfile } from '@/store/deviceProfile';
 import { ApiClient } from '@/services/http';
 import { ENV } from '@/config/env';
 import { useCalibrationStore, type LaserColor } from '@/store/calibrationStore';
+import { createLaserBurst } from '@/utils/syntheticBurst';
 import { pt } from '@/src/i18n/pt';
 
 const strings = pt.calibration.wizard;
@@ -61,13 +62,29 @@ export default function InstrumentCalibrationWizard() {
   }, [step, calibration.fit, autoRmseShown]);
 
   const handleImport = (color: LaserColor, source: VectorKey) => {
-    const frames = vectors[source];
+    let frames = vectors[source];
+    let alertTitle = 'Burst importado';
+    let alertMessage = 'Usamos o burst mais recente para este laser.';
+
     if (!frames || !frames.length) {
-      Alert.alert('Burst vazio', 'Capture um burst primeiro e tente novamente.');
-      return;
+      const syntheticNm = color === 'green' ? greenNm : color === 'red' ? redNm : 450;
+      const syntheticBurst = createLaserBurst(syntheticNm, 10);
+
+      if (source === 'ref') {
+        vectors.setRef(syntheticBurst);
+      } else if (source === 'sample') {
+        vectors.setSample(syntheticBurst);
+      } else {
+        vectors.setDark(syntheticBurst);
+      }
+
+      frames = syntheticBurst;
+      alertTitle = 'Burst sintético gerado';
+      alertMessage = 'Não encontramos capturas recentes, então geramos um burst de exemplo. Capture dados reais quando possível.';
     }
+
     calibration.setLaserFrames(color, frames);
-    Alert.alert('Burst importado', 'Usamos o burst mais recente para este laser.');
+    Alert.alert(alertTitle, alertMessage);
   };
 
   const handleSaveProfile = async () => {

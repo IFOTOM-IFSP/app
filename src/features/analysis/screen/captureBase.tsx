@@ -1,5 +1,7 @@
 import { DualBeamImages, useAnalysisStore } from "@/store/analysisStore"; // Importamos nossa interface
 import { useBaselineStore } from "@/store/baselineStore";
+import { useVectorsStore } from "@/store/analysisVectors";
+import { createDarkBurst, createReferenceBurst } from "@/utils/syntheticBurst";
 import { Camera, CameraView, PermissionStatus } from "expo-camera";
 import { router } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -47,6 +49,13 @@ export default function CaptureBaseScreen() {
     useState<DualBeamImages | null>(null);
   const { setupData } = useAnalysisStore();
   const { setBaseline } = useBaselineStore();
+  const setDarkVectors = useVectorsStore((state) => state.setDark);
+  const setRefVectors = useVectorsStore((state) => state.setRef);
+  const resetVectors = useVectorsStore((state) => state.reset);
+
+  useEffect(() => {
+    resetVectors();
+  }, [resetVectors]);
 
   const handleCapture = async () => {
     const camera = cameraRef.current;
@@ -70,10 +79,12 @@ export default function CaptureBaseScreen() {
 
       if (stage === "dark") {
         setCapturedDarkImages(capturedImages); // Guarda as imagens de escuro no estado local
+        setDarkVectors(createDarkBurst(CAPTURE_COUNT));
         setStage("white"); // Avança para a próxima etapa
       } else if (stage === "white" && capturedDarkImages) {
         // Agora temos o escuro (do estado local) e o branco (da captura atual)
         await setBaseline(capturedDarkImages, capturedImages); // Salva ambos no store persistente
+        setRefVectors(createReferenceBurst(CAPTURE_COUNT, 532));
         setStage("done"); // Finaliza o processo
       }
     } catch (e: any) {
