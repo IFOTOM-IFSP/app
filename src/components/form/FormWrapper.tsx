@@ -14,6 +14,7 @@ interface FormWrapperProps {
   children: React.ReactNode;
   buttonTitle?: string;
   isSubmitting?: boolean;
+  buttonDisabled?: boolean;
   onSubmit: () => void; // Adicionamos a função de submit aqui
 }
 
@@ -21,6 +22,7 @@ export function FormWrapper({
   children,
   buttonTitle = "Próximo",
   isSubmitting = false,
+  buttonDisabled = false,
   onSubmit,
 }: FormWrapperProps) {
   const borderColor = useThemeValue("border");
@@ -50,7 +52,7 @@ export function FormWrapper({
         <Button
           title={buttonTitle}
           onPress={onSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || buttonDisabled}
           loading={isSubmitting}
           style={styles.button}
         />

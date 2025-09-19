@@ -12,6 +12,7 @@ type ControlledFormFieldProps<T extends FieldValues> = ThemedInputProps & {
   control: Control<T>;
   label: string;
   info?: string; // Propriedade de informação adicionada
+  onInfoPress?: () => void;
 };
 
 export function ControlledFormField<T extends FieldValues>({
@@ -19,6 +20,7 @@ export function ControlledFormField<T extends FieldValues>({
   control,
   label,
   info,
+  onInfoPress,
   ...themedInputProps
 }: ControlledFormFieldProps<T>) {
   const destructiveColor = useThemeValue("warning");
@@ -39,7 +41,13 @@ export function ControlledFormField<T extends FieldValues>({
             {info && (
               <TouchableOpacity
                 style={styles.infoButton}
-                onPress={() => Alert.alert(label, info)}
+                onPress={() => {
+                  if (onInfoPress) {
+                    onInfoPress();
+                    return;
+                  }
+                  Alert.alert(label, info);
+                }}
                 accessibilityLabel={`Informação sobre ${label}`}>
                 <Feather name="help-circle" size={18} color={infoIconColor} />
               </TouchableOpacity>

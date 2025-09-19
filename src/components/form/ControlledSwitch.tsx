@@ -19,6 +19,7 @@ type ControlledSwitchProps<T extends FieldValues> = BaseSwitchProps & {
   control: Control<T>;
   label: string;
   info?: string;
+  onInfoPress?: () => void;
 };
 
 export function ControlledSwitch<T extends FieldValues>({
@@ -26,6 +27,7 @@ export function ControlledSwitch<T extends FieldValues>({
   control,
   label,
   info,
+  onInfoPress,
   ...switchRowProps
 }: ControlledSwitchProps<T>) {
   const infoIconColor = useThemeValue("primary");
@@ -36,7 +38,13 @@ export function ControlledSwitch<T extends FieldValues>({
       {info && (
         <TouchableOpacity
           style={styles.infoButton}
-          onPress={() => Alert.alert(label, info)}
+          onPress={() => {
+            if (onInfoPress) {
+              onInfoPress();
+              return;
+            }
+            Alert.alert(label, info);
+          }}
           accessibilityLabel={`Informação sobre ${label}`}>
           <Feather name="help-circle" size={18} color={infoIconColor} />
         </TouchableOpacity>
