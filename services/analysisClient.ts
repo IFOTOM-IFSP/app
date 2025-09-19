@@ -1,10 +1,10 @@
 // src/services/analysisClient.ts
-import { AnalysisReq } from "@/models";
-import { Api } from "./http";
+import { ENV } from "@/config/env";
+import type { QuantAnalyzeRequest, QuantAnalyzeResponse } from "@/types/api";
+import { ApiClient } from "./http";
 
-export async function runQuantitative(req: AnalysisReq) {
-  // valida pelo zod no http.ts
-  const resp = await Api.analyze(req);
-  // opcional: validar resposta com zod também (crie schema)
-  return resp;
+const client = new ApiClient(ENV.API_BASE_URL);
+
+export async function runQuantitative(req: QuantAnalyzeRequest): Promise<QuantAnalyzeResponse> {
+  return client.analyzeQuant(req);
 }

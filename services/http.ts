@@ -1,27 +1,46 @@
-import { AnalysisReq, AnalysisReqSchema } from "@/models";
+import type {
+  QuantAnalyzeRequest, QuantAnalyzeResponse,
+  CharacterizeRequest, CharacterizeResponse
+} from '@/types/api';
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_URL ?? "https://SEU-RENDER.onrender.com/api/v1";
+const DEFAULT_TIMEOUT_MS = 20000;
 
-async function jfetch<T>(path: string, init: RequestInit, schema?: any): Promise<T> {
-  const url = `${BASE_URL}${path}`;
-  let lastErr: any;
-  for (let i=0; i<3; i++) {
-    try {
-      const res = await fetch(url, { ...init, headers: { "Content-Type": "application/json", ...(init.headers||{}) }});
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-      return schema ? schema.parse(data) : data;
-    } catch (e) {
-      lastErr = e;
-      await new Promise(r => setTimeout(r, 200 * (i+1) + Math.random()*150));
-    }
-  }
-  throw lastErr;
+export class HttpError extends Error {
+  constructor(public status: number, public body: any) { super(`HTTP ${status}`); }
 }
 
-export const Api = {
-  analyze: (body: AnalysisReq) =>
-    jfetch("/analyze", { method: "POST", body: JSON.stringify(AnalysisReqSchema.parse(body)) }),
-  processReferences: (body: any) =>
-    jfetch("/process-references", { method: "POST", body: JSON.stringify(body) })
-};
+function withTimeout<T>(p: Promise<T>, ms = DEFAULT_TIMEOUT_MS): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error('timeout')), ms);
+    p.then(v => { clearTimeout(t); resolve(v); }).catch(e => { clearTimeout(t); reject(e); });
+  });
+}
+
+export class ApiClient {
+  constructor(private baseUrl: string) {}
+
+  private async request<T>(path: string, init?: RequestInit): Promise<T> {
+    const res = await withTimeout(fetch(`${this.baseUrl}${path}`, {
+      ...(init ?? {}),
+      headers: { 'Content-Type': 'application/json', ...(init?.headers || {}) }
+    }));
+    if (!(res as Response).ok) {
+      const body = await (res as Response).text().catch(() => '');
+      let json: any; try { json = JSON.parse(body); } catch { json = body; }
+      throw new HttpError((res as Response).status, json);
+    }
+    return (res as Response).json() as Promise<T>;
+  }
+
+  analyzeQuant(payload: QuantAnalyzeRequest): Promise<QuantAnalyzeResponse> {
+    return this.request('/analyze', { method: 'POST', body: JSON.stringify(payload) });
+  }
+
+  characterizeInstrument(payload: CharacterizeRequest): Promise<CharacterizeResponse> {
+    return this.request('/instrument/characterize', { method: 'POST', body: JSON.stringify(payload) });
+  }
+
+  health(): Promise<{ status: 'ok' }> {
+    return this.request('/health');
+  }
+}
