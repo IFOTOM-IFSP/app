@@ -32,10 +32,16 @@ const stepLabels: Record<WizardStep, string> = {
 
 type VectorKey = 'dark' | 'ref' | 'sample';
 
-const LASER_ORDER: { color: LaserColor; label: string; storeKey: VectorKey; defaultWavelength: number; helperButton: string }[] = [
-  { color: 'green', label: 'Laser verde (~532 nm)', storeKey: 'ref', defaultWavelength: 532, helperButton: strings.captureSection.importFromRef },
-  { color: 'red', label: 'Laser vermelho (~650 nm)', storeKey: 'sample', defaultWavelength: 650, helperButton: strings.captureSection.importFromSample },
-  { color: 'blue', label: 'Laser adicional (opcional)', storeKey: 'dark', defaultWavelength: 450, helperButton: strings.captureSection.importFromDark },
+const DEFAULT_LASER_WAVELENGTHS: Record<LaserColor, number> = {
+  green: 532,
+  red: 650,
+  blue: 450,
+};
+
+const LASER_ORDER: { color: LaserColor; label: string; storeKey: VectorKey; helperButton: string }[] = [
+  { color: 'green', label: 'Laser verde (~532 nm)', storeKey: 'ref', helperButton: strings.captureSection.importFromRef },
+  { color: 'red', label: 'Laser vermelho (~650 nm)', storeKey: 'sample', helperButton: strings.captureSection.importFromSample },
+  { color: 'blue', label: 'Laser adicional (opcional)', storeKey: 'dark', helperButton: strings.captureSection.importFromDark },
 ];
 
 export default function InstrumentCalibrationWizard() {
@@ -67,8 +73,8 @@ export default function InstrumentCalibrationWizard() {
     let alertMessage = 'Usamos o burst mais recente para este laser.';
 
     if (!frames || !frames.length) {
-      const syntheticNm = color === 'green' ? greenNm : color === 'red' ? redNm : 450;
-      const syntheticBurst = createLaserBurst(syntheticNm, 10);
+      const fallbackNm = calibration.lasers[color]?.wavelength ?? DEFAULT_LASER_WAVELENGTHS[color];
+      const syntheticBurst = createLaserBurst(fallbackNm, 10);
 
       if (source === 'ref') {
         vectors.setRef(syntheticBurst);
@@ -182,7 +188,7 @@ export default function InstrumentCalibrationWizard() {
             <ThemedText style={styles.laserLabel}>{laser.label}</ThemedText>
             <ThemedInput
               keyboardType="numeric"
-              value={String(measurement?.wavelength ?? laser.defaultWavelength)}
+              value={String(measurement?.wavelength ?? DEFAULT_LASER_WAVELENGTHS[laser.color])}
               onChangeText={(textValue) => {
                 const numeric = Number(textValue.replace(',', '.'));
                 if (!Number.isNaN(numeric)) {
