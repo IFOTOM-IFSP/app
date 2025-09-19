@@ -52,14 +52,6 @@
           }
         }
       ],
-      "./plugins/withAndroidGradleBootstrap",
-      "./plugins/withSpectroFramePlugin",
-      [
-        "react-native-vision-camera",
-        {
-          "cameraPermissionText": "Precisamos da câmera para análises."
-        }
-      ],
       "expo-router",
       [
         "expo-camera",
