@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/icon.jpg",
     "userInterfaceStyle": "automatic",
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/images/splash_icon.png",
       "resizeMode": "contain",
@@ -18,6 +19,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Precisamos da câmera para capturar espectros."
       },
+      "newArchEnabled": true,
       "bundleIdentifier": "com.anonymous.iFOTOM"
     },
     "android": {
@@ -25,14 +27,29 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "CAMERA"
       ],
+      "newArchEnabled": true,
       "package": "com.anonymous.iFOTOM"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "react-native-vision-camera",
+      [
+        "react-native-permissions",
+        {
+          "iosPermissions": [
+            "Camera",
+            "Microphone"
+          ],
+          "androidPermissions": [
+            "android.permission.CAMERA"
+          ]
+        }
+      ],
       [
         "expo-build-properties",
         {

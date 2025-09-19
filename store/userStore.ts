@@ -1,10 +1,10 @@
 import { handleError } from '@/services/errorHandler';
 import {
-    isFirstLaunch as checkFirstLaunch,
-    clearFirstLaunch,
-    getUserName,
-    saveUserName as saveNameToStorage,
-} from '@/src/native/storage/userStorage';
+  isFirstLaunch as checkFirstLaunch,
+  clearFirstLaunch,
+  getUserName,
+  saveUserName as saveNameToStorage,
+} from '@/storage/userStorage';
 import { create } from 'zustand';
 
 interface UserState {

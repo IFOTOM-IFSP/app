@@ -7,7 +7,7 @@ import {
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { Note } from "@/src/native/storage/notesStorage";
+import { Note } from "@/storage/notesStorage";
 import { FlaskConical, ListChecks, Notebook } from "lucide-react-native";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";

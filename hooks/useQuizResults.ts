@@ -1,4 +1,4 @@
-import type { QuizResult } from '@/src/native/storage/quizResultsStorage';
+import type { QuizResult } from '@/storage/quizResultsStorage';
 import {
     useHighScores as useHighScoresSelector,
     useIsQuizLoading as useIsQuizLoadingSelector,

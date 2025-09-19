@@ -10,7 +10,7 @@ import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { CreateNoteFAB } from "@/src/components/notes/CreateNoteFAB";
 import { NoteListItem } from "@/src/components/notes/NoteListItem";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { Note } from "@/src/native/storage/notesStorage";
+import { Note } from "@/storage/notesStorage";
 
 export default function NotesListScreen() {
   const router = useRouter();

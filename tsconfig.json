@@ -1,24 +1,22 @@
 {
-  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "jsx": "react-native",
-    "noEmit": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "checkJs": false
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "types": [
+      "react",
+      "react-native"
+    ]
   },
-  "include": [
-    "app",
-    "src",
-    "app.config.*",
-    "index.ts",
-    "index.tsx"
-  ],
-  
-  "exclude": [
-    "node_modules",
-    "dist",
-    "android",
-    "ios",
-    "plugins"
-  ]
+  "extends": "expo/tsconfig.base"
 }

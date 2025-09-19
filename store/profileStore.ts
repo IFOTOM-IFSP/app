@@ -1,6 +1,6 @@
 import { create } from 'zustand';
+import * as storage from '..//storage/storageService';
 import { SpectrometerProfile } from '../models/SpectrometerProfile';
-import * as storage from '../src/native/storage/storageService';
 
 interface ProfileState {
   profiles: SpectrometerProfile[];

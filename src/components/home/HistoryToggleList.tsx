@@ -3,7 +3,7 @@ import { useThemeValue } from "@/hooks/useThemeValue";
 import { SwitchRow } from "@/src/components/ui/SwitchRow";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 
-import { Note } from "@/src/native/storage/notesStorage";
+import { Note } from "@/storage/notesStorage";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Animated, StyleSheet, View } from "react-native";

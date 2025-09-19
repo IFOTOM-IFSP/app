@@ -1,4 +1,4 @@
-import * as storage from '@/src/native/storage/storageService';
+import * as storage from '@/storage/storageService';
 import { create } from 'zustand';
 import { AnalysisReport } from '../models/analysis';
 

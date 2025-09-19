@@ -1,11 +1,11 @@
 import { handleError } from '@/services/errorHandler';
 import {
-    getAllNotes,
-    getNoteById,
-    Note,
-    deleteNote as storageDeleteNote,
-    saveNote as storageSaveNote,
-} from '@/src/native/storage/notesStorage';
+  getAllNotes,
+  getNoteById,
+  Note,
+  deleteNote as storageDeleteNote,
+  saveNote as storageSaveNote,
+} from '@/storage/notesStorage';
 import { create } from 'zustand';
 
 interface NotesState {

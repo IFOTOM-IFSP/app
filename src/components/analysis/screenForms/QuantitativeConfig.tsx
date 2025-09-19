@@ -17,7 +17,7 @@ import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   getShouldShowConfigModal,
   setShouldShowConfigModal,
-} from "@/src/native/storage/settingsStorage";
+} from "@/storage/settingsStorage";
 import { Feather } from "@expo/vector-icons";
 import { ControlledFormField } from "../../form/ControlledFormField";
 import { ControlledSwitch } from "../../form/ControlledSwitch";
