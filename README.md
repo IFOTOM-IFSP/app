@@ -50,6 +50,11 @@
 
 ## 4. Considerações Adicionais
 
+- **Fluxos de Calibração e Análise Quantitativa:**
+  - A tela **Calibração do equipamento** (rota `/(tabs)/analysis/calibration`) guia o ajuste pixel→λ em etapas: ROI, captura de lasers, revisão do ajuste e salvamento do perfil ativo.
+  - A tela **Análise Quantitativa** valida se o perfil ativo está salvo, se os bursts (dark/ref/sample) estão completos e monta o payload para `/analyze`, exibindo dicas contextuais (RMSE, pseudo double-beam, curva).
+  - Os vetores espectrais capturados são armazenados no store `useVectorsStore`, enquanto o perfil ativo persiste no `useDeviceProfile` (AsyncStorage), permitindo recuperar o estado ao reabrir o app.
+
 - **Lint:**
   ```bash
   npm run lint
