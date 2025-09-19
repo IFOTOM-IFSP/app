@@ -28,7 +28,7 @@ const ModalContent = ({ item }: { item: AnalysisDataItem | undefined }) => {
   return (
     <>
       <ThemedText style={styles.modalKeyQuestion}>
-        "{item.keyQuestion}"
+        {`“${item.keyQuestion}”`}
       </ThemedText>
       <ThemedText style={styles.modalExplanation}>
         {item.explanation}
