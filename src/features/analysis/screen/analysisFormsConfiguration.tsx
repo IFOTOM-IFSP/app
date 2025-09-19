@@ -48,7 +48,7 @@ export default function AnalysisConfigurationScreen() {
         <AnalysisFormComponent />
       ) : (
         <ThemedText>
-          Erro: Tipo de análise {String(analysisFormId)} desconhecido.
+          Erro: Tipo de análise '{String(analysisFormId)}' desconhecido.
         </ThemedText>
       )}
     </ScreenLayout>

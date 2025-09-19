@@ -140,7 +140,7 @@ export default function CaptureBaseScreen() {
           <View style={styles.controls}>
             <Text style={styles.title}>Etapa 2: Medição de Referência</Text>
             <Text style={styles.instructions}>
-              Insira a amostra de referência (o branco) no compartimento e
+              Insira a amostra de referência (o "branco") no compartimento e
               pressione o botão.
             </Text>
             <Button title="Capturar Sinal de Branco" onPress={handleCapture} />
