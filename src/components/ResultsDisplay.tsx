@@ -6,7 +6,7 @@ import { LineChart } from "react-native-chart-kit";
 
 import { CurveGraphData } from "@/services/analysisService";
 import { FinalResult } from "@/store/analysisStore";
-import { AnalysisSetupFormData } from "./configuration/QuantitativeConfig";
+import { AnalysisSetupFormData } from "@/models/analysis";
 
 const screenWidth = Dimensions.get("window").width;
 

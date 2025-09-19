@@ -1,332 +1,680 @@
-import { Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
-import BackButton from "@/src/components/ui/BackButton";
-import { Button } from "@/src/components/ui/Button";
-import { ThemedText } from "@/src/components/ui/ThemedText";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { router } from "expo-router";
-import React, { useEffect, useMemo, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { pt } from '@/src/i18n/pt';
+import { ScreenLayout } from '@/src/components/layouts/ScreenLayout';
+import { Button } from '@/src/components/ui/Button';
+import BackButton from '@/src/components/ui/BackButton';
+import { InfoModal } from '@/src/components/ui/InfoModal';
+import { ThemedText } from '@/src/components/ui/ThemedText';
+import { useThemeValue } from '@/hooks/useThemeValue';
+import { useDeviceProfile } from '@/store/deviceProfile';
+import { useCurveStore } from '@/store/curveStore';
+import { useQuantitativeAnalysisStore, isSlopeNearZero } from '@/store/quantitativeAnalysisStore';
+import { selectCalibrationFitQuality } from '@/store/calibrationStore';
+import { router } from 'expo-router';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  Alert,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import { FormSection } from "../../form/FormSection";
-import { FormWrapper } from "../../form/FormWrapper";
-import { ControlledFormField } from "../../form/ControlledFormField";
-import { ControlledSwitch } from "../../form/ControlledSwitch";
-import { ApiClient, HttpError } from "@/services/http";
-import { ENV } from "@/config/env";
-import { useDeviceProfile } from "@/store/deviceProfile";
-import { useVectorsStore } from "@/store/analysisVectors";
-import type { QuantAnalyzeRequest, QuantAnalyzeResponse } from "@/types/api";
+import type { CalibrationCurve } from '@/models/CalibrationCurve';
 
-const quantitativeSchema = z.object({
-  lambda_nm: z.coerce.number({ invalid_type_error: "Informe o λ" }).min(200).max(1100),
-  window_nm: z.coerce.number().min(1).max(50).default(4),
-  m: z.coerce.number({ invalid_type_error: "Informe o coeficiente m" }),
-  b: z.coerce.number({ invalid_type_error: "Informe o coeficiente b" }),
-  frames_per_burst: z.coerce.number().int().min(1).max(200).default(10),
-  ref_after_sample: z.boolean().default(false),
-});
+type CurveModalProps = {
+  visible: boolean;
+  curves: CalibrationCurve[];
+  onClose: () => void;
+  onSelect: (curve: CalibrationCurve) => void;
+};
 
-export type QuantitativeFormData = z.infer<typeof quantitativeSchema>;
+const CurvePickerModal = ({ visible, curves, onClose, onSelect }: CurveModalProps) => {
+  const cardBackground = useThemeValue('card');
+  const textColor = useThemeValue('text');
+  const secondaryText = useThemeValue('textSecondary');
 
-export default function QuantitativeFormsScreen() {
-  const text = useThemeValue("text");
-  const tint = useThemeValue("tint");
-  const cardBackground = useThemeValue("card");
-  const secondaryText = useThemeValue("textSecondary");
+  return (
+    <Modal transparent animationType="fade" visible={visible} onRequestClose={onClose}>
+      <View style={styles.modalOverlay}>
+        <View style={[styles.modalCard, { backgroundColor: cardBackground }]}>
+          <ThemedText style={styles.modalTitle}>{pt.analysis.curvePickerButton}</ThemedText>
+          <ScrollView style={{ maxHeight: 320 }}>
+            {curves.length === 0 ? (
+              <Text style={[styles.emptyStateText, { color: secondaryText }]}>Nenhuma curva salva.</Text>
+            ) : (
+              curves.map((curve) => (
+                <TouchableOpacity
+                  key={curve.id}
+                  style={styles.curveRow}
+                  onPress={() => {
+                    onSelect(curve);
+                    onClose();
+                  }}>
+                  <View style={styles.curveRowText}>
+                    <Text style={[styles.curveName, { color: textColor }]}>{curve.substanceName}</Text>
+                    <Text style={[styles.curveMetadata, { color: secondaryText }]}>
+                      λ {curve.wavelengthNm} nm · m {curve.coefficients.slope_m.toFixed(4)}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            )}
+          </ScrollView>
+          <Button title={pt.common.cancel} onPress={onClose} variant="outline" style={styles.modalCloseButton} />
+        </View>
+      </View>
+    </Modal>
+  );
+};
 
-  const { control, handleSubmit, setValue } = useForm<QuantitativeFormData>({
-    resolver: zodResolver(quantitativeSchema),
-    mode: "onBlur",
-    defaultValues: {
-      lambda_nm: 540,
-      window_nm: 4,
-      m: 1,
-      b: 0,
-      frames_per_burst: 10,
-      ref_after_sample: false,
-    },
-  });
+function formatNumber(value: number | null | undefined, digits = 2) {
+  if (value === undefined || value === null || Number.isNaN(value)) return '-';
+  return value.toFixed(digits);
+}
+
+export default function QuantitativeAnalysisScreen() {
+  const [isProfileInfoOpen, setProfileInfoOpen] = useState(false);
+  const [isRmseInfoOpen, setRmseInfoOpen] = useState(false);
+  const [isWindowInfoOpen, setWindowInfoOpen] = useState(false);
+  const [isPseudoInfoOpen, setPseudoInfoOpen] = useState(false);
+  const [isCurveInfoOpen, setCurveInfoOpen] = useState(false);
+  const [hasShownPseudoModal, setHasShownPseudoModal] = useState(false);
+  const [isCurveModalOpen, setCurveModalOpen] = useState(false);
+
+  const textColor = useThemeValue('text');
+  const secondaryText = useThemeValue('textSecondary');
+  const cardBackground = useThemeValue('card');
+  const tint = useThemeValue('primary');
 
   const { profile, load } = useDeviceProfile();
-  const { dark, ref, sample, refAfter } = useVectorsStore();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [result, setResult] = useState<QuantAnalyzeResponse | null>(null);
+  const setParam = useQuantitativeAnalysisStore((state) => state.setParam);
+  const params = useQuantitativeAnalysisStore((state) => state.params);
+  const setError = useQuantitativeAnalysisStore((state) => state.setError);
 
-  const api = useMemo(() => new ApiClient(ENV.API_BASE_URL), []);
+  const curves = useCurveStore((state) => state.curves);
+  const loadCurves = useCurveStore((state) => state.loadCurves);
+
+  const [substance, setSubstance] = useState(params.substance);
+  const [wavelengthInput, setWavelengthInput] = useState(
+    params.wavelengthNm !== null && params.wavelengthNm !== undefined
+      ? String(params.wavelengthNm)
+      : ''
+  );
+  const [windowInput, setWindowInput] = useState(String(params.windowNm ?? ''));
+  const [slopeInput, setSlopeInput] = useState(
+    params.slope !== null && params.slope !== undefined ? String(params.slope) : ''
+  );
+  const [interceptInput, setInterceptInput] = useState(
+    params.intercept !== null && params.intercept !== undefined ? String(params.intercept) : ''
+  );
+  const [pseudoDoubleBeam, setPseudoDoubleBeam] = useState(params.pseudoDoubleBeam);
 
   useEffect(() => {
     load().catch(() => undefined);
-  }, [load]);
+    loadCurves().catch(() => undefined);
+  }, [load, loadCurves]);
 
   useEffect(() => {
-    api.health().catch(() => {
-      Alert.alert("Aviso", "API offline no momento.");
-    });
-  }, [api]);
+    setParam('substance', substance);
+  }, [setParam, substance]);
 
   useEffect(() => {
-    if (profile?.pixel_to_wavelength?.rmse_nm) {
-      setValue("window_nm", Math.max(2, Math.round(profile.pixel_to_wavelength.rmse_nm * 2)));
-    }
-  }, [profile, setValue]);
+    setParam('pseudoDoubleBeam', pseudoDoubleBeam);
+  }, [setParam, pseudoDoubleBeam]);
 
-  const handleCalibrate = () => {
-    router.push("/(tabs)/analysis/calibration");
+  const rmse = profile?.pixel_to_wavelength?.rmse_nm ?? null;
+  const rmseQuality = selectCalibrationFitQuality(rmse);
+
+  const parsedWavelength = useMemo(() => {
+    const numeric = Number(wavelengthInput.replace(',', '.'));
+    if (!Number.isFinite(numeric)) return null;
+    return numeric;
+  }, [wavelengthInput]);
+
+  const parsedWindow = useMemo(() => {
+    const numeric = Number(windowInput.replace(',', '.'));
+    if (!Number.isFinite(numeric)) return null;
+    return numeric;
+  }, [windowInput]);
+
+  const parsedSlope = useMemo(() => {
+    const numeric = Number(slopeInput.replace(',', '.'));
+    if (!Number.isFinite(numeric)) return null;
+    return numeric;
+  }, [slopeInput]);
+
+  const parsedIntercept = useMemo(() => {
+    const numeric = Number(interceptInput.replace(',', '.'));
+    if (!Number.isFinite(numeric)) return null;
+    return numeric;
+  }, [interceptInput]);
+
+  useEffect(() => {
+    setParam('wavelengthNm', parsedWavelength);
+  }, [parsedWavelength, setParam]);
+
+  useEffect(() => {
+    if (parsedWindow !== null) {
+      setParam('windowNm', parsedWindow);
+    }
+  }, [parsedWindow, setParam]);
+
+  useEffect(() => {
+    setParam('slope', parsedSlope);
+  }, [parsedSlope, setParam]);
+
+  useEffect(() => {
+    setParam('intercept', parsedIntercept);
+  }, [parsedIntercept, setParam]);
+
+  const handleSelectCurve = (curve: CalibrationCurve) => {
+    setSlopeInput(curve.coefficients.slope_m.toString());
+    setInterceptInput(curve.coefficients.intercept_b.toString());
+    setParam('selectedCurveId', curve.id);
   };
 
-  const onSubmit = async (data: QuantitativeFormData) => {
-    if (!profile) {
-      Alert.alert("Perfil obrigatório", "Calibre o equipamento antes de prosseguir.");
-      return;
-    }
-    const rmse = profile.pixel_to_wavelength.rmse_nm ?? 0;
-    if (rmse > 2) {
-      Alert.alert("Calibração imprecisa", "RMSE acima de 2 nm. Refaça a calibração.");
-      return;
-    }
-    if (!dark.length || !ref.length || !sample.length) {
-      Alert.alert("Capturas incompletas", "Capture vetores de escuro, referência e amostra antes de analisar.");
-      return;
-    }
-    const expectedFrames = data.frames_per_burst;
-    if (
-      expectedFrames &&
-      (dark.length !== expectedFrames || ref.length !== expectedFrames || sample.length !== expectedFrames)
-    ) {
-      Alert.alert(
-        "Quantidade de frames divergente",
-        `Esperava ${expectedFrames} frames por burst, mas recebeu D=${dark.length}, R=${ref.length}, S=${sample.length}.`
-      );
-      return;
-    }
-    if (data.ref_after_sample && (!refAfter || !refAfter.length)) {
-      Alert.alert(
-        "Referência ausente",
-        "Ative esta opção apenas após capturar um burst de referência após a amostra."
-      );
-      return;
-    }
+  const hasProfile = Boolean(profile);
+  const slopeNearZero = isSlopeNearZero(parsedSlope);
+  const rmseTooHigh = rmse !== null && rmse > 3;
+  const missingWavelength = parsedWavelength === null;
+  const missingWindow = parsedWindow === null;
+  const missingSubstance = substance.trim().length === 0;
 
-    setIsSubmitting(true);
-    setResult(null);
+  const disableReason = !hasProfile
+    ? pt.analysis.missingProfileTooltip
+    : rmseTooHigh
+    ? pt.analysis.highRmseWarning(formatNumber(rmse, 1))
+    : slopeNearZero
+    ? pt.analysis.slopeZeroError
+    : missingWavelength
+    ? 'Informe o λ.'
+    : missingWindow
+    ? 'Informe a janela ±nm.'
+    : missingSubstance
+    ? 'Informe a substância.'
+    : undefined;
 
-    try {
-      const payload: QuantAnalyzeRequest = {
-        lambda_nm: data.lambda_nm,
-        window_nm: data.window_nm ?? 4,
-        calibration: { m: data.m, b: data.b },
-        device_profile: profile,
-        dark: { frames: dark },
-        ref: { frames: ref },
-        sample: { frames: sample },
-      };
+  const canContinue = !disableReason;
 
-      const maybeRefAfter = data.ref_after_sample ? refAfter : undefined;
-      const response = await api.analyzeQuant(
-        maybeRefAfter && maybeRefAfter.length
-          ? { ...payload, pseudo_double_beam: { ref_after: { frames: maybeRefAfter } } }
-          : payload
-      );
-      setResult(response);
-      Alert.alert(
-        "Análise concluída",
-        `C = ${response.C.toFixed(4)}\nA = ${response.A_mean.toFixed(4)} ± ${response.A_sd.toFixed(4)}`
-      );
-    } catch (error) {
-      if (error instanceof HttpError) {
-        const message =
-          typeof error.body === "string" ? error.body : JSON.stringify(error.body, null, 2);
-        Alert.alert("Erro na API", message);
-      } else {
-        Alert.alert("Erro inesperado", (error as Error).message);
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleContinue = () => {
+    if (!canContinue) return;
+    setError(null);
+    Alert.alert('Captura', 'Pronto para capturar dark/ref/amostra.');
   };
+
+  const rmseBadgeStyle = useMemo(() => {
+    switch (rmseQuality) {
+      case 'ok':
+        return { backgroundColor: '#DCFCE7', color: '#166534' };
+      case 'warn':
+        return { backgroundColor: '#FEF9C3', color: '#854D0E' };
+      case 'error':
+        return { backgroundColor: '#FEE2E2', color: '#991B1B' };
+      default:
+        return { backgroundColor: cardBackground, color: secondaryText };
+    }
+  }, [rmseQuality, cardBackground, secondaryText]);
 
   return (
     <ScreenLayout>
-      <View style={styles.header}>
-        <BackButton color={text} style={styles.baseContainer} />
+      <View style={styles.headerRow}>
+        <BackButton color={textColor} style={styles.backButton} />
         <View style={styles.headerTitleContainer}>
-          <View style={[styles.stepBadge, { backgroundColor: tint }]}> 
+          <View style={[styles.stepBadge, { backgroundColor: tint }]}>
             <Text style={styles.stepBadgeText}>λ</Text>
           </View>
-          <ThemedText style={styles.headerTitle}>Análise Quantitativa</ThemedText>
+          <ThemedText style={styles.headerTitle}>{pt.analysis.header}</ThemedText>
         </View>
         <View style={{ width: 40 }} />
       </View>
 
-      <ThemedText style={styles.instructions}>
-        Configure os parâmetros e envie os vetores capturados para obter o resultado.
+      <ThemedText style={[styles.instructions, { color: secondaryText }]}>
+        {pt.analysis.intro}
       </ThemedText>
 
       <View style={[styles.profileCard, { backgroundColor: cardBackground }]}>
         <View style={styles.profileHeader}>
-          <ThemedText style={styles.profileTitle}>Perfil ativo</ThemedText>
-          <Button title="Calibrar" onPress={handleCalibrate} variant="outline" style={styles.calibrateButton} />
+          <ThemedText style={styles.profileTitle}>Perfil do equipamento</ThemedText>
+          <TouchableOpacity onPress={() => setProfileInfoOpen(true)}>
+            <Text style={[styles.infoIcon, { color: secondaryText }]}>{pt.analysis.chipInfo}</Text>
+          </TouchableOpacity>
         </View>
-        {profile ? (
+        {!hasProfile ? (
           <View style={styles.profileBody}>
-            <ThemedText style={[styles.profileText, { color: text }]}>hash: {profile.device_hash}</ThemedText>
-            <ThemedText style={[styles.profileText, { color: secondaryText }]}>
-              RMSE: {(profile.pixel_to_wavelength.rmse_nm ?? 0).toFixed(2)} nm
-            </ThemedText>
+            <Text style={[styles.warningText, { color: secondaryText }]}>
+              {pt.analysis.noProfileWarning}
+            </Text>
+            <Button title={pt.analysis.calibrateNow} onPress={() => router.push('/(tabs)/analysis/calibration')} />
           </View>
         ) : (
-          <ThemedText style={[styles.profileText, { color: secondaryText }]}>Nenhum perfil carregado.</ThemedText>
+          <View style={styles.profileBody}>
+            <Text style={[styles.profileText, { color: textColor }]}>
+              {pt.analysis.profileActiveLabel(profile.device_hash, formatNumber(rmse, 1))}
+            </Text>
+            <View style={styles.profileActions}>
+              <Button
+                title={pt.analysis.recalibrate}
+                onPress={() => router.push('/(tabs)/analysis/calibration')}
+                variant="outline"
+                style={styles.recalibrateButton}
+              />
+              <TouchableOpacity onPress={() => setRmseInfoOpen(true)} style={styles.rmseBadge}>
+                <View style={[styles.badge, { backgroundColor: rmseBadgeStyle.backgroundColor }]}>
+                  <Text style={[styles.badgeText, { color: rmseBadgeStyle.color }]}>RMSE {formatNumber(rmse, 2)} nm</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <Text style={[styles.recalibrateHint, { color: secondaryText }]}>{pt.analysis.recalibrateHint}</Text>
+          </View>
         )}
       </View>
 
-      <FormWrapper
-        buttonTitle="Executar análise"
-        isSubmitting={isSubmitting}
-        onSubmit={handleSubmit(onSubmit)}>
-        <FormSection title="Parâmetros da análise">
-          <ControlledFormField
-            name="lambda_nm"
-            control={control}
-            label="Comprimento de onda (nm)"
-            placeholder="Ex: 540"
-            keyboardType="numeric"
-            info="λ alvo para a absorbância."
+      <ScrollView style={styles.form} contentContainerStyle={styles.formContent}>
+        <View style={styles.formGroup}>
+          <Text style={[styles.label, { color: secondaryText }]}>{pt.analysis.substanceLabel}</Text>
+          <TextInput
+            style={[styles.input, { backgroundColor: cardBackground, color: textColor }]}
+            value={substance}
+            placeholder="Ex.: Azul de metileno"
+            placeholderTextColor={secondaryText}
+            onChangeText={setSubstance}
           />
-          <ControlledFormField
-            name="window_nm"
-            control={control}
-            label="Janela (±nm)"
-            placeholder="Ex: 4"
-            keyboardType="numeric"
-            info="Largura da janela para média espectral."
-          />
-          <ControlledFormField
-            name="m"
-            control={control}
-            label="Coeficiente angular (m)"
-            placeholder="Inclinação da curva"
-            keyboardType="numeric"
-            info="Coeficiente m da curva de calibração."
-          />
-          <ControlledFormField
-            name="b"
-            control={control}
-            label="Coeficiente linear (b)"
-            placeholder="Intercepto"
-            keyboardType="numeric"
-            info="Coeficiente b da curva de calibração."
-          />
-          <ControlledFormField
-            name="frames_per_burst"
-            control={control}
-            label="Frames por burst"
-            placeholder="Ex: 10"
-            keyboardType="numeric"
-            info="Quantidade esperada de frames em cada burst."/>
-          <ControlledSwitch
-            name="ref_after_sample"
-            control={control}
-            label="Referência após a amostra"
-            info="Marque se capturou um burst de referência após a amostra."
-          />
-        </FormSection>
-      </FormWrapper>
-
-      {result && (
-        <View style={[styles.resultCard, { backgroundColor: cardBackground }]}>
-          <ThemedText style={styles.resultTitle}>Resultado</ThemedText>
-          <ThemedText style={styles.resultText}>
-            Concentração: {result.C.toFixed(4)} (CI95: {result.CI95?.low?.toFixed(4) ?? "-"} – {result.CI95?.high?.toFixed(4) ?? "-"})
-          </ThemedText>
-          <ThemedText style={styles.resultText}>
-            Absorbância: {result.A_mean.toFixed(4)} ± {result.A_sd.toFixed(4)} (CV {result.CV.toFixed(2)}%)
-          </ThemedText>
         </View>
-      )}
+
+        <View style={styles.formGroup}>
+          <View style={styles.labelRow}>
+            <Text style={[styles.label, { color: secondaryText }]}>{pt.analysis.wavelengthLabel}</Text>
+            <TouchableOpacity onPress={() => setWindowInfoOpen(true)}>
+              <Text style={[styles.infoIcon, { color: secondaryText }]}>{pt.analysis.pseudoDoubleBeamInfo}</Text>
+            </TouchableOpacity>
+          </View>
+          <TextInput
+            style={[styles.input, { backgroundColor: cardBackground, color: textColor }]}
+            keyboardType="numeric"
+            value={wavelengthInput}
+            onChangeText={setWavelengthInput}
+            placeholder="λ"
+            placeholderTextColor={secondaryText}
+          />
+          <Text style={[styles.helperText, { color: secondaryText }]}>{pt.analysis.wavelengthHelp}</Text>
+        </View>
+
+        <View style={styles.formGroup}>
+          <View style={styles.labelRow}>
+            <Text style={[styles.label, { color: secondaryText }]}>{pt.analysis.windowLabel}</Text>
+            <TouchableOpacity onPress={() => setWindowInfoOpen(true)}>
+              <Text style={[styles.infoIcon, { color: secondaryText }]}>{pt.analysis.pseudoDoubleBeamInfo}</Text>
+            </TouchableOpacity>
+          </View>
+          <TextInput
+            style={[styles.input, { backgroundColor: cardBackground, color: textColor }]}
+            keyboardType="numeric"
+            value={windowInput}
+            onChangeText={setWindowInput}
+            placeholder="±nm"
+            placeholderTextColor={secondaryText}
+          />
+          <Text style={[styles.helperText, { color: secondaryText }]}>{pt.analysis.windowHelp}</Text>
+        </View>
+
+        <View style={[styles.formGroup, styles.curveGroup]}>
+          <View style={styles.curveHeader}>
+            <Text style={[styles.label, { color: secondaryText }]}>Curva de calibração</Text>
+            <TouchableOpacity onPress={() => setCurveInfoOpen(true)}>
+              <Text style={[styles.infoIcon, { color: secondaryText }]}>{pt.analysis.curveInfoCta}</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.curveInputsRow}>
+            <View style={styles.curveField}>
+              <Text style={[styles.label, { color: secondaryText }]}>{pt.analysis.slopeLabel}</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: cardBackground, color: textColor }]}
+                value={slopeInput}
+                keyboardType="numeric"
+                onChangeText={setSlopeInput}
+                placeholder="m"
+                placeholderTextColor={secondaryText}
+              />
+            </View>
+            <View style={styles.curveField}>
+              <Text style={[styles.label, { color: secondaryText }]}>{pt.analysis.interceptLabel}</Text>
+              <TextInput
+                style={[styles.input, { backgroundColor: cardBackground, color: textColor }]}
+                value={interceptInput}
+                keyboardType="numeric"
+                onChangeText={setInterceptInput}
+                placeholder="b"
+                placeholderTextColor={secondaryText}
+              />
+            </View>
+          </View>
+
+          <Button
+            title={pt.analysis.curvePickerButton}
+            variant="outline"
+            onPress={() => setCurveModalOpen(true)}
+            style={styles.curvePickerButton}
+          />
+
+          {slopeNearZero && (
+            <Text style={[styles.errorText, { color: '#B91C1C' }]}>{pt.analysis.slopeZeroError}</Text>
+          )}
+        </View>
+
+        <View style={[styles.formGroup, styles.switchRow]}>
+          <View>
+            <Text style={[styles.label, { color: secondaryText }]}>{pt.analysis.pseudoDoubleBeamLabel}</Text>
+            <Text style={[styles.helperText, { color: secondaryText }]}>
+              {pt.analysis.pseudoDoubleBeamDescription}
+            </Text>
+          </View>
+          <TouchableOpacity onPress={() => setPseudoInfoOpen(true)} style={styles.switchInfoIcon}>
+            <Text style={[styles.infoIcon, { color: secondaryText }]}>{pt.analysis.pseudoDoubleBeamInfo}</Text>
+          </TouchableOpacity>
+          <Switch
+            value={pseudoDoubleBeam}
+            onValueChange={(value) => {
+              setPseudoDoubleBeam(value);
+              if (value && !hasShownPseudoModal) {
+                setPseudoInfoOpen(true);
+                setHasShownPseudoModal(true);
+              }
+            }}
+          />
+        </View>
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <Button
+          title={pt.analysis.continueCta}
+          onPress={handleContinue}
+          disabled={!canContinue}
+        />
+        {disableReason && (
+          <Text style={[styles.disableReason, { color: secondaryText }]}>{disableReason}</Text>
+        )}
+      </View>
+
+      <InfoModal
+        visible={isProfileInfoOpen}
+        onClose={() => setProfileInfoOpen(false)}
+        title={pt.modals.deviceProfile.title}
+        content={<Text style={{ color: secondaryText }}>{pt.modals.deviceProfile.body}</Text>}
+        actions={
+          <Button
+            title={pt.modals.deviceProfile.cta}
+            onPress={() => {
+              setProfileInfoOpen(false);
+              router.push('/(tabs)/analysis/calibration');
+            }}
+          />
+        }
+      />
+
+      <InfoModal
+        visible={isRmseInfoOpen}
+        onClose={() => setRmseInfoOpen(false)}
+        title={pt.modals.rmse.title}
+        content={<Text style={{ color: secondaryText }}>{pt.modals.rmse.body}</Text>}
+        actions={
+          <View style={styles.modalActions}>
+            <Button
+              title={pt.modals.rmse.actions[0]}
+              variant="outline"
+              onPress={() => {
+                setRmseInfoOpen(false);
+                router.push('/(tabs)/analysis/calibration');
+              }}
+            />
+            <Button
+              title={pt.modals.rmse.actions[1]}
+              onPress={() => {
+                setRmseInfoOpen(false);
+                router.push('/(tabs)/analysis/calibration');
+              }}
+            />
+          </View>
+        }
+      />
+
+      <InfoModal
+        visible={isWindowInfoOpen}
+        onClose={() => setWindowInfoOpen(false)}
+        title={pt.modals.window.title}
+        content={<Text style={{ color: secondaryText }}>{pt.modals.window.body}</Text>}
+      />
+
+      <InfoModal
+        visible={isPseudoInfoOpen}
+        onClose={() => setPseudoInfoOpen(false)}
+        title={pt.modals.pseudoDoubleBeam.title}
+        content={<Text style={{ color: secondaryText }}>{pt.modals.pseudoDoubleBeam.body}</Text>}
+      />
+
+      <InfoModal
+        visible={isCurveInfoOpen}
+        onClose={() => setCurveInfoOpen(false)}
+        title={pt.modals.curve.title}
+        content={<Text style={{ color: secondaryText }}>{pt.modals.curve.body}</Text>}
+        actions={
+          <Button
+            title={pt.modals.curve.cta}
+            onPress={() => {
+              setCurveInfoOpen(false);
+              router.push('/(tabs)/analysis/curve');
+            }}
+          />
+        }
+      />
+
+      <CurvePickerModal
+        visible={isCurveModalOpen}
+        curves={curves}
+        onClose={() => setCurveModalOpen(false)}
+        onSelect={handleSelectCurve}
+      />
     </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  header: {
-    justifyContent: "space-between",
-    marginBottom: Margin.md,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
-  baseContainer: {
+  backButton: {
     padding: 0,
-    backgroundColor: "transparent",
+    backgroundColor: 'transparent',
   },
   headerTitleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   stepBadge: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    justifyContent: "center",
-    alignItems: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 10,
   },
   stepBadgeText: {
-    color: "white",
-    fontWeight: "bold",
+    color: 'white',
+    fontWeight: 'bold',
     fontSize: 16,
   },
   headerTitle: {
     fontSize: 22,
-    fontWeight: "bold",
+    fontWeight: '700',
   },
   instructions: {
     fontSize: 16,
-    color: "#6B7280",
-    textAlign: "left",
-    marginBottom: Margin.lg,
-    alignSelf: "center",
-    width: "100%",
+    marginBottom: 16,
   },
   profileCard: {
-    padding: Padding.md,
-    borderRadius: 12,
-    marginBottom: Margin.lg,
-    gap: 12,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 24,
   },
   profileHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   profileTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
+  },
+  infoIcon: {
+    fontSize: 16,
   },
   profileBody: {
-    gap: 4,
+    marginTop: 12,
+    gap: 12,
   },
   profileText: {
     fontSize: 14,
   },
-  calibrateButton: {
-    width: 120,
-  },
-  resultCard: {
-    marginTop: Margin.lg,
-    padding: Padding.md,
-    borderRadius: 12,
-    gap: 6,
-  },
-  resultTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  resultText: {
+  warningText: {
     fontSize: 14,
+    lineHeight: 20,
+  },
+  profileActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  recalibrateButton: {
+    flex: 1,
+  },
+  rmseBadge: {
+    paddingVertical: 4,
+  },
+  badge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  badgeText: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  recalibrateHint: {
+    fontSize: 12,
+  },
+  form: {
+    flex: 1,
+  },
+  formContent: {
+    paddingBottom: 24,
+    gap: 20,
+  },
+  formGroup: {
+    gap: 8,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  helperText: {
+    fontSize: 12,
+    lineHeight: 18,
+  },
+  input: {
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    fontSize: 16,
+  },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  curveGroup: {
+    gap: 12,
+  },
+  curveHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  curveInputsRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  curveField: {
+    flex: 1,
+    gap: 8,
+  },
+  curvePickerButton: {
+    alignSelf: 'flex-start',
+  },
+  errorText: {
+    fontSize: 12,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  switchInfoIcon: {
+    marginRight: 12,
+  },
+  footer: {
+    marginTop: 16,
+    gap: 8,
+  },
+  disableReason: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalCard: {
+    width: '100%',
+    borderRadius: 16,
+    padding: 16,
+    gap: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  emptyStateText: {
+    textAlign: 'center',
+    paddingVertical: 16,
+  },
+  curveRow: {
+    paddingVertical: 12,
+  },
+  curveRowText: {
+    gap: 4,
+  },
+  curveName: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  curveMetadata: {
+    fontSize: 13,
+  },
+  modalCloseButton: {
+    alignSelf: 'flex-end',
+    width: '45%',
+  },
+  modalActions: {
+    gap: 12,
   },
 });

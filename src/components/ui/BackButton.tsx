@@ -27,7 +27,8 @@ const BackButton: React.FC<BackButtonProps> = ({
 }) => {
   const router = useRouter();
   const backgroundColor = useThemeValue("primary");
-  const foregroundColor = color ? color : useThemeValue("textWhite");
+  const themeTextWhite = useThemeValue("textWhite");
+  const foregroundColor = color ?? themeTextWhite;
 
   const handlePress = () => {
     if (path) {

@@ -28,6 +28,7 @@ export default function GeneralSettingsScreen() {
 
   const backgroundColor = useThemeValue("card");
   const contentBackgroundColor = useThemeValue("card");
+  const dangerTextColor = useThemeValue("dangerText");
   const actions = useUserActions();
 
   const isModalOpen = useSharedValue(false);
@@ -132,7 +133,7 @@ export default function GeneralSettingsScreen() {
             <ThemedText
               style={[
                 styles.modalTitle,
-                { color: useThemeValue("dangerText") },
+                { color: dangerTextColor },
               ]}>
               Deletar Dados
             </ThemedText>
