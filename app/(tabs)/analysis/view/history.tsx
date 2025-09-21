@@ -1,4 +1,7 @@
-import { useAnalysisHistory } from "@/src/store/analysisHistoryStore";
+import {
+  buildSavedAnalysis,
+  useAnalysisHistory,
+} from "@/src/store/analysisHistoryStore";
 import { useRouter } from "expo-router";
 import { useMemo } from "react";
 import {

@@ -7,7 +7,7 @@ import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useAnalysisFlowActions } from "../analysisFlowContext";
+import { useAnalysisMachine } from "../AnalysisMachineProvider";
 
 const parseCiteText = (text: string) => {
   if (!text) return "";
@@ -54,18 +54,19 @@ const ModalContent = ({ item }: { item: AnalysisDataItem | undefined }) => {
 export default function AnalysisStart() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedAnalysisIndex, setSelectedAnalysisIndex] = useState(0);
-  const { startAnalysis } = useAnalysisFlowActions();
   const backgroundColor = useThemeValue("card");
   const text = useThemeValue("text");
   const tint = useThemeValue("tint");
-
+  const { send } = useAnalysisMachine();
   const openInfoModal = (index: number) => {
     setSelectedAnalysisIndex(index);
     setModalVisible(true);
   };
 
   const handleStartAnalysis = (analysisType: string) => {
-    startAnalysis(analysisType);
+    if (analysisType === "quantitative") {
+      send({ type: "SELECT_TYPE", value: "quant" });
+    }
   };
 
   const selectedAnalysisData = TYPES_ANALYSIS_DATA[selectedAnalysisIndex];

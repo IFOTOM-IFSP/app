@@ -10,7 +10,10 @@ export function useSyncRouteWithState() {
     const m = state.value;
     if (m === "PARAMS" && !path.endsWith("/create/[analysisFormId]")) {
       router.replace("/(tabs)/analysis/create/[analysisFormId]");
-    } else if (m === "PREFLIGHT" && !path.endsWith("/create/preflight")) {
+    } else if (
+      m === "PREFLIGHT" &&
+      !path.endsWith("/(tabs)/analysis/create/preflight")
+    ) {
       router.replace("/(tabs)/analysis/create/preflight");
     } else if (m === "CALIB_DEVICE" && !path.endsWith("/create/calibrate")) {
       router.replace("/(tabs)/analysis/create/calibrate");

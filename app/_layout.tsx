@@ -3,14 +3,14 @@ import { ThemedView } from "@/src/components/ui/ThemedView";
 import { FontSize, Padding } from "@/src/constants/Styles";
 import { useNotifications } from "@/src/hooks/useNotifications";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
-import { initializeSettings } from "@/src/store/settingsStore";
+import { useSettingsStore } from "@/src/store/settingsStore";
 import { ThemeProvider } from "@/src/store/ThemeContext";
 import { useUserStore } from "@/src/store/userStore";
 import * as Sentry from "@sentry/react-native";
 import { Slot, SplashScreen, usePathname, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import LottieView from "lottie-react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
@@ -54,10 +54,17 @@ export default Sentry.wrap(function RootLayout() {
   const init = useUserStore((state) => state.actions.init);
   const router = useRouter();
   const pathname = usePathname();
+  const [settingsHydrated, setSettingsHydrated] = useState(
+    useSettingsStore.persist.hasHydrated()
+  );
   useNotifications();
   useEffect(() => {
     init();
-    initializeSettings();
+    const unsub = useSettingsStore.persist.onFinishHydration(() => {
+      setSettingsHydrated(true);
+    });
+
+    return unsub;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

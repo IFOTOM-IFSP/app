@@ -6,7 +6,10 @@ import { Button } from "@/src/components/ui/Button";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useAnalysisMachine } from "@/src/features/analysis/AnalysisMachineProvider";
 import { buildActionMessages } from "@/src/lib/quality";
-import { useAnalysisHistory } from "@/src/store/analysisHistoryStore";
+import {
+  buildSavedAnalysis,
+  useAnalysisHistory,
+} from "@/src/store/analysisHistoryStore";
 import { router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
@@ -146,9 +149,7 @@ export default function ResultsScreen() {
           onPress={() => {
             if (state.context.params && state.context.results) {
               addHistory(
-                // resultsSource é setado na máquina quando a quantificação termina
-                // @ts-ignore
-                require("@/store/analysisHistoryStore").buildSavedAnalysis(
+                buildSavedAnalysis(
                   state.context.params,
                   state.context.results,
                   state.context.deviceProfile,
