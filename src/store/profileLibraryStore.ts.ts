@@ -1,4 +1,3 @@
-// src/store/profileLibraryStore.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
@@ -100,3 +99,68 @@ export const useProfileLibraryStore = create<LibraryState>()(
     }
   )
 );
+
+const PROFILES_KEY = "spectrometer_profiles";
+
+export type SpectrometerProfile = {
+  id: string;
+  name: string;
+  calibrationDate: string; // ISO string
+  device_hash: string;
+  pixel_to_nm: { a0: number; a1: number; a2?: number; rmse_nm?: number };
+  roi: { x: number; y: number; w: number; h: number };
+  camera_meta?: { iso?: number; shutter_ms?: number; wb?: string } | Record<string, any>;
+  rmse_nm?: number;
+};
+
+type ProfileState = {
+  profiles: SpectrometerProfile[];
+  isLoading: boolean;
+
+  loadProfiles: () => Promise<void>;
+  addProfile: (p: SpectrometerProfile) => Promise<void>;
+  removeProfile: (id: string) => Promise<void>;
+  clearProfiles: () => Promise<void>;
+};
+
+async function readAll(): Promise<SpectrometerProfile[]> {
+  try {
+    const s = await AsyncStorage.getItem(PROFILES_KEY);
+    return s ? (JSON.parse(s) as SpectrometerProfile[]) : [];
+  } catch {
+    return [];
+  }
+}
+async function writeAll(items: SpectrometerProfile[]) {
+  await AsyncStorage.setItem(PROFILES_KEY, JSON.stringify(items));
+}
+
+export const useProfileStore = create<ProfileState>((set, get) => ({
+  profiles: [],
+  isLoading: false,
+
+  loadProfiles: async () => {
+    set({ isLoading: true });
+    const items = await readAll();
+    set({ profiles: items, isLoading: false });
+  },
+
+  addProfile: async (p) => {
+    const current = get().profiles;
+    const updated = [p, ...current.filter((x) => x.id !== p.id)];
+    await writeAll(updated);
+    set({ profiles: updated });
+  },
+
+  removeProfile: async (id) => {
+    const current = get().profiles;
+    const updated = current.filter((x) => x.id !== id);
+    await writeAll(updated);
+    set({ profiles: updated });
+  },
+
+  clearProfiles: async () => {
+    await writeAll([]);
+    set({ profiles: [] });
+  },
+}));

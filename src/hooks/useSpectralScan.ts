@@ -1,94 +1,69 @@
-import type {
-  AnalysisRequest,
-  AnalysisResponse
-} from '@/src/models/apiSchema';
-import { apiService } from '@/services/http';
-import { useCallback, useState } from 'react';
+import { loadDeviceProfile } from '@/services/deviceProfile';
+import { acquireStageVectors, resampleBurstLinear } from '@/src/lib/acquisition';
+import { TARGET_POINTS } from '@/src/lib/quantEngine';
+import type { AnalysisParams, Matrix } from '@/types/types';
 
+type Spectrum = {
+  lambda: number[];
+  I_dark: number[];
+  I_ref: number[];
+  I_sample: number[];
+  A: number[]; // -log10((Is-Id)/(Ir-Id)) em todo o espectro (com clamp básico)
+};
 
-
-export type SpectralScanStatus = 
-  | 'idle'                
-  | 'calibrating'         
-  | 'capturingSample'     
-  | 'analyzing'           
-  | 'success'             
-  | 'error';              
-
-export interface UseSpectralScanReturn {
-  status: SpectralScanStatus;
-  isLoading: boolean;
-  error: string | null;
-  analysisResult: AnalysisResponse | null;
-  startAnalysis: (darkFrames: string[], whiteFrames: string[], sampleFrame: string) => Promise<void>;
-  reset: () => void;
+function meanVector(burst: Matrix): number[] {
+  const n = burst.length;
+  const cols = burst[0]?.length ?? 0;
+  const out = new Array(cols).fill(0);
+  for (let i = 0; i < n; i++) {
+    const row = burst[i] as number[];
+    for (let c = 0; c < cols; c++) out[c] += row[c] ?? 0;
+  }
+  for (let c = 0; c < cols; c++) out[c] /= n;
+  return out;
 }
 
+export async function runSpectralScan(params: Pick<AnalysisParams,
+  'frames_per_burst'
+>) : Promise<Spectrum> {
+  const profile = await loadDeviceProfile();
+  if (!profile) throw new Error('Perfil do dispositivo ausente');
 
-export function useSpectralScan(): UseSpectralScanReturn {
-  const [status, setStatus] = useState<SpectralScanStatus>('idle');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
+  // captura única (dark/ref/sample)
+  const dark   = await acquireStageVectors({ ...params, name: 'Spectral', build_curve: false, useLocalCore: true, standards: [] } as any, 'darkNoise');
+  const ref1   = await acquireStageVectors({ ...params, name: 'Spectral', build_curve: false, useLocalCore: true, standards: [] } as any, 'ref1');
+  const sample = await acquireStageVectors({ ...params, name: 'Spectral', build_curve: false, useLocalCore: true, standards: [] } as any, 'sample');
 
-  const startAnalysis = useCallback(async (
-    darkFrames: string[], 
-    whiteFrames: string[], 
-    sampleFrame: string
-  ) => {
-    setIsLoading(true);
-    setError(null);
-    setAnalysisResult(null);
+  // reamostra para 2048
+  const dR = resampleBurstLinear(dark,   TARGET_POINTS);
+  const rR = resampleBurstLinear(ref1,   TARGET_POINTS);
+  const sR = resampleBurstLinear(sample, TARGET_POINTS);
 
-    try {
-      setStatus('calibrating');
-      const refData = await apiService.processReferences(darkFrames, whiteFrames);
-      
-      if (!refData.dark_reference_spectrum || !refData.white_reference_spectrum) {
-        throw new Error("A resposta da calibração de referência está incompleta.");
-      }
+  // médias
+  const I_dark   = meanVector(dR);
+  const I_ref    = meanVector(rR);
+  const I_sample = meanVector(sR);
 
-      setStatus('analyzing');
-      const command: AnalysisRequest = {
-        analysisType: 'scan', 
-        dark_reference_spectrum: refData.dark_reference_spectrum,
-        white_reference_spectrum: refData.white_reference_spectrum,
-        pixel_to_wavelength_coeffs: refData.pixel_to_wavelength_coeffs || [],
-        samples: [
-          { 
-            id: 'unknown_sample_scan',
-            type: 'unknown', 
-            frames_base64: [sampleFrame] 
-          }
-        ],
-      };
+  // map λ
+  const origW = profile.roi.w;
+  const alpha = (origW > 1 && TARGET_POINTS > 1) ? (origW - 1)/(TARGET_POINTS - 1) : 1;
+  const a0 = profile.pixel_to_nm.a0;
+  const a1 = (profile.pixel_to_nm.a1 ?? 0) * alpha;
+  const a2 = profile.pixel_to_nm.a2 != null ? profile.pixel_to_nm.a2 * alpha * alpha : undefined;
+  const lambda = new Array(TARGET_POINTS).fill(0).map((_, x) => a0 + a1 * x + (a2 ? a2 * x * x : 0));
 
-      const result = await apiService.runAnalysis(command);
-      
-      setAnalysisResult(result);
-      setStatus('success');
+  // A(λ)
+  const EPS = 1e-12;
+  const A = I_sample.map((Is, i) => {
+    const Id = I_dark[i] ?? 0;
+    const Ir = I_ref[i] ?? 0;
+    const Irp = Ir - Id;
+    const Isp = Is - Id;
+    if (!(Irp > 0) || !(Isp > 0)) return NaN;
+    const T = Isp / (Irp || EPS);
+    if (!(T > 0)) return NaN;
+    return -Math.log10(T);
+  });
 
-    } catch (err) {
-      setError('Ocorreu um erro durante a varredura espectral. Por favor, tente novamente.');
-      setStatus('error');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const reset = useCallback(() => {
-    setStatus('idle');
-    setIsLoading(false);
-    setError(null);
-    setAnalysisResult(null);
-  }, []);
-
-  return {
-    status,
-    isLoading,
-    error,
-    analysisResult,
-    startAnalysis,
-    reset,
-  };
+  return { lambda, I_dark, I_ref, I_sample, A };
 }

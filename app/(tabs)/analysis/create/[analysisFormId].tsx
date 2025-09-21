@@ -1,3 +1,3 @@
-import AnalysisFormsConfigurationScreen from "@/src/features/analysis/screen/analysisFormsConfiguration";
+import ParamsScreen from "@/src/features/analysis/screen/params";
 
-export default AnalysisFormsConfigurationScreen;
+export default ParamsScreen;

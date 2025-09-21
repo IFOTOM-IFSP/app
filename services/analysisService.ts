@@ -1,6 +1,6 @@
 import { CalibrationCurve } from '@/src/models/CalibrationCurve';
 import axios from 'axios';
-import { SpectrometerProfile } from '../src/models/SpectrometerProfile';
+import { SpectrometerProfile } from '../src/models/spectrometerProfile';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 

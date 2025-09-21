@@ -1,96 +1,131 @@
-import type { CalibrationCurve } from '@/types/api';
+// store/curveLibraryStore.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
+export type CalibrationCoeffs = {
+  m: number;
+  b: number;
+  R2?: number;
+  SEE?: number;
+  s_m?: number;
+  s_b?: number;
+};
+
 export type SavedCurve = {
-  id: string;                  // uuid
-  name: string;                // ex.: "Azul de metileno (lote 3)"
-  createdAt: number;           // Date.now()
-
-  curve: CalibrationCurve;     // m, b, R2, SEE, s_m, s_b, range, LOD, LOQ...
+  id: string;
+  name: string;
+  substance?: string;
   lambda_nm: number;
-  window_nm?: number;
-
-  device_hash?: string;        // perfil do dispositivo usado
-  substance?: string;          // substância associada
-  notes?: string;              // observações livres
+  createdAt: number; // timestamp
+  coeffs: CalibrationCoeffs; // <- canonical
+  range?: { cmin: number; cmax: number };
 };
 
-type CurveLibState = {
-  curves: SavedCurve[];
+// Tipo de entrada para o add(): aceita coeffs OU coefficients (legado)
+type AddInput =
+  Omit<SavedCurve, 'id' | 'createdAt' | 'coeffs'> &
+  Partial<Pick<SavedCurve, 'id' | 'createdAt'>> & {
+    coeffs?: CalibrationCoeffs;
+    // suporte legado:
+    coefficients?: CalibrationCoeffs;
+  };
 
-  add: (c: Omit<SavedCurve, 'id' | 'createdAt'> & Partial<Pick<SavedCurve, 'id' | 'createdAt'>>) => SavedCurve;
-
-  update: (id: string, patch: Partial<SavedCurve>) => void;
-
-  upsert: (c: SavedCurve) => void;
-
+type CurveState = {
+  items: SavedCurve[];
+  add: (c: AddInput) => void;
   remove: (id: string) => void;
-
   clear: () => void;
-
-  getById: (id: string) => SavedCurve | undefined;
+  loadFromJSON?: (arr: any[]) => void; // opcional, migração em massa
 };
 
-function uuid(): string {
-  if (typeof globalThis?.crypto?.randomUUID === 'function') {
-    return globalThis.crypto.randomUUID();
-  }
-  return 'xxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0;
-    const v = c === 'x' ? r : (r & 0x3) | 0x8;
-    return v.toString(16);
-  });
-}
-
-export const useCurveLibraryStore = create<CurveLibState>()(
+export const useCurveLibraryStore = create<CurveState>()(
   persist(
     (set, get) => ({
-      curves: [],
-
+      items: [],
       add: (c) => {
+        // normaliza id/createdAt
+        const id =
+          c.id ??
+          (globalThis.crypto?.randomUUID?.() ??
+            `${Date.now()}_${Math.random().toString(16).slice(2)}`);
+        const createdAt = typeof c.createdAt === 'number' ? c.createdAt : Date.now();
+
+        // normaliza coeffs (aceita coefficients legado)
+        const coeffs = c.coeffs ?? c.coefficients;
+        if (!coeffs) {
+          throw new Error('curveLibraryStore.add: faltam coefficients/coeffs');
+        }
+
+        // normaliza range (Cmin/Cmax → cmin/cmax)
+        const range = c.range
+          ? {
+              cmin: (c.range as any).cmin ?? (c.range as any).Cmin,
+              cmax: (c.range as any).cmax ?? (c.range as any).Cmax,
+            }
+          : undefined;
+
         const item: SavedCurve = {
-          id: c.id ?? uuid(),
-          createdAt: c.createdAt ?? Date.now(),
-          ...c,
-        } as SavedCurve;
-        set((state) => ({ curves: [item, ...state.curves] }));
-        return item;
-      },
+          id,
+          name: c.name,
+          substance: c.substance,
+          lambda_nm: c.lambda_nm,
+          createdAt,
+          coeffs: {
+            m: Number(coeffs.m),
+            b: Number(coeffs.b),
+            R2: coeffs.R2,
+            SEE: coeffs.SEE,
+            s_m: coeffs.s_m,
+            s_b: coeffs.s_b,
+          },
+          range,
+        };
 
-      update: (id, patch) => {
-        set((state) => ({
-          curves: state.curves.map((it) => (it.id === id ? { ...it, ...patch, id: it.id } : it)),
-        }));
+        set({ items: [item, ...get().items] });
       },
+      remove: (id) => set({ items: get().items.filter((i) => i.id !== id) }),
+      clear: () => set({ items: [] }),
+      // util opcional para migrar listas antigas já carregadas
+      loadFromJSON: (arr) => {
+        const normalized: SavedCurve[] = (arr ?? []).map((raw: any) => {
+          const id =
+            raw.id ??
+            (globalThis.crypto?.randomUUID?.() ??
+              `${Date.now()}_${Math.random().toString(16).slice(2)}`);
+          const createdAt =
+            typeof raw.createdAt === 'number'
+              ? raw.createdAt
+              : Date.now();
 
-      upsert: (c) => {
-        set((state) => {
-          const idx = state.curves.findIndex((it) => it.id === c.id);
-          if (idx >= 0) {
-            const copy = state.curves.slice();
-            copy[idx] = { ...state.curves[idx], ...c, id: state.curves[idx].id };
-            return { curves: copy };
-          }
-          return { curves: [c, ...state.curves] };
+          const coeffs = raw.coeffs ?? raw.coefficients ?? {};
+          const range = raw.range
+            ? {
+                cmin: raw.range.cmin ?? raw.range.Cmin,
+                cmax: raw.range.cmax ?? raw.range.Cmax,
+              }
+            : undefined;
+
+          return {
+            id,
+            name: String(raw.name ?? 'Curva'),
+            substance: raw.substance,
+            lambda_nm: Number(raw.lambda_nm ?? raw.wavelengthNm ?? 0),
+            createdAt,
+            coeffs: {
+              m: Number(coeffs.m ?? coeffs.slope_m ?? 0),
+              b: Number(coeffs.b ?? coeffs.intercept_b ?? 0),
+              R2: coeffs.R2 ?? coeffs.r_squared,
+              SEE: coeffs.SEE,
+              s_m: coeffs.s_m,
+              s_b: coeffs.s_b,
+            },
+            range,
+          };
         });
+        set({ items: normalized });
       },
-
-      remove: (id) => set((state) => ({ curves: state.curves.filter((it) => it.id !== id) })),
-
-      clear: () => set({ curves: [] }),
-
-      getById: (id) => get().curves.find((c) => c.id === id),
     }),
-    {
-      name: 'ifotom-curves',
-      storage: createJSONStorage(() => AsyncStorage),
-      version: 1,
-    }
+    { name: 'curve-library', storage: createJSONStorage(() => AsyncStorage) }
   )
 );
-
-export const useAllCurves = () => useCurveLibraryStore((s) => s.curves);
-export const useCurveById = (id?: string) =>
-  useCurveLibraryStore((s) => (id ? s.curves.find((c) => c.id === id) : undefined));

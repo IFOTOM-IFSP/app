@@ -1,95 +1,65 @@
+import { loadDeviceProfile } from '@/services/deviceProfile';
+import { acquireStageVectors, resampleBurstLinear } from '@/src/lib/acquisition';
+import { computeAStatsFromBursts } from '@/src/lib/quantCore';
+import { TARGET_POINTS } from '@/src/lib/quantEngine';
+import type { AnalysisParams } from '@/types/types';
 
-import type {
-  AnalysisRequest,
-  AnalysisResponse,
-  ReferenceProcessingResponse
-} from '@/src/models/apiSchema';
-import { apiService } from '@/services/http';
-import { useCallback, useState } from 'react';
+export type SimpleReadingResult = {
+  A_mean: number;
+  A_sd: number;
+  CV: number;
+  used: {
+    lambda_nm: number;
+    window_nm: number;
+    frames_per_burst: number;
+    points: number; // 2048
+  };
+  notes?: string[];
+};
 
-export type SimpleReadingStatus = 
-  | 'idle'               
-  | 'calibrating'         
-  | 'capturingSample'     
-  | 'analyzing'           
-  | 'success'            
-  | 'error';              
+export async function runSimpleReading(params: Pick<AnalysisParams,
+  'lambda_nm' | 'window_nm' | 'frames_per_burst'
+>) : Promise<{ result: SimpleReadingResult }> {
+  const profile = await loadDeviceProfile();
+  if (!profile) throw new Error('Perfil do dispositivo ausente');
 
-type ReferenceData = Omit<ReferenceProcessingResponse, 'status' | 'error'>;
+  // captura
+  const dark  = await acquireStageVectors({ ...params, name: 'Simple', build_curve: false, useLocalCore: true, standards: [] } as any, 'darkNoise');
+  const ref1  = await acquireStageVectors({ ...params, name: 'Simple', build_curve: false, useLocalCore: true, standards: [] } as any, 'ref1');
+  const sample= await acquireStageVectors({ ...params, name: 'Simple', build_curve: false, useLocalCore: true, standards: [] } as any, 'sample');
 
-export interface UseSimpleReadingReturn {
-  status: SimpleReadingStatus;
-  isLoading: boolean;
-  error: string | null;
-  analysisResult: AnalysisResponse | null;
-  startAnalysis: (darkFrames: string[], whiteFrames: string[], sampleFrame: string) => Promise<void>;
-  reset: () => void;
-}
+  // reamostra
+  const darkR   = resampleBurstLinear(dark,   TARGET_POINTS);
+  const ref1R   = resampleBurstLinear(ref1,   TARGET_POINTS);
+  const sampleR = resampleBurstLinear(sample, TARGET_POINTS);
 
-export function useSimpleReading(): UseSimpleReadingReturn {
-  const [status, setStatus] = useState<SimpleReadingStatus>('idle');
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [analysisResult, setAnalysisResult] = useState<AnalysisResponse | null>(null);
+  // reescala do px→λ para 2048
+  const origW = profile.roi.w;
+  const alpha = (origW > 1 && TARGET_POINTS > 1) ? (origW - 1)/(TARGET_POINTS - 1) : 1;
+  const p2w = {
+    a0: profile.pixel_to_nm.a0,
+    a1: (profile.pixel_to_nm.a1 ?? 0) * alpha,
+    a2: profile.pixel_to_nm.a2 != null ? profile.pixel_to_nm.a2 * alpha * alpha : undefined,
+  };
 
-  const startAnalysis = useCallback(async (
-    darkFrames: string[], 
-    whiteFrames: string[], 
-    sampleFrame: string
-  ) => {
-    setIsLoading(true);
-    setError(null);
-    setAnalysisResult(null);
-
-    try {
-      setStatus('calibrating');
-      const refData = await apiService.processReferences(darkFrames, whiteFrames);
-      
-      if (!refData.dark_reference_spectrum || !refData.white_reference_spectrum) {
-        throw new Error("A resposta da calibração de referência está incompleta.");
-      }
-
-      setStatus('analyzing');
-      const command: AnalysisRequest = {
-        analysisType: 'simple_read',
-        dark_reference_spectrum: refData.dark_reference_spectrum,
-        white_reference_spectrum: refData.white_reference_spectrum,
-        pixel_to_wavelength_coeffs: refData.pixel_to_wavelength_coeffs || [],
-        samples: [
-          { 
-            id: 'unknown_sample',
-            type: 'unknown', 
-            frames_base64: [sampleFrame] 
-          }
-        ],
-      };
-
-      const result = await apiService.runAnalysis(command);
-      
-      setAnalysisResult(result);
-      setStatus('success');
-
-    } catch (err) {
-      setError('Ocorreu um erro durante a análise. Por favor, tente novamente.');
-      setStatus('error');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const reset = useCallback(() => {
-    setStatus('idle');
-    setIsLoading(false);
-    setError(null);
-    setAnalysisResult(null);
-  }, []);
+  // estatísticas locais
+  const { A_mean, A_sd } = computeAStatsFromBursts(
+    darkR, ref1R, sampleR,
+    p2w,
+    params.lambda_nm,
+    params.window_nm ?? 4
+  );
+  const CV = Math.abs(A_mean) > 1e-12 ? (A_sd / Math.abs(A_mean)) * 100 : NaN;
 
   return {
-    status,
-    isLoading,
-    error,
-    analysisResult,
-    startAnalysis,
-    reset,
+    result: {
+      A_mean, A_sd, CV,
+      used: {
+        lambda_nm: params.lambda_nm,
+        window_nm: params.window_nm ?? 4,
+        frames_per_burst: params.frames_per_burst,
+        points: TARGET_POINTS
+      }
+    }
   };
 }

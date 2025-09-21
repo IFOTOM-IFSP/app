@@ -1,12 +1,11 @@
-// quantMachine.ts
 import { loadDeviceProfile, saveDeviceProfile } from '@/services/deviceProfile';
 import { acquireStageVectors, acquireStandards, resampleBurstLinear } from '@/src/lib/acquisition';
 import { MIN_R2, MIN_STANDARDS, validateCalibrationAcceptance, validatePreflight } from '@/src/lib/quality';
 import { computeAStatsFromBursts } from '@/src/lib/quantCore';
+import { quantifyHybrid, TARGET_POINTS } from '@/src/lib/quantEngine';
 import type { QuantAnalyzeResponse } from '@/types/api';
 import type { Acquisition, AnalysisParams, Curve, DeviceProfile, Matrix } from '@/types/types';
 import { assign, createMachine, fromPromise } from 'xstate';
-import { quantifyHybrid, TARGET_POINTS } from '../lib/quantEngine';
 
 export type QuantContext = {
   analysisType?: 'quant';
@@ -50,7 +49,7 @@ export const quantMachine = createMachine({
       on: {
         SELECT_TYPE: {
           target: 'PARAMS',
-          actions: assign({ analysisType: 'quant' as const }),
+          actions: assign({ analysisType: 'quant' as const, error: undefined }),
         },
       },
     },
@@ -68,6 +67,7 @@ export const quantMachine = createMachine({
           actions: assign(({ event }) => ({
             params: (event as any).params,
             curve: (event as any).providedCurve ?? null,
+            error: undefined,
           })),
         },
       },
@@ -80,7 +80,7 @@ export const quantMachine = createMachine({
           const ctx = input as QuantContext;
           const res = validatePreflight(ctx.deviceProfile, ctx.deviceProfile?.roi as any);
           if (!res.ok) throw new Error(res.issues.join(' | '));
-          return res;
+          return res; // sugestões podem ser mostradas na UI
         }),
         input: ({ context }) => context,
         onDone: { target: 'DECIDE_CALIB_DEVICE' },
@@ -270,7 +270,7 @@ export const quantMachine = createMachine({
           const ctx = input as QuantContext;
           if (!ctx.params || !ctx.deviceProfile) throw new Error('missing params/profile');
 
-          // Se vamos construir curva com padrões, valide antes (n, faixa A, R², WLS opcional)
+          // Validação da curva construída agora (n, faixa A, R², WLS opcional)
           if (!ctx.curve && ctx.acquisition.standards?.length) {
             const origW = ctx.deviceProfile.roi.w;
             const alpha = (origW > 1 && TARGET_POINTS > 1) ? (origW - 1) / (TARGET_POINTS - 1) : 1;
@@ -300,9 +300,10 @@ export const quantMachine = createMachine({
             if (!acc.ok) throw new Error('Curva reprovada: ' + acc.issues.join(' | '));
           }
 
-          // Estratégia: 'auto' tenta API e cai para local; toggle para 'local' (preview/offline)
+          // Estratégia de execução
           const strategy = ctx.params.useLocalCore ? 'local' : 'auto';
 
+          // Normalização do shape da curva (range cmin/cmax)
           const curveNormalized = ctx.curve
             ? {
                 m: ctx.curve.m,

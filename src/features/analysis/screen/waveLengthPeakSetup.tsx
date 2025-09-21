@@ -1,4 +1,5 @@
-import { Camera, CameraView, PermissionStatus } from "expo-camera";
+// src/features/analysis/screen/waveLengthPeakSetup.tsx
+import { Camera, CameraView } from "expo-camera";
 import * as Crypto from "expo-crypto";
 import { Info, Plus, X } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
@@ -9,6 +10,7 @@ import {
   Modal,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -28,20 +30,21 @@ import {
   Spacing,
 } from "../../../constants/Styles";
 import { useThemeValue } from "../../../hooks/useThemeValue";
-import { CalibrationMeasurement } from "../../../models/analysis";
-import { useAnalysisStore } from "../../../store/analysisStore";
-import { useProfileStore } from "../../../store/profileLibraryStore.ts";
-import { useAnalysisFlowActions } from "../analysisFlowContext";
+import { useAnalysisMachine } from "../AnalysisMachineProvider";
+import { useAnalysisStore } from "@/src/store/deviceProfileStore";
+import { useProfileStore } from "@/src/store/profileLibraryStore.ts";
+import { CalibrationMeasurement } from "@/src/models/analysis";
 
+// quantos frames/fotos capturar por ponto
 const CAPTURE_COUNT = 10;
 
-// Componente para exibir um ponto de calibração já medido
+/** Card compacto de ponto de calibração já medido */
 const MeasurementItem = ({
   item,
   onRemove,
 }: {
   item: CalibrationMeasurement;
-  onRemove: (name: string) => void;
+  onRemove?: (name: string) => void;
 }) => {
   const cardColor = useThemeValue("card");
   const textColor = useThemeValue("text");
@@ -59,12 +62,15 @@ const MeasurementItem = ({
           {item.wavelengthNm} nm
         </ThemedText>
       </View>
-      <TouchableOpacity onPress={() => onRemove(item.laserName)}>
-        <X size={20} color={dangerColor} />
-      </TouchableOpacity>
+      {!!onRemove && (
+        <TouchableOpacity onPress={() => onRemove(item.laserName)}>
+          <X size={20} color={dangerColor} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
+
 const itemStyles = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -79,29 +85,45 @@ const itemStyles = StyleSheet.create({
 });
 
 export default function CalibrateWavelengthScreen() {
-  const [permission, setPermission] = useState<PermissionStatus | null>(null);
+  const [permissionStatus, setPermissionStatus] = useState<
+    "granted" | "denied" | "undetermined"
+  >("undetermined");
   const cameraRef = useRef<CameraView>(null);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // modais
+  const [isAddPointModalVisible, setAddPointModalVisible] = useState(false);
   const [isInfoModalVisible, setIsInfoModalVisible] = useState(false);
+  const [isSaveProfileModalVisible, setSaveProfileModalVisible] =
+    useState(false);
+
+  // formulário de ponto atual
   const [currentPoint, setCurrentPoint] = useState({
     name: "",
     wavelength: "",
   });
+
   const [isCapturing, setIsCapturing] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
 
+  const [saveProfileName, setSaveProfileName] = useState<string>("");
+
+  // stores
   const {
     addCalibrationMeasurement,
+    removeCalibrationMeasurement, // se não existir no store, pode ignorar
     performCalibration,
     status,
     error,
     resetAnalysis,
     calibrationMeasurements,
   } = useAnalysisStore();
-  const { addProfile } = useProfileStore();
-  const { completeWavelengthCalibration } = useAnalysisFlowActions();
 
+  const { addProfile } = useProfileStore();
+
+  // XState machine
+  const { send } = useAnalysisMachine();
+
+  // theming
   const cardColor = useThemeValue("card");
   const textColor = useThemeValue("text");
   const secondaryTextColor = useThemeValue("textSecondary");
@@ -109,92 +131,118 @@ export default function CalibrateWavelengthScreen() {
   const tintColor = useThemeValue("tint");
   const primaryColor = useThemeValue("primary");
 
+  // permissões e reset local de estado de calibração
   useEffect(() => {
-    Camera.requestCameraPermissionsAsync().then(({ status }) =>
-      setPermission(status)
-    );
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setPermissionStatus(status);
+    })();
     resetAnalysis();
   }, [resetAnalysis]);
+
+  // --- Ações ---
 
   const handleStartCapture = () => {
     if (!currentPoint.name || !currentPoint.wavelength) {
       Alert.alert("Erro", "Preencha o nome e o comprimento de onda.");
       return;
     }
-    setIsModalVisible(false);
+    setAddPointModalVisible(false);
     setShowCamera(true);
-    setCurrentPoint({ name: "", wavelength: "" });
+    // NÃO limpar o estado aqui; faremos após salvar a captura
   };
 
   const handleCapture = async () => {
     const camera = cameraRef.current;
     if (!camera || isCapturing) return;
+
     setIsCapturing(true);
     try {
       const uris = await Promise.all(
         Array.from({ length: CAPTURE_COUNT }).map(async () => {
-          const photo = await camera.takePictureAsync({
-            quality: 0.5,
-          });
+          const photo = await camera.takePictureAsync({ quality: 0.5 });
           return photo?.uri;
         })
       );
 
       const validUris = uris.filter((uri): uri is string => !!uri);
-      if (validUris.length < CAPTURE_COUNT)
+      if (validUris.length < CAPTURE_COUNT) {
         throw new Error("Falha na captura de imagens.");
+      }
 
       addCalibrationMeasurement({
         laserName: currentPoint.name,
         wavelengthNm: parseFloat(currentPoint.wavelength),
         imageUris: validUris,
       });
+
+      // limpeza e volta para a tela
       setShowCamera(false);
-    } catch (_error) {
+      setCurrentPoint({ name: "", wavelength: "" });
+    } catch (_err) {
       Alert.alert("Erro", "Não foi possível capturar as imagens.");
     } finally {
       setIsCapturing(false);
     }
   };
 
+  // finaliza, calcula coeficientes e abre modal para nomear/salvar
   const handleFinishAndCalibrate = async () => {
     const profile = await performCalibration();
-    if (profile) {
-      Alert.prompt(
-        "Calibração Concluída!",
-        "Dê um nome para salvar este novo perfil:",
-        async (name) => {
-          if (name) {
-            const profileWithId = {
-              ...profile,
-              id: Crypto.randomUUID(),
-              name,
-              calibrationDate: new Date().toISOString(),
-            };
-            await addProfile(profileWithId);
-            completeWavelengthCalibration(); // Ação do fluxo que decide a próxima tela
-          }
-        },
-        "plain-text",
-        `Perfil ${new Date().toLocaleDateString("pt-BR")}`
-      );
-    } else {
+    if (!profile) {
       Alert.alert(
         "Falha na Calibração",
         `Erro: ${error || "Tente novamente."}`
       );
+      return;
     }
+    setSaveProfileName(`Perfil ${new Date().toLocaleDateString("pt-BR")}`);
+    setSaveProfileModalVisible(true);
   };
 
-  if (!permission) return <ActivityIndicator />;
-  if (permission !== "granted")
-    return <Text>Você precisa conceder acesso à câmera.</Text>;
+  // confirma salvar perfil, adiciona na biblioteca e avança o fluxo na XState
+  const confirmSaveProfile = async () => {
+    setSaveProfileModalVisible(false);
 
+    const profile = await performCalibration();
+    if (!profile) {
+      Alert.alert(
+        "Falha na Calibração",
+        `Erro: ${error || "Tente novamente."}`
+      );
+      return;
+    }
+
+    // (1) Salvar na biblioteca de perfis para o usuário
+    const libProfile = {
+      ...profile,
+      id: Crypto.randomUUID(),
+      name:
+        (saveProfileName || "").trim() ||
+        `Perfil ${new Date().toLocaleDateString("pt-BR")}`,
+      calibrationDate: new Date().toISOString(),
+    };
+    await addProfile(libProfile);
+
+    // (2) Entregar o perfil (cru, no formato DeviceProfile) para a máquina
+    send({ type: "DEVICE_PROFILE_READY", profile });
+  };
+
+  // --- Render ---
+
+  if (permissionStatus === "undetermined") {
+    return <ActivityIndicator style={{ marginTop: 24 }} />;
+  }
+  if (permissionStatus !== "granted") {
+    return <Text>Você precisa conceder acesso à câmera.</Text>;
+  }
+
+  // UI de captura
   if (showCamera) {
     return (
       <View style={styles.cameraContainer}>
         <Text style={styles.cameraTitle}>
-          Capturando: {currentPoint.name} ({currentPoint.wavelength}nm)
+          Capturando: {currentPoint.name} ({currentPoint.wavelength} nm)
         </Text>
         <CameraView
           ref={cameraRef}
@@ -221,6 +269,7 @@ export default function CalibrateWavelengthScreen() {
 
   return (
     <ScreenLayout>
+      {/* Cabeçalho */}
       <View style={styles.header}>
         <BackButton color={textColor} style={styles.baseContainer} />
         <View style={styles.headerTitleContainer}>
@@ -238,18 +287,20 @@ export default function CalibrateWavelengthScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* Texto de apoio */}
       <ThemedText style={[styles.instructions, { color: secondaryTextColor }]}>
         Registre pelo menos dois pontos de referência capturando o feixe de
         lasers ou fontes com comprimentos de onda conhecidos.
       </ThemedText>
 
+      {/* Modal de ajuda (didático) */}
       <InfoModal
         visible={isInfoModalVisible}
         onClose={handleCloseInfoModal}
         title="Calibração do equipamento"
         icon={<Info size={40} color={primaryColor} />}
         content={
-          "Nesta etapa, calibramos o espectrofotômetro usando fontes de comprimento de onda conhecido. Esses pontos garantem que as leituras de lambda estejam alinhadas antes de medir as amostras."
+          "Nesta etapa, calibramos o espectrofotômetro usando fontes de comprimento de onda conhecido. Esses pontos garantem que as leituras de λ estejam alinhadas antes de medir as amostras."
         }
         actions={
           <Button
@@ -260,11 +311,12 @@ export default function CalibrateWavelengthScreen() {
         }
       />
 
+      {/* Modal para adicionar ponto */}
       <Modal
-        visible={isModalVisible}
-        transparent={true}
+        visible={isAddPointModalVisible}
+        transparent
         animationType="slide"
-        onRequestClose={() => setIsModalVisible(false)}>
+        onRequestClose={() => setAddPointModalVisible(false)}>
         <View style={styles.modalBackdrop}>
           <View style={[styles.modalContent, { backgroundColor: cardColor }]}>
             <FormField
@@ -285,22 +337,68 @@ export default function CalibrateWavelengthScreen() {
             <Button title="Iniciar Captura" onPress={handleStartCapture} />
             <Button
               title="Cancelar"
-              onPress={() => setIsModalVisible(false)}
+              onPress={() => setAddPointModalVisible(false)}
               variant="outline"
             />
           </View>
         </View>
       </Modal>
 
+      {/* Modal para nomear/salvar perfil */}
+      <Modal
+        visible={isSaveProfileModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSaveProfileModalVisible(false)}>
+        <View style={styles.modalBackdrop}>
+          <View style={[styles.modalContent, { backgroundColor: cardColor }]}>
+            <ThemedText style={{ fontSize: FontSize.lg, marginBottom: 8 }}>
+              Salvar perfil de calibração
+            </ThemedText>
+            <TextInput
+              value={saveProfileName}
+              onChangeText={setSaveProfileName}
+              placeholder="Nome do perfil"
+              style={{
+                borderWidth: 1,
+                borderColor: borderColor,
+                borderRadius: BorderRadius.md,
+                padding: 12,
+                marginBottom: 12,
+                color: textColor,
+              }}
+              placeholderTextColor={secondaryTextColor}
+            />
+            <Button title="Salvar e continuar" onPress={confirmSaveProfile} />
+            <Button
+              title="Cancelar"
+              onPress={() => setSaveProfileModalVisible(false)}
+              variant="outline"
+              style={{ marginTop: 8 }}
+            />
+          </View>
+        </View>
+      </Modal>
+
+      {/* Lista de pontos adicionados */}
       <View style={styles.listContainer}>
         <FlatList
           data={calibrationMeasurements}
-          renderItem={({ item }) => <MeasurementItem item={item} />}
+          renderItem={({ item }) => (
+            <MeasurementItem
+              item={item}
+              onRemove={
+                typeof removeCalibrationMeasurement === "function"
+                  ? (name) => removeCalibrationMeasurement(name)
+                  : undefined
+              }
+            />
+          )}
           keyExtractor={(item) => item.laserName}
           ListHeaderComponent={
             <TouchableOpacity
               style={[styles.addButton, { borderColor: secondaryTextColor }]}
-              onPress={() => setIsModalVisible(true)}>
+              onPress={() => setAddPointModalVisible(true)}>
               <Plus size={20} color={textColor} />
               <ThemedText>Adicionar Ponto de Calibração</ThemedText>
             </TouchableOpacity>
@@ -316,6 +414,7 @@ export default function CalibrateWavelengthScreen() {
         />
       </View>
 
+      {/* Rodapé */}
       <View style={[styles.footer, { borderTopColor: borderColor }]}>
         {calibrationMeasurements.length < 2 && (
           <Text style={[styles.infoText, { color: secondaryTextColor }]}>
@@ -355,16 +454,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(0,0,0,0.6)",
+    padding: 16,
   },
   modalContent: {
-    width: "90%",
-    padding: Padding.lg,
+    width: "100%",
     borderRadius: BorderRadius.lg,
+    padding: Padding.lg,
     gap: Spacing.md,
   },
-  modalActionButton: {
-    marginTop: Margin.md,
-  },
+  modalActionButton: { marginTop: Margin.md },
   addButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -395,14 +493,8 @@ const styles = StyleSheet.create({
     marginBottom: Margin.lg,
     width: "100%",
   },
-  baseContainer: {
-    padding: 0,
-    backgroundColor: "transparent",
-  },
-  headerTitleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  baseContainer: { padding: 0, backgroundColor: "transparent" },
+  headerTitleContainer: { flexDirection: "row", alignItems: "center" },
   stepBadge: {
     width: 28,
     height: 28,
@@ -411,31 +503,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 10,
   },
-  stepBadgeText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  headerTitle: {
-    fontSize: FontSize.xl,
-    fontWeight: FontWeight.semiBold,
-  },
-  infoButton: {
-    padding: Spacing.xs,
-  },
+  stepBadgeText: { color: "white", fontWeight: "bold", fontSize: 16 },
+  headerTitle: { fontSize: FontSize.xl, fontWeight: FontWeight.semiBold },
+  infoButton: { padding: Spacing.xs },
   instructions: {
     fontSize: FontSize.md,
     lineHeight: 22,
     marginBottom: Margin.lg,
   },
-  listContainer: {
-    flex: 1,
-  },
-  list: {
-    flex: 1,
-  },
-  listContent: {
-    flexGrow: 1,
-    paddingBottom: Padding.lg,
-  },
+  listContainer: { flex: 1 },
+  list: { flex: 1 },
+  listContent: { flexGrow: 1, paddingBottom: Padding.lg },
 });

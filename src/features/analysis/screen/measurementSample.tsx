@@ -1,181 +1,180 @@
-import { Camera, CameraView, PermissionStatus } from "expo-camera";
-import { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+// app/analysis/measure.tsx
+import { useRouter } from "expo-router";
+import { useMemo } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
-// Importando todos os stores necessários
-import captureDualBeamImage from "@/src/components/captureDualBeamImage";
-import { CalibrationCurve } from "@/src/models/CalibrationCurve";
-import { useAnalysisStore } from "@/src/store/analysisStore";
-import { useBaselineStore } from "@/src/store/baselineStore";
-import { useProfileStore } from "@/src/store/profileLibraryStore.ts";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import BackButton from "@/src/components/ui/BackButton";
+import { Button } from "@/src/components/ui/Button";
+import { ThemedText } from "@/src/components/ui/ThemedText";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { useSettingsStore } from "@/src/store/settingsStore";
+import { useAnalysisMachine } from "../AnalysisMachineProvider";
 
 export default function MeasurementSampleScreen() {
-  const [permission, setPermission] = useState<PermissionStatus | null>(null);
-  const cameraRef = useRef<CameraView>(null);
+  const router = useRouter();
+  const { state, send } = useAnalysisMachine();
 
-  const [isCapturing, setIsCapturing] = useState(false);
+  const text = useThemeValue("text");
+  const tint = useThemeValue("tint");
+  const secondary = useThemeValue("textSecondary");
+  const border = useThemeValue("border");
 
-  // Conexão com os stores
-  const {
-    setupData,
-    status,
-    finalResult,
-    calculateFinalConcentration,
-    newlyCreatedCurve,
-  } = useAnalysisStore();
-  const { darkSignalImages, whiteSignalImages } = useBaselineStore();
-  const { profiles } = useProfileStore();
+  const learningMode = useSettingsStore((s) => s.learningMode);
 
-  useEffect(() => {
-    const getPermissions = async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setPermission(status);
-    };
-    getPermissions();
-  }, []);
+  const isAcqSample = state.matches("ACQ_SAMPLE");
+  const isAcqRef2 = state.matches("ACQ_REF2");
+  const isProcessing = state.matches("PROCESSING");
+  const isResults = state.matches("RESULTS");
+  const hasError = Boolean(state.context.error) && !isProcessing;
 
-  // Efeito para navegar para a tela de resultados quando o cálculo terminar
-  useEffect(() => {
-    if (status === "success" && finalResult) {
-      // router.push('/(tabs)/analysis/results');
-      Alert.alert(
-        "Análise Concluída!",
-        `Concentração encontrada: ${finalResult.final_concentration.toFixed(4)}`
-      );
-    } else if (status === "error") {
-      Alert.alert("Erro", "Não foi possível processar a análise final.");
-    }
-  }, [status, finalResult]);
+  const stepNumber = 5; // ajuste se seu fluxo exibir badges de passo
 
-  const handleAnalyze = async () => {
-    // --- 1. Validação e Coleta de Dados ---
-    const camera = cameraRef.current;
-    if (!camera || !setupData || !darkSignalImages || !whiteSignalImages) {
-      Alert.alert(
-        "Erro de Dados",
-        "Dados essenciais (setup, linha de base) não foram encontrados."
-      );
-      return;
-    }
-    const profile = profiles.find((p) => p.id === setupData.selectedProfileId);
-    if (!profile) {
-      Alert.alert(
-        "Erro de Perfil",
-        "O perfil do equipamento selecionado não foi encontrado."
-      );
-      return;
-    }
-
-    // Lógica para encontrar a curva correta
-    let curve: CalibrationCurve["coefficients"] | null = null;
-    if (newlyCreatedCurve) {
-      // Prioridade 1: A curva que acabamos de criar no CurveBuilder
-      curve = newlyCreatedCurve;
-    } else if (
-      setupData.hasDefinedCurve &&
-      setupData.slope_m != null &&
-      setupData.intercept_b != null
-    ) {
-      curve = {
-        slope_m: setupData.slope_m,
-        intercept_b: setupData.intercept_b,
-        r_squared: 0,
-      };
-    }
-
-    if (!curve) {
-      Alert.alert(
-        "Erro de Curva",
-        "Não foi possível encontrar uma curva de calibração válida para a análise."
-      );
-      return;
-    }
-
-    setIsCapturing(true);
-    try {
-      const sampleImages = await captureDualBeamImage(camera);
-
-      await calculateFinalConcentration({
-        sampleImages,
-        baseline: { dark: darkSignalImages, white: whiteSignalImages },
-        profile,
-        curve,
-        wavelength: setupData.wavelength,
-      });
-    } catch (e: any) {
-      Alert.alert("Erro de Captura", e.message || "Falha ao medir a amostra.");
-    } finally {
-      setIsCapturing(false);
-    }
-  };
-
-  if (!permission) return <ActivityIndicator />;
-  if (permission !== "granted")
-    return <Text>É necessário conceder acesso à câmera.</Text>;
+  const headerTitle = useMemo(() => {
+    if (isAcqSample) return "Medindo amostra";
+    if (isAcqRef2) return "Capturando referência (pós-amostra)";
+    if (isProcessing) return "Processando…";
+    if (isResults) return "Medição concluída";
+    if (hasError) return "Erro na medição";
+    return "Medição da Amostra";
+  }, [isAcqSample, isAcqRef2, isProcessing, isResults, hasError]);
 
   return (
-    <View style={styles.container}>
-      <CameraView ref={cameraRef} style={styles.camera} facing="back" />
-
-      <View style={styles.overlay}>
-        {status === "processing" ? (
-          <View style={styles.centered}>
-            <ActivityIndicator size="large" />
-            <Text style={styles.progressText}>
-              Processando resultado final...
-            </Text>
+    <ScreenLayout>
+      {/* Header */}
+      <View style={styles.header}>
+        <BackButton color={text} style={styles.baseContainer} />
+        <View style={styles.headerTitleContainer}>
+          <View style={[styles.stepBadge, { backgroundColor: tint }]}>
+            <ThemedText style={styles.stepBadgeText}>
+              {String(stepNumber)}
+            </ThemedText>
           </View>
-        ) : (
-          <View style={styles.controls}>
-            <Text style={styles.title}>Medição da Amostra</Text>
-            <Text style={styles.instructions}>
-              Insira sua amostra de concentração desconhecida no compartimento e
-              pressione o botão abaixo para iniciar a análise final.
-            </Text>
-            <Button
-              title="Analisar Amostra"
-              onPress={handleAnalyze}
-              disabled={isCapturing}
-            />
-          </View>
-        )}
+          <ThemedText style={styles.headerTitle}>{headerTitle}</ThemedText>
+        </View>
+        <View style={{ width: 40 }} />
       </View>
-    </View>
+
+      {/* Ajuda didática (modo aprendizagem) */}
+      {learningMode && (
+        <View style={[styles.helpBox, { borderColor: border }]}>
+          <ThemedText style={styles.helpItem}>
+            • O fluxo é sequencial (pseudo double-beam):{" "}
+            <ThemedText style={styles.bold}>
+              dark → ref → sample → ref2
+            </ThemedText>
+            . Aqui você está na etapa de amostra.
+          </ThemedText>
+          <ThemedText style={styles.helpItem}>
+            • Após a amostra, capturamos uma segunda referência para corrigir{" "}
+            <ThemedText style={styles.bold}>drift</ThemedText> por interpolação
+            temporal.
+          </ThemedText>
+          <ThemedText style={styles.helpItem}>
+            • O processamento aplica janela em λ, remove outliers (MAD), calcula
+            A e C com IC95.
+          </ThemedText>
+        </View>
+      )}
+
+      {/* Estados / progresso */}
+      {(isAcqSample || isAcqRef2 || isProcessing) && (
+        <View style={styles.centerBlock}>
+          <ActivityIndicator size="large" />
+          <ThemedText style={[styles.progressText, { color: secondary }]}>
+            {isAcqSample && "Capturando amostra…"}
+            {isAcqRef2 && "Capturando referência pós-amostra…"}
+            {isProcessing && "Processando resultados…"}
+          </ThemedText>
+        </View>
+      )}
+
+      {/* Resultado pronto */}
+      {isResults && (
+        <View style={styles.actions}>
+          <ThemedText style={[styles.successText, { color: secondary }]}>
+            Medição concluída com sucesso. Você pode revisar os números,
+            gráficos e QA.
+          </ThemedText>
+          <Button
+            title="Ver resultados"
+            onPress={() => router.push("/analysis/results")}
+          />
+          <Button
+            title="Medir novamente"
+            variant="outline"
+            onPress={() => {
+              // Volta para medir amostra de novo:
+              // a máquina aceita RETRY em PROCESSING, então primeiro vamos a PROCESSING rapidamente:
+              send({ type: "RETRY" }); // se estiver em RESULTS, você pode RESET e recomeçar o fluxo, se preferir.
+            }}
+          />
+        </View>
+      )}
+
+      {/* Erro */}
+      {hasError && (
+        <View style={styles.actions}>
+          <ThemedText style={[styles.errorText]}>
+            Ocorreu um erro: {state.context.error}
+          </ThemedText>
+          <Button
+            title="Tentar novamente"
+            onPress={() => send({ type: "RETRY" })}
+          />
+          <Button
+            title="Reiniciar fluxo"
+            variant="outline"
+            onPress={() => {
+              send({ type: "RESET" });
+              router.replace("/analysis/params");
+            }}
+          />
+        </View>
+      )}
+    </ScreenLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#000" },
-  camera: { ...StyleSheet.absoluteFillObject },
-  overlay: {
-    flex: 1,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
+  header: {
+    justifyContent: "space-between",
+    marginBottom: 24,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  baseContainer: { padding: 0, backgroundColor: "transparent" },
+  headerTitleContainer: { flexDirection: "row", alignItems: "center" },
+  stepBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    marginRight: 10,
   },
-  controls: {
-    width: "100%",
-    padding: 20,
-    backgroundColor: "#fff",
+  stepBadgeText: { color: "white", fontWeight: "bold", fontSize: 16 },
+  headerTitle: { fontSize: 22, fontWeight: "bold" },
+
+  helpBox: {
+    borderWidth: 1,
     borderRadius: 10,
+    padding: 12,
+    marginBottom: 12,
+  },
+  helpItem: { fontSize: 15, lineHeight: 22, marginBottom: 6 },
+  bold: { fontWeight: "600" },
+
+  centerBlock: {
     alignItems: "center",
-    gap: 15,
+    justifyContent: "center",
+    gap: 10,
+    marginTop: 24,
   },
-  title: { fontSize: 22, fontWeight: "bold", textAlign: "center" },
-  instructions: {
-    fontSize: 16,
-    textAlign: "center",
-    lineHeight: 24,
-    color: "#333",
-  },
-  centered: { justifyContent: "center", alignItems: "center", gap: 20 },
-  progressText: { fontSize: 18, fontWeight: "bold" },
+  progressText: { fontSize: 16 },
+
+  actions: { gap: 12, marginTop: 12 },
+  successText: { fontSize: 15 },
+  errorText: { fontSize: 15, color: "#B00020" },
 });

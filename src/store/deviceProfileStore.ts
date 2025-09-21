@@ -157,3 +157,89 @@ export async function saveDeviceProfile(p: DeviceProfile): Promise<void> {
 export async function clearDeviceProfile(): Promise<void> {
   useDeviceProfileStore.getState().clear();
 }
+
+import { CalibrationMeasurement } from "@/src/models/analysis";
+import * as Crypto from "expo-crypto";
+
+
+
+type CalibStatus = "idle" | "capturing" | "calibrating" | "error";
+
+type AnalysisCalibState = {
+  calibrationMeasurements: CalibrationMeasurement[];
+  status: CalibStatus;
+  error?: string;
+
+  resetAnalysis: () => void;
+  addCalibrationMeasurement: (m: CalibrationMeasurement) => void;
+  removeCalibrationMeasurement: (laserName: string) => void;
+
+  /** Retorna um DeviceProfile pronto para a máquina XState (DEVICE_PROFILE_READY) */
+  performCalibration: () => Promise<DeviceProfile | null>;
+};
+
+export const useAnalysisStore = create<AnalysisCalibState>((set, get) => ({
+  calibrationMeasurements: [],
+  status: "idle",
+  error: undefined,
+
+  resetAnalysis: () => set({ calibrationMeasurements: [], status: "idle", error: undefined }),
+
+  addCalibrationMeasurement: (m) =>
+    set((s) => ({
+      calibrationMeasurements: [
+        // se já existir com o mesmo nome, substitui
+        ...s.calibrationMeasurements.filter((x) => x.laserName !== m.laserName),
+        m,
+      ],
+    })),
+
+  removeCalibrationMeasurement: (laserName) =>
+    set((s) => ({
+      calibrationMeasurements: s.calibrationMeasurements.filter((x) => x.laserName !== laserName),
+    })),
+
+  performCalibration: async () => {
+    const { calibrationMeasurements } = get();
+    if (calibrationMeasurements.length < 2) {
+      set({ status: "error", error: "São necessários pelo menos 2 pontos." });
+      return null;
+    }
+
+    try {
+      set({ status: "calibrating", error: undefined });
+
+      // ---------------------------------------------
+      // IMPLEMENTAÇÃO BÁSICA (linear “educativa”):
+      // Assume espectro cobrindo ~380–780nm na largura da ROI.
+      // Você pode substituir por um fit real quando plugar
+      // o processador que acha o pico (px) em cada imagem.
+      // ---------------------------------------------
+
+      // Dimensões padrão da ROI (ajuste se já tiver uma ROI válida)
+      const ROI_W = 2048;
+      const ROI_H = 80;
+
+      // m (nm/px): (780 - 380) / (W - 1)
+      const a0 = 380; // nm no pixel 0
+      const a1 = (780 - 380) / Math.max(1, ROI_W - 1); // ~0.195 nm/px
+
+      const profile: DeviceProfile = {
+        device_hash:
+          typeof Crypto.randomUUID === "function"
+            ? Crypto.randomUUID()
+            : "dev_" + Date.now().toString(16),
+        pixel_to_nm: { a0, a1 }, // a2 ausente (linear)
+        roi: { x: 0, y: 0, w: ROI_W, h: ROI_H },
+        camera_meta: {}, // preencha caso já tenha ISO/exposure/WB
+        rmse_nm: undefined, // pode ser calculado quando usar fit real
+      };
+
+      set({ status: "idle" });
+      return profile;
+    } catch (e: any) {
+      set({ status: "error", error: String(e?.message || e) });
+      return null;
+    }
+  },
+}));
