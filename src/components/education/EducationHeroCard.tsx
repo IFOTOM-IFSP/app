@@ -5,9 +5,8 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Image, StyleSheet, Text, View } from "react-native";
 
 export function EducationHeroCard() {

@@ -6,7 +6,7 @@ import {
   ListContent,
   TextContent,
   VideoContent,
-} from "@/models";
+} from "@/src/models";
 import React from "react";
 
 import { CodeBlock } from "@/src/components/contentBlocks/CodeBlock";

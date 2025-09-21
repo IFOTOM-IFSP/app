@@ -1,6 +1,6 @@
-import { Spacing } from "@/constants/Styles";
 import { ThemedInput } from "@/src/components/ui/ThemedInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { Spacing } from "@/src/constants/Styles";
 import React from "react";
 import {
   useController,

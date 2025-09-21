@@ -1,4 +1,4 @@
-import { LayoutSize } from "@/constants/Styles";
+import { LayoutSize } from "@/src/constants/Styles";
 import React from "react";
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 

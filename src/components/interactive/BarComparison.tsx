@@ -1,7 +1,11 @@
 import { InteractiveCard } from "@/src/components/common/InteractiveCard";
-import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import {
+  BorderRadius,
+  FontSize,
+  Margin,
+  Padding,
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { BarChart } from "react-native-chart-kit";
 

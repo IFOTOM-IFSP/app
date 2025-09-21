@@ -6,10 +6,10 @@ import {
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import Slider from "@react-native-community/slider";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 

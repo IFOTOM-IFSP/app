@@ -4,9 +4,9 @@ import {
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { Note } from "@/storage/notesStorage"; // Apenas o 'Note' é importado
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { Note } from "@/src/storage/notesStorage"; // Apenas o 'Note' é importado
 import { FlaskConical, ListChecks, Notebook } from "lucide-react-native";
 import { MotiView } from "moti";
 import { StyleSheet, TouchableOpacity, View } from "react-native";

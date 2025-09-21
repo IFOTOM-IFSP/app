@@ -1,4 +1,4 @@
-import { Module } from "@/models";
+import { Module } from "@/src/models";
 
 export const firstModule: Module = {
   id: '1',

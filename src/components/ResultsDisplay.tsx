@@ -1,11 +1,10 @@
-import React from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 
 // Importando os tipos de dados que o componente espera receber
 
 import { CurveGraphData } from "@/services/analysisService";
-import { FinalResult } from "@/store/analysisStore";
+import { FinalResult } from "@/src/store/analysisStore";
 import { AnalysisSetupFormData } from "./configuration/QuantitativeConfig";
 
 const screenWidth = Dimensions.get("window").width;

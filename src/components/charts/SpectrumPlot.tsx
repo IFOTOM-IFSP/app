@@ -1,13 +1,12 @@
 // src/components/charts/SpectrumPlot.tsx
-
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   VictoryArea,
   VictoryAxis,
   VictoryChart,
   VictoryLine,
   VictoryTheme,
-} from "@/lib/victoryCompat";
-import { ThemedText } from "@/src/components/ui/ThemedText";
+} from "@/src/lib/victoryCompat";
 import { useMemo } from "react";
 import { View } from "react-native";
 
@@ -33,7 +32,7 @@ export default function SpectrumPlot({
 }) {
   if (!spectrum?.lambda?.length) return null;
 
-  const { bandData, maxY, series } = useMemo(() => {
+  const { bandData, series } = useMemo(() => {
     const L = spectrum.lambda;
     const toXY = (ys?: number[]) => (ys ?? []).map((y, i) => ({ x: L[i], y }));
 
@@ -44,18 +43,15 @@ export default function SpectrumPlot({
       sample: toXY(spectrum.I_sample),
     };
 
-    // y máximo para pintar faixa
     const maxY = Math.max(
       1,
-      ...[s.dark, s.white, s.ref, s.sample].flat().map((p) => p?.y ?? 0)
+      ...[s.dark, s.white, s.ref, s.sample].flat().map((p: any) => p?.y ?? 0)
     );
-
-    // sombreamento [λ-Δ/2, λ+Δ/2]
     const low = lambda_nm - window_nm / 2;
     const high = lambda_nm + window_nm / 2;
     const bandData = L.map((x) => ({ x, y: x >= low && x <= high ? maxY : 0 }));
 
-    return { bandData, maxY, series: s };
+    return { bandData, series: s };
   }, [spectrum, lambda_nm, window_nm]);
 
   return (
@@ -67,7 +63,6 @@ export default function SpectrumPlot({
         height={height}
         theme={VictoryTheme.material}
         padding={{ top: 16, left: 50, right: 20, bottom: 40 }}>
-        {/* janela sombreada */}
         <VictoryArea
           data={bandData}
           interpolation="linear"
@@ -79,8 +74,6 @@ export default function SpectrumPlot({
           label="Intensidade"
           style={{ axisLabel: { padding: 40 } }}
         />
-
-        {/* traços */}
         {series.dark?.length ? <VictoryLine data={series.dark} /> : null}
         {series.white?.length ? <VictoryLine data={series.white} /> : null}
         {series.ref?.length ? <VictoryLine data={series.ref} /> : null}

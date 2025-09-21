@@ -1,4 +1,4 @@
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { StyleSheet } from "react-native";

@@ -5,9 +5,8 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { StyleSheet, View } from "react-native";
 
 type Step = { label: string; title: string; description: string };

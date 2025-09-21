@@ -1,3 +1,4 @@
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -5,9 +6,8 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { ThemedText } from "@/src/components/ui/ThemedText";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
 import {

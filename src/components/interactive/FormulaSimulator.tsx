@@ -1,8 +1,13 @@
 import { InteractiveCard } from "@/src/components/common/InteractiveCard";
 import { ThemedInput } from "@/src/components/ui/ThemedInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import {
+  BorderRadius,
+  FontSize,
+  Margin,
+  Padding,
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 

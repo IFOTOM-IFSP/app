@@ -1,4 +1,4 @@
-import { Article } from "@/models";
+import { Article } from "@/src/models";
 
 export const ARTICLE_DATA: Article[] = [
   {

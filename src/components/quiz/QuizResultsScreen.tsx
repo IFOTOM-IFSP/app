@@ -1,10 +1,9 @@
-import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { Button } from "@/src/components/ui/Button";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { ThemedView } from "@/src/components/ui/ThemedView";
+import { FontSize, FontWeight, Margin, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather } from "@expo/vector-icons";
-import React from "react";
 import { StyleSheet } from "react-native";
 
 interface QuizResultsScreenProps {

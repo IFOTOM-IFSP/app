@@ -13,15 +13,15 @@ import { SpectrumGraph } from "@/src/components/interactive/SpectrumGraph";
 import { StepFlow } from "@/src/components/interactive/StepFlow";
 import { ToggleExplanation } from "@/src/components/interactive/ToggleExplanation";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { BorderRadius, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { InteractiveContent } from "@/models";
+import { BorderRadius, Margin, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { InteractiveContent } from "@/src/models";
 import {
   calculateAbsorbance,
   calculateBeerLambert,
-} from "@/utils/formulas/absorbance";
-import { calculateV1 } from "@/utils/formulas/dilution";
-import { calculateMass } from "@/utils/formulas/mass";
+} from "@/src/utils/formulas/absorbance";
+import { calculateV1 } from "@/src/utils/formulas/dilution";
+import { calculateMass } from "@/src/utils/formulas/mass";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { FunctionExplorer } from "../interactive/FunctionExplorer";

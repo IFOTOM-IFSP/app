@@ -1,8 +1,7 @@
 import { ThemedInput, ThemedInputProps } from "@/src/components/ui/ThemedInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { FontSize, FontWeight, Margin, Spacing } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { FontSize, FontWeight, Margin, Spacing } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
 

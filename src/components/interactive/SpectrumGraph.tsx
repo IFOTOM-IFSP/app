@@ -1,7 +1,6 @@
 import { ChartContainer } from "@/src/components/interactive/ChartContainer";
-import { BorderRadius, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { BorderRadius, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useWindowDimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 

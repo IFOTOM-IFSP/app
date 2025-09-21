@@ -1,7 +1,7 @@
 import { Camera, CameraView, PermissionStatus } from "expo-camera";
 import * as Crypto from "expo-crypto";
 import { router } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -14,10 +14,10 @@ import {
 } from "react-native";
 
 // Importando todos os stores necessários
-import { DualBeamImages, useAnalysisStore } from "@/store/analysisStore";
-import { useBaselineStore } from "@/store/baselineStore";
-import { useCurveStore } from "@/store/curveStore";
-import { useProfileStore } from "@/store/profileStore";
+import { DualBeamImages, useAnalysisStore } from "@/src/store/analysisStore";
+import { useBaselineStore } from "@/src/store/baselineStore";
+import { useCurveStore } from "@/src/store/curveLibraryStore.ts";
+import { useProfileStore } from "@/src/store/profileLibraryStore.ts";
 
 const CAPTURE_COUNT = 10;
 
@@ -89,12 +89,7 @@ export default function CurveBuilderScreen() {
   const handleCaptureStandard = async () => {
     // Validações para garantir que todos os dados necessários estão presentes
     const camera = cameraRef.current;
-    if (
-      !camera ||
-      !setupData ||
-      !darkSignalImages ||
-      !whiteSignalImages
-    ) {
+    if (!camera || !setupData || !darkSignalImages || !whiteSignalImages) {
       Alert.alert(
         "Erro de Dados",
         "Dados essenciais da análise (setup, linha de base) não foram encontrados."

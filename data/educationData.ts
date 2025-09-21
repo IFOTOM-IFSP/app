@@ -1,4 +1,4 @@
-import { HubItem } from "@/models";
+import { HubItem } from "@/src/models";
 
 
 export const EDUCATION_HUB_ITEMS: HubItem[] = [

@@ -6,8 +6,8 @@ import {
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 

@@ -1,9 +1,9 @@
-import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { FormField } from "@/src/components/form/FormInput";
 import { AuthLayout } from "@/src/components/layouts/AuthLayout";
 import { Button } from "@/src/components/ui/Button";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { useUserStore } from "@/store/userStore";
+import { FontSize, FontWeight, Margin, Padding } from "@/src/constants/Styles";
+import { useUserStore } from "@/src/store/userStore";
 import { useRouter } from "expo-router";
 import { JSX, useState } from "react";
 import {

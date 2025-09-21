@@ -1,8 +1,13 @@
-import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { VideoContent } from "@/models";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { getYouTubeId } from "@/utils/videoUtils";
+import {
+  BorderRadius,
+  FontSize,
+  Margin,
+  Padding,
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { VideoContent } from "@/src/models";
+import { getYouTubeId } from "@/src/utils/videoUtils";
 import { StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
 

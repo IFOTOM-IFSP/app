@@ -6,9 +6,9 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React, { ComponentProps } from "react";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { ComponentProps } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 
 interface InputProps extends ComponentProps<typeof TextInput> {}

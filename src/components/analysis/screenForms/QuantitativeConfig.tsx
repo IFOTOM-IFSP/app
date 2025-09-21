@@ -1,23 +1,26 @@
-import { AnalysisSetupFormData, analysisSetupSchema } from "@/models/analysis";
 import { useAnalysisFlowActions } from "@/src/features/analysis/analysisFlowContext";
-import { useAnalysisStore } from "@/store/analysisStore";
-import { useCurveStore } from "@/store/curveStore";
-import { useProfileStore } from "@/store/profileStore";
+import {
+  AnalysisSetupFormData,
+  analysisSetupSchema,
+} from "@/src/models/analysis";
+import { useAnalysisStore } from "@/src/store/analysisStore";
+import { useCurveStore } from "@/src/store/curveLibraryStore.ts";
+import { useProfileStore } from "@/src/store/profileLibraryStore.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, Text, View } from "react-native";
 
-import { Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import BackButton from "@/src/components/ui/BackButton";
 import { Button } from "@/src/components/ui/Button";
 import { SelectionInput } from "@/src/components/ui/SelectionInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { Margin, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import {
   getShouldShowConfigModal,
   setShouldShowConfigModal,
-} from "@/storage/settingsStorage";
+} from "@/src/storage/settingsStorage";
 import { Feather } from "@expo/vector-icons";
 import { ControlledFormField } from "../../form/ControlledFormField";
 import { ControlledSwitch } from "../../form/ControlledSwitch";

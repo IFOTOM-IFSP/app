@@ -1,17 +1,28 @@
-import React, { useMemo, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
-import { Button } from '@/src/components/ui/Button';
-import { Tag } from '@/src/components/ui/Tag';
-import { useThemeValue } from '@/hooks/useThemeValue';
-import { BorderRadius, Padding, Spacing, FontSize, FontWeight } from '@/constants/Styles';
-import { useVectorsStore } from '@/store/analysisVectors';
-import { useDeviceProfile, type DeviceProfile } from '@/store/deviceProfile';
-import { ApiClient } from '@/services/http';
-import { ENV } from '@/config/env';
-import { meanVector, argMax, polyfitPxToNm } from '@/utils/signal';
+import { ENV } from "@/config/env";
+import { ApiClient } from "@/services/http";
+import { Button } from "@/src/components/ui/Button";
+import { Tag } from "@/src/components/ui/Tag";
+import {
+  BorderRadius,
+  FontSize,
+  FontWeight,
+  Padding,
+  Spacing,
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { useVectorsStore } from "@/src/store/analysisVectors";
+import {
+  useDeviceProfile,
+  type DeviceProfile,
+} from "@/src/store/deviceProfileStore";
+import { argMax, meanVector, polyfitPxToNm } from "@/src/utils/signal";
+import React, { useMemo, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function InstrumentCalibrationWizard() {
-  const [step, setStep] = useState<'intro' | 'green' | 'red' | 'review' | 'save'>('intro');
+  const [step, setStep] = useState<
+    "intro" | "green" | "red" | "review" | "save"
+  >("intro");
   const [greenNm] = useState(532);
   const [redNm] = useState(650);
   const roi = { x: 0, y: 0, width: 1024, height: 10 };
@@ -19,9 +30,9 @@ export default function InstrumentCalibrationWizard() {
   const vectors = useVectorsStore();
   const api = useMemo(() => new ApiClient(ENV.API_BASE_URL), []);
 
-  const cardBackground = useThemeValue('card');
-  const textColor = useThemeValue('text');
-  const secondaryText = useThemeValue('textSecondary');
+  const cardBackground = useThemeValue("card");
+  const textColor = useThemeValue("text");
+  const secondaryText = useThemeValue("textSecondary");
 
   const vGreen = useMemo(() => meanVector(vectors.ref), [vectors.ref]);
   const vRed = useMemo(() => meanVector(vectors.sample), [vectors.sample]);
@@ -39,10 +50,15 @@ export default function InstrumentCalibrationWizard() {
   const onSave = async () => {
     const { fit } = doFit();
     const device_profile: DeviceProfile = {
-      device_hash: 'expo-managed-dev',
-      pixel_to_wavelength: { a0: fit.a0, a1: fit.a1, a2: fit.a2, rmse_nm: fit.rmse },
+      device_hash: "expo-managed-dev",
+      pixel_to_wavelength: {
+        a0: fit.a0,
+        a1: fit.a1,
+        a2: fit.a2,
+        rmse_nm: fit.rmse,
+      },
       roi,
-      camera_meta: { wb: 'locked' },
+      camera_meta: { wb: "locked" },
     };
     await setProfile(device_profile);
     try {
@@ -55,50 +71,61 @@ export default function InstrumentCalibrationWizard() {
     } catch {
       // best effort only
     }
-    setStep('save');
+    setStep("save");
   };
 
   const renderIntro = () => (
     <View style={[styles.card, { backgroundColor: cardBackground }]}>
-      <Text style={[styles.title, { color: textColor }]}>Calibração do equipamento</Text>
+      <Text style={[styles.title, { color: textColor }]}>
+        Calibração do equipamento
+      </Text>
       <Text style={[styles.body, { color: secondaryText }]}>
         Aponte os lasers (~532 e ~650 nm). Capture 10 frames para cada.
       </Text>
-      <Button title="Capturar VERDE" onPress={() => setStep('green')} />
+      <Button title="Capturar VERDE" onPress={() => setStep("green")} />
     </View>
   );
 
   const renderGreen = () => (
     <View style={[styles.card, { backgroundColor: cardBackground }]}>
-      <Text style={[styles.title, { color: textColor }]}>Laser VERDE (~532 nm)</Text>
+      <Text style={[styles.title, { color: textColor }]}>
+        Laser VERDE (~532 nm)
+      </Text>
       <Text style={[styles.body, { color: secondaryText }]}>
         Use sua tela de captura para gravar um burst (vetores em ref).
       </Text>
-      <Button title="Próximo: VERMELHO" onPress={() => setStep('red')} />
+      <Button title="Próximo: VERMELHO" onPress={() => setStep("red")} />
     </View>
   );
 
   const renderRed = () => (
     <View style={[styles.card, { backgroundColor: cardBackground }]}>
-      <Text style={[styles.title, { color: textColor }]}>Laser VERMELHO (~650 nm)</Text>
+      <Text style={[styles.title, { color: textColor }]}>
+        Laser VERMELHO (~650 nm)
+      </Text>
       <Text style={[styles.body, { color: secondaryText }]}>
         Grave um burst (vetores em sample) e avance.
       </Text>
-      <Button title="Revisar & Ajustar" onPress={() => setStep('review')} />
+      <Button title="Revisar & Ajustar" onPress={() => setStep("review")} />
     </View>
   );
 
   const renderReview = () => {
     const { pxG, pxR, fit } = doFit();
-    const rmseTagVariant: 'success' | 'warning' = fit.rmse < 2 ? 'success' : 'warning';
+    const rmseTagVariant: "success" | "warning" =
+      fit.rmse < 2 ? "success" : "warning";
     return (
       <View style={[styles.card, { backgroundColor: cardBackground }]}>
-        <Text style={[styles.title, { color: textColor }]}>Revisão & Ajuste</Text>
+        <Text style={[styles.title, { color: textColor }]}>
+          Revisão & Ajuste
+        </Text>
         <View style={styles.chipsContainer}>
           <Tag text={`px(G)=${pxG}`} variant="primary" size="sm" />
           <Tag text={`px(R)=${pxR}`} variant="primary" size="sm" />
           <Tag
-            text={`a0=${fit.a0.toFixed(2)} a1=${fit.a1.toFixed(4)}${fit.a2 ? ` a2=${fit.a2.toExponential(2)}` : ''}`}
+            text={`a0=${fit.a0.toFixed(2)} a1=${fit.a1.toFixed(4)}${
+              fit.a2 ? ` a2=${fit.a2.toExponential(2)}` : ""
+            }`}
             variant="primary"
             size="sm"
           />
@@ -119,21 +146,19 @@ export default function InstrumentCalibrationWizard() {
       <Text style={[styles.body, { color: secondaryText }]}>
         Perfil salvo localmente. Pronto para usar nas análises.
       </Text>
-      <Button title="Refazer" onPress={() => setStep('intro')} />
+      <Button title="Refazer" onPress={() => setStep("intro")} />
     </View>
   );
 
   let content: React.ReactNode;
-  if (step === 'intro') content = renderIntro();
-  else if (step === 'green') content = renderGreen();
-  else if (step === 'red') content = renderRed();
-  else if (step === 'review') content = renderReview();
+  if (step === "intro") content = renderIntro();
+  else if (step === "green") content = renderGreen();
+  else if (step === "red") content = renderRed();
+  else if (step === "review") content = renderReview();
   else content = renderSave();
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {content}
-    </ScrollView>
+    <ScrollView contentContainerStyle={styles.container}>{content}</ScrollView>
   );
 }
 
@@ -141,13 +166,13 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: Padding.lg,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   card: {
     borderRadius: BorderRadius.lg,
     padding: Padding.lg,
     gap: Spacing.md,
-    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowColor: "rgba(0,0,0,0.2)",
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 2,
@@ -160,8 +185,8 @@ const styles = StyleSheet.create({
     fontSize: FontSize.md,
   },
   chipsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: "row",
+    flexWrap: "wrap",
     gap: Spacing.sm,
   },
 });

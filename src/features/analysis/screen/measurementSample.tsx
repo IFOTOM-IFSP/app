@@ -1,5 +1,5 @@
 import { Camera, CameraView, PermissionStatus } from "expo-camera";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -10,11 +10,11 @@ import {
 } from "react-native";
 
 // Importando todos os stores necessários
-import { CalibrationCurve } from "@/models/CalibrationCurve";
 import captureDualBeamImage from "@/src/components/captureDualBeamImage";
-import { useAnalysisStore } from "@/store/analysisStore";
-import { useBaselineStore } from "@/store/baselineStore";
-import { useProfileStore } from "@/store/profileStore";
+import { CalibrationCurve } from "@/src/models/CalibrationCurve";
+import { useAnalysisStore } from "@/src/store/analysisStore";
+import { useBaselineStore } from "@/src/store/baselineStore";
+import { useProfileStore } from "@/src/store/profileLibraryStore.ts";
 
 export default function MeasurementSampleScreen() {
   const [permission, setPermission] = useState<PermissionStatus | null>(null);
@@ -57,12 +57,7 @@ export default function MeasurementSampleScreen() {
   const handleAnalyze = async () => {
     // --- 1. Validação e Coleta de Dados ---
     const camera = cameraRef.current;
-    if (
-      !camera ||
-      !setupData ||
-      !darkSignalImages ||
-      !whiteSignalImages
-    ) {
+    if (!camera || !setupData || !darkSignalImages || !whiteSignalImages) {
       Alert.alert(
         "Erro de Dados",
         "Dados essenciais (setup, linha de base) não foram encontrados."

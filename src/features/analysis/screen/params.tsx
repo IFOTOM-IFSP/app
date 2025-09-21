@@ -1,10 +1,10 @@
 // app/analysis/params.tsx
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { Button } from "@/src/components/ui/Button";
 import { ThemedInput } from "@/src/components/ui/ThemedInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { useSettingsStore } from "@/store/settingsStore"; // <<< novo
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { useSettingsStore } from "@/src/store/settingsStore"; // <<< novo
 import { useMemo, useState } from "react";
 import { StyleSheet, Switch, View } from "react-native";
 import { useAnalysisMachine } from "../AnalysisMachineProvider";

@@ -1,9 +1,13 @@
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { ImageContent } from "@/models";
+import {
+  BorderRadius,
+  FontSize,
+  Margin,
+  Padding,
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { ImageContent } from "@/src/models";
 import { Image } from "expo-image";
-import React from "react";
 import { StyleSheet, View } from "react-native";
 
 export function ImageBlock({ block }: { block: ImageContent }) {

@@ -1,4 +1,4 @@
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import {
   FontAwesome5,
   Ionicons,
@@ -7,7 +7,6 @@ import {
   SimpleLineIcons,
 } from "@expo/vector-icons";
 import { Feather } from "lucide-react-native";
-import React from "react";
 
 export type IconLibrary =
   | "Octicons"

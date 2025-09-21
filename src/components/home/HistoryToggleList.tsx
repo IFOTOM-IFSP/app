@@ -1,11 +1,11 @@
-import { FontSize, FontWeight, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { SwitchRow } from "@/src/components/ui/SwitchRow";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { FontSize, FontWeight, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 
-import { Note } from "@/storage/notesStorage";
+import { Note } from "@/src/storage/notesStorage";
 import { useRouter } from "expo-router";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Animated, StyleSheet, View } from "react-native";
 
 interface HistoryToggleListProps {

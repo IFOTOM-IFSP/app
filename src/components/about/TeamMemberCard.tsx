@@ -6,12 +6,11 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { TeamMember } from "@/models";
-import { openURL } from "@/utils/linkingUtils";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { TeamMember } from "@/src/models";
+import { openURL } from "@/src/utils/linkingUtils";
 import { AntDesign } from "@expo/vector-icons";
-import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface TeamMemberCardProps {

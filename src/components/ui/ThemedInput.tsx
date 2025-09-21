@@ -1,6 +1,5 @@
-import { BorderRadius, FontSize, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { BorderRadius, FontSize, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import {
   StyleProp,
   StyleSheet,

@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { Alert } from "react-native";
 import { create } from "zustand";
 
-import { useBaselineStore } from "@/store/baselineStore";
+import { useBaselineStore } from "@/src/store/baselineStore";
 
 type AnalysisStep =
   | "idle"

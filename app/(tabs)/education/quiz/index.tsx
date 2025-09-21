@@ -1,16 +1,16 @@
+import { quizData } from "@/data/index";
 import FilterTabs from "@/src/components/common/FilterTabs";
 import SearchComponent from "@/src/components/common/SearchComponent";
 import ThemedFlatList from "@/src/components/common/ThemedFlatList";
 import TitleSection from "@/src/components/common/TitleSection";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { QuizListItem } from "@/src/components/quiz/QuizListItem";
-import { Margin } from "@/constants/Styles";
-import { quizData } from "@/data/index";
-import { useQuizResults } from "@/hooks/useQuizResults";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { moduleTitles } from "@/utils/module-helpers";
+import { Margin } from "@/src/constants/Styles";
+import { useQuizResults } from "@/src/hooks/useQuizResults";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { moduleTitles } from "@/src/utils/module-helpers";
 import { useFocusEffect } from "expo-router";
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 export default function QuizListScreen() {

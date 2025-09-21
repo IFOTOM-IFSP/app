@@ -1,7 +1,6 @@
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { BorderRadius, FontSize, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { BorderRadius, FontSize, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Icon } from "./icon/Icon";
 
@@ -13,7 +12,7 @@ interface Option<T> {
 interface SelectionInputProps<T> {
   label: string;
   options: Option<T>[];
-  selectedValue: T | undefined; 
+  selectedValue: T | undefined;
   onSelect: (value: T) => void;
   placeholder?: string;
 }

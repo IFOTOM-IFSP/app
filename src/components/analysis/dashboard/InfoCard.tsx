@@ -1,7 +1,6 @@
 import { InfoCardData } from "@/data/analysisData";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { router } from "expo-router";
-import React from "react";
 import {
   Dimensions,
   Image,

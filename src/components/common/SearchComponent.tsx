@@ -1,6 +1,11 @@
 import { ThemedInput } from "@/src/components/ui/ThemedInput";
-import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import {
+  BorderRadius,
+  FontSize,
+  Margin,
+  Padding,
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import {

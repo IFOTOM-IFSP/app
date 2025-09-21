@@ -6,9 +6,8 @@ import {
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { StyleSheet, View } from "react-native";
 
 type ChartData = {

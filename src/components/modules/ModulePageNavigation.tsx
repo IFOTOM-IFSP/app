@@ -1,7 +1,7 @@
-import { Padding, Spacing } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { ModulePage } from "@/models";
 import { Button } from "@/src/components/ui/Button";
+import { Padding, Spacing } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { ModulePage } from "@/src/models";
 import { AntDesign } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
 import { Platform, StyleSheet, View } from "react-native";

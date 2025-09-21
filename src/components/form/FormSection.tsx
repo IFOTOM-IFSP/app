@@ -5,8 +5,8 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import React from "react";
 import { StyleSheet, View, ViewProps } from "react-native";
 import { ThemedText } from "../ui/ThemedText";

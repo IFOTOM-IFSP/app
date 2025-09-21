@@ -1,8 +1,7 @@
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { FontSize, FontWeight, Margin } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { FontSize, FontWeight, Margin } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface HomeHeaderProps {

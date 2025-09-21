@@ -1,4 +1,4 @@
-import { Module } from "@/models";
+import { Module } from "@/src/models";
 
 export const seventhModule: Module = {
   id: "7",

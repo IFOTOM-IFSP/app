@@ -1,12 +1,12 @@
+import { glossaryData } from "@/data/glossaryData";
 import FilterTabs from "@/src/components/common/FilterTabs";
 import SearchComponent from "@/src/components/common/SearchComponent";
 import ThemedFlatList from "@/src/components/common/ThemedFlatList";
 import TitleSection from "@/src/components/common/TitleSection";
-import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { GlossaryListItem } from "@/src/components/glossary/GlossaryListItem";
-import { Padding } from "@/constants/Styles";
-import { glossaryData } from "@/data/glossaryData";
-import React, { useMemo, useState } from "react";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { Padding } from "@/src/constants/Styles";
+import { useMemo, useState } from "react";
 import { LayoutAnimation, Platform, UIManager } from "react-native";
 
 if (

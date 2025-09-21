@@ -1,8 +1,7 @@
 import BackButton from "@/src/components/ui/BackButton";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { FontSize, FontWeight, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { FontSize, FontWeight, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { StyleProp, StyleSheet, TextStyle, View } from "react-native";
 
 interface TitleSectionProps {

@@ -2,8 +2,8 @@ import { InteractiveCard } from "@/src/components/common/InteractiveCard";
 import { Icon } from "@/src/components/ui/icon/Icon";
 import { IconContainer } from "@/src/components/ui/icon/IconContainer";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { FontSize, FontWeight, Margin, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
 import {

@@ -5,15 +5,13 @@ import {
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
+} from "@/src/constants/Styles";
 
-
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { Quiz } from "@/src/models";
 import { Feather } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Quiz } from "@/models";
 
 interface QuizListItemProps {
   item: Quiz;

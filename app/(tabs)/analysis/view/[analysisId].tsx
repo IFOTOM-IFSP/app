@@ -1,7 +1,7 @@
 import ResultsDisplay from "@/src/components/ResultsDisplay";
-import { useHistoryStore } from "@/store/historyStore";
+import { useHistoryStore } from "@/src/store/historyStore";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 
 export default function HistoryDetailScreen() {

@@ -1,7 +1,7 @@
-import { FontSize, FontWeight, Padding } from "@/constants/Styles";
+import { FontSize, FontWeight, Padding } from "@/src/constants/Styles";
 
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 import React, { JSX } from "react";
 import { Platform, StyleSheet, View } from "react-native";

@@ -5,8 +5,8 @@ import {
   FontSize,
   Margin,
   Padding,
-} from "../../../constants/Styles";
-import { useThemeValue } from "../../../hooks/useThemeValue";
+} from "../../constants/Styles";
+import { useThemeValue } from "../../hooks/useThemeValue";
 import { ThemedText } from "../ui/ThemedText";
 
 interface Option<T> {

@@ -1,4 +1,4 @@
-import { TeamMember } from "@/models";
+import { TeamMember } from "@/src/models";
 
 
 export const PROJECT_DATA = {

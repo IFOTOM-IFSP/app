@@ -1,4 +1,4 @@
-import { InfoCardData, TypesAnalysisData } from "@/models/analysis";
+import { InfoCardData, TypesAnalysisData } from "@/src/models/analysis";
 
 export const INFO_CARD_DATA: InfoCardData[] = [
   {

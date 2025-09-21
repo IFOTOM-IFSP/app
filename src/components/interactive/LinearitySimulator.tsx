@@ -8,10 +8,10 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { Point, useLinearRegression } from "@/hooks/useLinearRegression";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React, { useState } from "react";
+} from "@/src/constants/Styles";
+import { Point, useLinearRegression } from "@/src/hooks/useLinearRegression";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { useState } from "react";
 import { StyleSheet, View, useWindowDimensions } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 

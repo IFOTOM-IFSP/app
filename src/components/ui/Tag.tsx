@@ -1,5 +1,5 @@
-import { BorderRadius, FontSize, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { BorderRadius, FontSize, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { StyleSheet, TextStyle, View, ViewStyle } from "react-native";
 import { Icon, IconLibrary } from "./icon/Icon";
 import { ThemedText } from "./ThemedText";

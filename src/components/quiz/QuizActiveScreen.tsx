@@ -1,16 +1,16 @@
+import BackButton from "@/src/components/ui/BackButton";
+import { QuizOption } from "@/src/components/ui/QuizOption";
+import { ThemedText } from "@/src/components/ui/ThemedText";
+import { ThemedView } from "@/src/components/ui/ThemedView";
 import {
   BorderRadius,
   FontSize,
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { Question, Quiz } from "@/models";
-import BackButton from "@/src/components/ui/BackButton";
-import { QuizOption } from "@/src/components/ui/QuizOption";
-import { ThemedText } from "@/src/components/ui/ThemedText";
-import { ThemedView } from "@/src/components/ui/ThemedView";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { Question, Quiz } from "@/src/models";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Button } from "../ui/Button";

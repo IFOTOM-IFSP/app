@@ -1,8 +1,8 @@
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Image, StyleSheet, View } from "react-native";
 
 export default function NotFoundScreen() {

@@ -1,7 +1,6 @@
-import { FontSize, Padding, Spacing } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { FontSize, Padding, Spacing } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { CheckCircle, Circle, Trash2 } from "lucide-react-native";
-import React from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
 
 export interface ChecklistItem {

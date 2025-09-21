@@ -1,17 +1,17 @@
 import { useRouter } from "expo-router";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
-import { Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { HomeHeader } from "@/src/components/home/HomeHeader";
 import { StartAnalysisCard } from "@/src/components/home/StartAnalysisCard";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 
 import {
   UsefulSections,
   UsefulSectionsProps,
 } from "@/src/components/common/UsefulSections";
-import { useUserStore } from "@/store/userStore";
+import { useUserStore } from "@/src/store/userStore";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type AppRouter = ReturnType<typeof useRouter>;

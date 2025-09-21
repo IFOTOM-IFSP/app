@@ -1,18 +1,18 @@
-import { Margin, Padding, Spacing } from "@/constants/Styles";
+import { Margin, Padding, Spacing } from "@/src/constants/Styles";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { useNotesActions, useNotesStore } from "@/store/notesStore";
+import { useNotesActions, useNotesStore } from "@/src/store/notesStore";
 
-import { useThemeValue } from "@/hooks/useThemeValue";
 import ThemedFlatList from "@/src/components/common/ThemedFlatList";
 import TitleSection from "@/src/components/common/TitleSection";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { CreateNoteFAB } from "@/src/components/notes/CreateNoteFAB";
 import { NoteListItem } from "@/src/components/notes/NoteListItem"; // <- Importamos o novo item da lista
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { Note } from "@/storage/notesStorage";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { Note } from "@/src/storage/notesStorage";
 import { NotebookPen } from "lucide-react-native";
 
 // Novo componente para quando a lista está vazia

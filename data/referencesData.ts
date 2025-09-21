@@ -1,4 +1,4 @@
-import { Reference } from "@/models";
+import { Reference } from "@/src/models";
 
 export const referencesData: Reference[] = [
   {

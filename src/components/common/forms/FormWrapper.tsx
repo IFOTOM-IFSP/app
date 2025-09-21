@@ -1,6 +1,6 @@
 import { Button } from "@/src/components/ui/Button";
-import { Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import React from "react";
 import {
   KeyboardAvoidingView,

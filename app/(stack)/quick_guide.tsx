@@ -1,8 +1,13 @@
-import { BorderRadius, FontSize, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import TitleSection from "@/src/components/common/TitleSection";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import {
+  BorderRadius,
+  FontSize,
+  Margin,
+  Padding,
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Image } from "expo-image";
 import {
   ChevronDown,

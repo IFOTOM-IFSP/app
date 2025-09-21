@@ -1,8 +1,7 @@
-import { FontWeight, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { FontWeight, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { router } from "expo-router";
-import React from "react";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function CardMain() {

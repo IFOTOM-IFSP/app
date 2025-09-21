@@ -1,7 +1,12 @@
-import { getModuleById } from "@/utils/module-helpers";
+import { getModuleById } from "@/src/utils/module-helpers";
 import { Link, useLocalSearchParams } from "expo-router";
 import { ScrollView, StyleSheet, View } from "react-native";
 
+import TitleSection from "@/src/components/common/TitleSection";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { PageListItem } from "@/src/components/modules/PageListItem";
+import { Button } from "@/src/components/ui/Button";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -9,12 +14,7 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import TitleSection from "@/src/components/common/TitleSection";
-import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
-import { PageListItem } from "@/src/components/modules/PageListItem";
-import { Button } from "@/src/components/ui/Button";
-import { ThemedText } from "@/src/components/ui/ThemedText";
+} from "@/src/constants/Styles";
 
 export default function ModuleDetailScreen() {
   const { moduleId } = useLocalSearchParams<{ moduleId: string }>();

@@ -1,4 +1,4 @@
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Octicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React from "react";

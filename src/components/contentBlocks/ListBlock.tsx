@@ -1,9 +1,8 @@
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { FontSize, Margin, Padding, Spacing } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { ListContent } from "@/models";
-import { FormattedText } from "@/utils/text-formatting";
-import React from "react";
+import { FontSize, Margin, Padding, Spacing } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { ListContent } from "@/src/models";
+import { FormattedText } from "@/src/utils/text-formatting";
 import { StyleSheet, View } from "react-native";
 
 interface ListBlockProps {

@@ -1,7 +1,6 @@
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { CustomTabBar } from "@/src/components/layouts/CustomTabBar";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Tabs } from "expo-router";
-import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 

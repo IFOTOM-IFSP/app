@@ -6,9 +6,9 @@ import {
   FontWeight,
   Margin,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { getContrastColor } from "@/utils/colorUtils";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { getContrastColor } from "@/src/utils/colorUtils";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 

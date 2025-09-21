@@ -5,13 +5,11 @@ import {
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { ARTICLE_DATA } from "@/data/articleData";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { Article } from "@/models";
-import { openURL } from "@/utils/linkingUtils";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { Article } from "@/src/models";
+import { openURL } from "@/src/utils/linkingUtils";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface ArticleListItemProps {

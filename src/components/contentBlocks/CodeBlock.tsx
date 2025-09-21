@@ -6,10 +6,9 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { CodeContent } from "@/models";
-import React from "react";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { CodeContent } from "@/src/models";
 import { Platform, ScrollView, StyleSheet, View } from "react-native";
 
 export function CodeBlock({ block }: { block: CodeContent }) {

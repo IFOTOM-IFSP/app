@@ -5,11 +5,10 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { TextContent } from "@/models"; // Verifique se o caminho para seus tipos está correto
-import { FormattedText } from "@/utils/text-formatting";
-import React from "react";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { TextContent } from "@/src/models"; // Verifique se o caminho para seus tipos está correto
+import { FormattedText } from "@/src/utils/text-formatting";
 import { StyleSheet, View } from "react-native";
 
 interface TextBlockProps {

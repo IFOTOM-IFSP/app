@@ -1,9 +1,8 @@
 import { IconButton } from "@/src/components/ui/icon/IconButton";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { FontWeight, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { FontWeight, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { StyleSheet, Text, View } from "react-native";
 
 interface AnalysisHeaderProps {
   handleMenuPress: () => void;

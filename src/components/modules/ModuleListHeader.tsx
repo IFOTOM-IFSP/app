@@ -1,8 +1,7 @@
 import TitleSection from "@/src/components/common/TitleSection";
 import { ThemedView } from "@/src/components/ui/ThemedView";
-import { Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Platform, StyleSheet } from "react-native";
 
 interface ModuleListHeaderProps {

@@ -1,3 +1,6 @@
+import { Icon } from "@/src/components/ui/icon/Icon";
+import { IconContainer } from "@/src/components/ui/icon/IconContainer";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -5,11 +8,8 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { Icon } from "@/src/components/ui/icon/Icon";
-import { IconContainer } from "@/src/components/ui/icon/IconContainer";
-import { ThemedText } from "@/src/components/ui/ThemedText";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Link } from "expo-router";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 

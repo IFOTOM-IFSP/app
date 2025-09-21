@@ -1,3 +1,4 @@
+import { HubItem as HubItemType } from "@/data/educationData";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
@@ -5,11 +6,9 @@ import {
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { HubItem as HubItemType } from "@/data/educationData";
-import { useThemeValue } from "@/hooks/useThemeValue";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 interface HubListItemProps {

@@ -6,8 +6,8 @@ import {
   FontWeight,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import {
   ArticleReference,
   BookReference,
@@ -15,7 +15,7 @@ import {
   OnlineMediaReference as GenericOnlineReference,
   Reference,
   WebsiteReference,
-} from "@/models";
+} from "@/src/models";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { Linking, StyleSheet, TouchableOpacity, View } from "react-native";

@@ -1,9 +1,9 @@
 import ContentCard, {
   CONTENT_CARD_HEIGHT,
 } from "@/src/components/common/ContentCard";
-import { Module } from "@/models";
+import { Module } from "@/src/models";
 import { Link } from "expo-router";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Animated, useWindowDimensions } from "react-native";
 
 interface AnimatedListItemProps {

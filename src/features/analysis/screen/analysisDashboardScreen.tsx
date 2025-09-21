@@ -57,11 +57,11 @@
 
 // app/analysis/start.tsx
 import { TYPES_ANALYSIS_DATA } from "@/data/analysisData";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import BackButton from "@/src/components/ui/BackButton";
 import { InfoModal } from "@/src/components/ui/InfoModal";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";

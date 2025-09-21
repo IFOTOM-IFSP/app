@@ -1,5 +1,4 @@
 import { useRouter } from "expo-router";
-import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { EducationHeroCard } from "@/src/components/education/EducationHeroCard";
@@ -7,8 +6,8 @@ import { HubListItem } from "@/src/components/education/HubListItem";
 import { EducationLayout } from "@/src/components/layouts/EducationLayout";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 
-import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
 import { EDUCATION_HUB_ITEMS } from "@/data/educationData";
+import { FontSize, FontWeight, Margin, Padding } from "@/src/constants/Styles";
 
 export default function EducationHubScreen() {
   const router = useRouter();

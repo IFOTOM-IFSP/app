@@ -5,8 +5,8 @@ import {
   LayoutSize,
   Margin,
   Padding,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather } from "@expo/vector-icons";
 import React from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";

@@ -1,6 +1,5 @@
 import { Icon } from "@/src/components/ui/icon/Icon";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ButtonFooter() {

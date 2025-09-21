@@ -6,10 +6,10 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { FormattedText } from "@/utils/text-formatting";
-import React, { useState } from "react";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { FormattedText } from "@/src/utils/text-formatting";
+import { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 type Item = { label: string; content: string };

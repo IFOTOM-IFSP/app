@@ -1,6 +1,5 @@
-import { FontSize, FontWeight, Margin } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { FontSize, FontWeight, Margin } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import {
   ScrollView,
   StyleProp,

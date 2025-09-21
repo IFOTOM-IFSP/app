@@ -4,7 +4,7 @@ import { QuizResultsScreen } from "@/src/components/quiz/QuizResultsScreen";
 import BackButton from "@/src/components/ui/BackButton";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { ThemedView } from "@/src/components/ui/ThemedView";
-import { useQuizActions } from "@/store/quizStore";
+import { useQuizActions } from "@/src/store/quizStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet } from "react-native";

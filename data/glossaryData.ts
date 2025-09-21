@@ -1,4 +1,4 @@
-import { GlossaryItem } from "@/models";
+import { GlossaryItem } from "@/src/models";
 
 
 export const glossaryData: GlossaryItem[] = [

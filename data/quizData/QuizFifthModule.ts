@@ -1,4 +1,4 @@
-import { Quiz } from "@/models";
+import { Quiz } from "@/src/models";
 
 export const quizFifthModule: Quiz[] = [{
     id: "501",

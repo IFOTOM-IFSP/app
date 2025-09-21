@@ -1,4 +1,4 @@
-import { DualBeamImages } from "@/store/analysisStore";
+import { DualBeamImages } from "@/src/store/analysisStore";
 import { CameraView } from "expo-camera";
 
 export default async function captureDualBeamImage(

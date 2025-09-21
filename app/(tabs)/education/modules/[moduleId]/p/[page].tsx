@@ -1,16 +1,16 @@
-import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import { ErrorState } from "@/src/components/common/ErrorState";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ContentBlockRenderer } from "@/src/components/modules/ContentBlockRenderer";
 import { ModulePageNavigation } from "@/src/components/modules/ModulePageNavigation";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { FontSize, FontWeight, Margin, Padding } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import {
   getModuleById,
   getModulePageById,
   getNextPage,
   getPreviousPage,
-} from "@/utils/module-helpers";
+} from "@/src/utils/module-helpers";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";

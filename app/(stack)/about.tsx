@@ -1,6 +1,5 @@
 import { PROJECT_DATA, TEAM_MEMBERS } from "@/data/aboutScreenData";
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
 import { Image, ScrollView, StyleSheet, View } from "react-native";
 
 import { ObjectiveItem } from "@/src/components/about/ObjectiveItem";
@@ -8,6 +7,9 @@ import { TeamMemberCard } from "@/src/components/about/TeamMemberCard";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { ThemedView } from "@/src/components/ui/ThemedView";
 
+import TitleSection from "@/src/components/common/TitleSection";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { Button } from "@/src/components/ui/Button";
 import {
   BorderRadius,
   FontSize,
@@ -15,12 +17,9 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import TitleSection from "@/src/components/common/TitleSection";
-import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
-import { Button } from "@/src/components/ui/Button";
-import { openURL } from "@/utils/linkingUtils";
+} from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
+import { openURL } from "@/src/utils/linkingUtils";
 
 export default function AboutScreen() {
   const primaryColor = useThemeValue("primary");

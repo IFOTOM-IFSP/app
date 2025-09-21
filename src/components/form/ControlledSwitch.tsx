@@ -1,5 +1,5 @@
-import { Spacing } from "@/constants/Styles";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { Spacing } from "@/src/constants/Styles";
 import React from "react";
 import {
   useController,

@@ -1,5 +1,4 @@
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { type TextProps, Text } from "react-native";
 
 export type ThemedTextProps = TextProps & {

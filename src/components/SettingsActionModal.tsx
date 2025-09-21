@@ -1,5 +1,4 @@
-import { FontSize, FontWeight } from "@/constants/Styles";
-import React from "react";
+import { FontSize, FontWeight } from "@/src/constants/Styles";
 import { StyleSheet, View } from "react-native";
 import {
   Button,

@@ -1,7 +1,7 @@
 import TitleSection from "@/src/components/common/TitleSection";
-import { UsefulSections } from "@/src/components/common/UsefulSections"; 
+import { UsefulSections } from "@/src/components/common/UsefulSections";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
-import { openURL } from "@/utils/linkingUtils";
+import { openURL } from "@/src/utils/linkingUtils";
 import {
   AntDesign,
   FontAwesome5,
@@ -10,7 +10,6 @@ import {
   SimpleLineIcons,
 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import React from "react";
 import { StyleSheet } from "react-native";
 
 type OptionRouter = ReturnType<typeof useRouter>;

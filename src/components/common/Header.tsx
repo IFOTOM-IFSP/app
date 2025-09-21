@@ -17,8 +17,8 @@ import {
   LinearGradient as SvgGradient,
 } from "react-native-svg";
 
-import { FontSize, FontWeight } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
+import { FontSize, FontWeight } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 
 export const HEADER_HEIGHT = 220;
 

@@ -1,9 +1,8 @@
 import { IconLibrary } from "@/src/components/ui/icon/Icon";
 import { IconButton } from "@/src/components/ui/icon/IconButton";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { FontSize, FontWeight, Margin, Spacing } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
+import { FontSize, FontWeight, Margin, Spacing } from "@/src/constants/Styles";
+import { useThemeValue } from "@/src/hooks/useThemeValue";
 import {
   StyleProp,
   StyleSheet,

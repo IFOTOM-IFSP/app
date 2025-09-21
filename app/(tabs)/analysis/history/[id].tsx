@@ -3,7 +3,7 @@ import CalibrationChart from "@/src/components/charts/CalibrationChart";
 import SpectrumPlot from "@/src/components/charts/SpectrumPlot";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { useAnalysisHistory } from "@/store/analysisHistoryStore";
+import { useAnalysisHistory } from "@/src/store/analysisHistoryStore";
 import { useLocalSearchParams } from "expo-router";
 
 export default function HistoryDetail() {
