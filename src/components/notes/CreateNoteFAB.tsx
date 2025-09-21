@@ -8,11 +8,17 @@ import {
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-// import { getAnalysisHistory, SavedAnalysis } from "@/storage/analysisStorage";
 import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
-import { FlaskConical, ListChecks, Notebook, Plus } from "lucide-react-native";
-import React, { useState } from "react";
+import {
+  FlaskConical,
+  ListChecks,
+  Notebook,
+  Plus,
+  X,
+} from "lucide-react-native";
+import { AnimatePresence, MotiView } from "moti";
+import { useState } from "react";
 import {
   Modal,
   Pressable,
@@ -22,113 +28,86 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const ModalBackdrop = ({ onClose }: { onClose: () => void }) => (
-  <Pressable onPress={onClose} style={StyleSheet.absoluteFill}>
-    <BlurView intensity={90} tint="dark" style={StyleSheet.absoluteFill} />
-  </Pressable>
-);
+const templates = [
+  {
+    key: "quick",
+    title: "Nota Rápida",
+    subtitle: "Apenas texto, sem formatação.",
+    icon: Notebook,
+  },
+  {
+    key: "task",
+    title: "Lista de Tarefas",
+    subtitle: "Organize seus afazeres.",
+    icon: ListChecks,
+  },
+  {
+    key: "analysis",
+    title: "Anotação de Análise",
+    subtitle: "Vincule a um experimento.",
+    icon: FlaskConical,
+  },
+];
 
 const TemplateMenuModal = ({ isVisible, onClose, onSelect }: any) => {
   const cardColor = useThemeValue("card");
   const textColor = useThemeValue("text");
-
-  const templates = [
-    {
-      key: "quick",
-      title: "Nota Rápida",
-      icon: <Notebook size={24} color={textColor} />,
-    },
-    {
-      key: "analysis",
-      title: "Anotação de Análise",
-      icon: <FlaskConical size={24} color={textColor} />,
-    },
-    {
-      key: "task",
-      title: "Lista de Tarefas",
-      icon: <ListChecks size={24} color={textColor} />,
-    },
-  ];
+  const textSecondary = useThemeValue("textSecondary");
+  const primaryColor = useThemeValue("primary");
 
   return (
     <Modal visible={isVisible} transparent={true} animationType="fade">
-      <ModalBackdrop onClose={onClose} />
-      <View style={styles.modalContainer}>
-        <View style={[styles.modalContent, { backgroundColor: cardColor }]}>
-          <ThemedText style={styles.modalTitle}>Criar Nova Nota</ThemedText>
-          {templates.map((template) => (
-            <TouchableOpacity
-              key={template.key}
-              style={styles.templateButton}
-              onPress={() => onSelect(template.key)}>
-              {template.icon}
-              <ThemedText style={styles.templateTitle}>
-                {template.title}
+      <Pressable onPress={onClose} style={StyleSheet.absoluteFill}>
+        <BlurView intensity={30} tint="dark" style={StyleSheet.absoluteFill} />
+      </Pressable>
+
+      <View style={styles.modalContainer} pointerEvents="box-none">
+        <AnimatePresence>
+          {isVisible && (
+            <MotiView
+              from={{ opacity: 0, translateY: 50 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              exit={{ opacity: 0, translateY: 50 }}
+              style={[styles.modalContent, { backgroundColor: cardColor }]}>
+              <ThemedText style={styles.modalTitle}>
+                Criar Nova Anotação
               </ThemedText>
-            </TouchableOpacity>
-          ))}
-        </View>
+              {templates.map((template) => {
+                const Icon = template.icon;
+                return (
+                  <TouchableOpacity
+                    key={template.key}
+                    style={styles.templateButton}
+                    onPress={() => onSelect(template.key)}>
+                    <View
+                      style={[
+                        styles.iconWrapper,
+                        { backgroundColor: primaryColor + "20" }, // Fundo com transparência
+                      ]}>
+                      <Icon size={24} color={primaryColor} />
+                    </View>
+                    <View>
+                      <ThemedText style={styles.templateTitle}>
+                        {template.title}
+                      </ThemedText>
+                      <ThemedText
+                        style={[
+                          styles.templateSubtitle,
+                          { color: textSecondary },
+                        ]}>
+                        {template.subtitle}
+                      </ThemedText>
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
+            </MotiView>
+          )}
+        </AnimatePresence>
       </View>
     </Modal>
   );
 };
-
-// const AnalysisSelectorModal = ({ isVisible, onClose, onSelect }: any) => {
-//   const [analyses, setAnalyses] = useState<SavedAnalysis[]>([]);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const cardColor = useThemeValue("card");
-//   const textColor = useThemeValue("text");
-
-//   useEffect(() => {
-//     if (isVisible) {
-//       setIsLoading(true);
-//       getAnalysisHistory()
-//         .then(setAnalyses)
-//         .catch(console.error)
-//         .finally(() => setIsLoading(false));
-//     }
-//   }, [isVisible]);
-
-//   return (
-//     <Modal visible={isVisible} transparent={true} animationType="fade">
-//       <ModalBackdrop onClose={onClose} />
-//       <View style={styles.modalContainer}>
-//         <View
-//           style={[
-//             styles.modalContent,
-//             { backgroundColor: cardColor, maxHeight: "70%" },
-//           ]}>
-//           <ThemedText style={styles.modalTitle}>
-//             Associar a uma Análise
-//           </ThemedText>
-//           {isLoading ? (
-//             <ActivityIndicator />
-//           ) : (
-//             <FlatList
-//               data={analyses}
-//               keyExtractor={(item) => item.id.toString()}
-//               renderItem={({ item }) => (
-//                 <TouchableOpacity
-//                   style={styles.templateButton}
-//                   onPress={() => onSelect(item)}>
-//                   <FlaskConical size={24} color={textColor} />
-//                   <ThemedText style={styles.templateTitle}>
-//                     {item.analysisSetup.analysisName || `Análise #${item.id}`}
-//                   </ThemedText>
-//                 </TouchableOpacity>
-//               )}
-//               ListEmptyComponent={
-//                 <ThemedText style={{ textAlign: "center" }}>
-//                   Nenhuma análise encontrada.
-//                 </ThemedText>
-//               }
-//             />
-//           )}
-//         </View>
-//       </View>
-//     </Modal>
-//   );
-// };
 
 export function CreateNoteFAB() {
   const router = useRouter();
@@ -136,26 +115,19 @@ export function CreateNoteFAB() {
   const primaryColor = useThemeValue("primary");
 
   const [isTemplateMenuVisible, setTemplateMenuVisible] = useState(false);
-  const [isAnalysisSelectorVisible, setAnalysisSelectorVisible] =
-    useState(false);
 
   const handleSelectTemplate = (template: string) => {
     setTemplateMenuVisible(false);
-    if (template === "analysis") {
-      setTimeout(() => setAnalysisSelectorVisible(true), 150);
-    } else {
-      router.push(`/notes/new?template=${template}`);
-    }
+    // Adiciona um pequeno delay para a animação do modal concluir
+    setTimeout(() => {
+      if (template === "analysis") {
+        // Lógica para selecionar análise pode ser adicionada aqui depois
+        router.push(`/notes/new?template=analysis`);
+      } else {
+        router.push(`/notes/new?template=${template}`);
+      }
+    }, 200);
   };
-
-  // const handleAnalysisSelected = (analysis: SavedAnalysis) => {
-  //   setAnalysisSelectorVisible(false);
-  //   router.push(
-  //     `/notes/new?template=analysis&analysisId=${
-  //       analysis.id
-  //     }&analysisName=${encodeURIComponent(analysis.analysisSetup.analysisName)}`
-  //   );
-  // };
 
   return (
     <>
@@ -164,11 +136,6 @@ export function CreateNoteFAB() {
         onClose={() => setTemplateMenuVisible(false)}
         onSelect={handleSelectTemplate}
       />
-      {/* <AnalysisSelectorModal
-        isVisible={isAnalysisSelectorVisible}
-        onClose={() => setAnalysisSelectorVisible(false)}
-        onSelect={handleAnalysisSelected}
-      /> */}
 
       <TouchableOpacity
         style={[
@@ -176,7 +143,19 @@ export function CreateNoteFAB() {
           { bottom: insets.bottom + Spacing.md, backgroundColor: primaryColor },
         ]}
         onPress={() => setTemplateMenuVisible(true)}>
-        <Plus size={28} color="white" />
+        <AnimatePresence>
+          <MotiView
+            key={isTemplateMenuVisible ? "close" : "add"}
+            from={{ rotate: "-180deg", scale: 0 }}
+            animate={{ rotate: "0deg", scale: 1 }}
+            exit={{ rotate: "180deg", scale: 0 }}>
+            {isTemplateMenuVisible ? (
+              <X size={28} color="white" />
+            ) : (
+              <Plus size={28} color="white" />
+            )}
+          </MotiView>
+        </AnimatePresence>
       </TouchableOpacity>
     </>
   );
@@ -185,11 +164,11 @@ export function CreateNoteFAB() {
 const styles = StyleSheet.create({
   fab: {
     position: "absolute",
-    botton: 80, 
     right: Spacing.md,
     width: 60,
     height: 60,
     borderRadius: 30,
+    bottom: -100,
     justifyContent: "center",
     alignItems: "center",
     elevation: 8,
@@ -209,13 +188,13 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     padding: Padding.lg,
     borderRadius: BorderRadius.xl,
-    gap: Spacing.md,
+    gap: Spacing.sm,
   },
   modalTitle: {
     fontSize: FontSize.xl,
     fontWeight: FontWeight.bold,
     textAlign: "center",
-    marginBottom: Margin.sm,
+    marginBottom: Margin.md,
   },
   templateButton: {
     flexDirection: "row",
@@ -223,8 +202,17 @@ const styles = StyleSheet.create({
     padding: Padding.md,
     borderRadius: BorderRadius.lg,
   },
+  iconWrapper: {
+    padding: Padding.sm,
+    borderRadius: BorderRadius.md,
+    marginRight: Margin.md,
+  },
   templateTitle: {
-    marginLeft: Margin.md,
     fontSize: FontSize.lg,
+    fontWeight: FontWeight.bold,
+  },
+  templateSubtitle: {
+    fontSize: FontSize.md,
+    marginTop: 2,
   },
 });

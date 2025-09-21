@@ -1,91 +1,97 @@
-import { FontSize, FontWeight, Margin, Spacing } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { ThemedInput, ThemedInputProps } from "@/src/components/ui/ThemedInput";
+import { Spacing } from "@/constants/Styles";
+import { ThemedInput } from "@/src/components/ui/ThemedInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { Feather } from "@expo/vector-icons";
 import React from "react";
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  useController,
+  type Control,
+  type FieldPath,
+  type FieldValues,
+} from "react-hook-form";
+import { StyleSheet, View } from "react-native";
 
-type ControlledFormFieldProps<T extends FieldValues> = ThemedInputProps & {
-  name: Path<T>;
-  control: Control<T>;
-  label: string;
-  info?: string; // Propriedade de informação adicionada
+type ThemedInputProps = React.ComponentProps<typeof ThemedInput>;
+
+type ControlledFormFieldProps<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+> = Omit<ThemedInputProps, "value" | "onChangeText" | "onBlur" | "label"> & {
+  name: TName;
+  control: Control<TFieldValues>;
+  /** Texto acima do input (renderizado por este wrapper, não pelo ThemedInput) */
+  label?: string;
+  /** Slot para botão/ícone à direita do label (ex.: ℹ︎ / “Saiba mais”) */
+  labelRightAccessory?: React.ReactNode;
+  /** Help text opcional abaixo do campo */
+  info?: string;
 };
 
-export function ControlledFormField<T extends FieldValues>({
-  name,
-  control,
-  label,
-  info,
-  ...themedInputProps
-}: ControlledFormFieldProps<T>) {
-  const destructiveColor = useThemeValue("warning");
-  const labelColor = useThemeValue("textSecondary");
-  const infoIconColor = useThemeValue("primary");
+export function ControlledFormField<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>(props: ControlledFormFieldProps<TFieldValues, TName>) {
+  const {
+    name,
+    control,
+    label,
+    labelRightAccessory,
+    info,
+    variant,
+    ...inputProps
+  } = props;
+
+  const { field, fieldState } = useController({ name, control });
+  const showError = !!fieldState.error?.message;
+  const effectiveVariant = showError ? "error" : variant ?? "default";
+
+  // Normaliza valor para string, já que TextInput trabalha com string.
+  const raw = field.value as any;
+  const stringValue =
+    raw === undefined || raw === null
+      ? ""
+      : typeof raw === "string"
+      ? raw
+      : String(raw);
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({
-        field: { onChange, onBlur, value },
-        fieldState: { error },
-      }) => (
-        <View style={styles.container}>
-          <View style={styles.labelContainer}>
-            <Text style={[styles.label, { color: labelColor }]}>{label}</Text>
-            {info && (
-              <TouchableOpacity
-                style={styles.infoButton}
-                onPress={() => Alert.alert(label, info)}
-                accessibilityLabel={`Informação sobre ${label}`}>
-                <Feather name="help-circle" size={18} color={infoIconColor} />
-              </TouchableOpacity>
-            )}
-          </View>
-          <ThemedInput
-            {...themedInputProps}
-            value={value}
-            onBlur={onBlur}
-            onChangeText={onChange}
-            style={[
-              themedInputProps.style,
-              error && { borderColor: destructiveColor, borderWidth: 1 },
-            ]}
-          />
-          {error && (
-            <ThemedText style={[styles.errorText, { color: destructiveColor }]}>
-              {error.message}
-            </ThemedText>
-          )}
+    <View style={styles.container}>
+      {label ? (
+        <View style={styles.labelRow}>
+          <ThemedText style={styles.label}>{label}</ThemedText>
+          {labelRightAccessory ?? null}
         </View>
-      )}
-    />
+      ) : null}
+
+      <ThemedInput
+        {...inputProps}
+        value={stringValue}
+        onChangeText={field.onChange}
+        onBlur={field.onBlur}
+        variant={effectiveVariant as any}
+      />
+
+      {showError ? (
+        <ThemedText style={styles.errorText}>
+          {String(fieldState.error?.message)}
+        </ThemedText>
+      ) : info ? (
+        <ThemedText style={styles.infoText}>{info}</ThemedText>
+      ) : null}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: Margin.md,
-    width: "100%",
-  },
-  labelContainer: {
+  container: { marginBottom: Spacing.md },
+  labelRow: {
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: Spacing.sm,
+    marginBottom: Spacing.xs,
   },
-  label: {
-    fontSize: FontSize.md,
-    fontWeight: FontWeight.medium,
-  },
-  infoButton: {
-    marginLeft: Spacing.sm,
-  },
-  errorText: {
-    fontSize: FontSize.xs,
-    marginTop: Margin.xs,
-    marginLeft: Margin.xs,
-  },
+  label: { fontSize: 16, fontWeight: "600" },
+  errorText: { marginTop: 4, fontSize: 12, color: "#ef4444" },
+  infoText: { marginTop: 4, fontSize: 12, opacity: 0.8 },
 });
+
+export default ControlledFormField;

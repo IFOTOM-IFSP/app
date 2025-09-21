@@ -1,72 +1,86 @@
 import { Spacing } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
-import { SwitchRow, SwitchRowProps } from "@/src/components/ui/SwitchRow";
-import { Feather } from "@expo/vector-icons";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import React from "react";
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
-import { ThemedText } from "../ui/ThemedText";
+import {
+  useController,
+  type Control,
+  type FieldPath,
+  type FieldValues,
+} from "react-hook-form";
+import { StyleSheet, Switch, View } from "react-native";
 
-// Remove as props que serão controladas pelo React Hook Form
-type BaseSwitchProps = Omit<
-  SwitchRowProps,
-  "value" | "onValueChange" | "label"
->;
-
-// Adiciona as props do React Hook Form e a nova prop 'info'
-type ControlledSwitchProps<T extends FieldValues> = BaseSwitchProps & {
-  name: Path<T>;
-  control: Control<T>;
-  label: string;
+type ControlledSwitchProps<
+  TFieldValues extends FieldValues,
+  TName extends FieldPath<TFieldValues>
+> = {
+  name: TName;
+  control: Control<TFieldValues>;
+  label?: string;
+  /** Slot para botão/ícone à direita do label (ex.: ℹ︎) */
+  labelRightAccessory?: React.ReactNode;
+  /** Help text opcional abaixo do switch */
   info?: string;
+  disabled?: boolean;
 };
 
-export function ControlledSwitch<T extends FieldValues>({
+export function ControlledSwitch<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>({
   name,
   control,
   label,
+  labelRightAccessory,
   info,
-  ...switchRowProps
-}: ControlledSwitchProps<T>) {
-  const infoIconColor = useThemeValue("primary");
-
-  const labelWithInfo = (
-    <View style={styles.labelContainer}>
-      <ThemedText style={styles.labelText}>{label}</ThemedText>
-      {info && (
-        <TouchableOpacity
-          style={styles.infoButton}
-          onPress={() => Alert.alert(label, info)}
-          accessibilityLabel={`Informação sobre ${label}`}>
-          <Feather name="help-circle" size={18} color={infoIconColor} />
-        </TouchableOpacity>
-      )}
-    </View>
-  );
+  disabled,
+}: ControlledSwitchProps<TFieldValues, TName>) {
+  const { field, fieldState } = useController({ name, control });
+  const value = !!field.value;
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field: { onChange, value } }) => (
-        <SwitchRow
-          {...switchRowProps}
-          label={labelWithInfo}
+    <View style={styles.container}>
+      {label ? (
+        <View style={styles.labelRow}>
+          <ThemedText style={styles.label}>{label}</ThemedText>
+          {labelRightAccessory ?? null}
+        </View>
+      ) : null}
+
+      <View style={styles.switchRow}>
+        <Switch
           value={value}
-          onValueChange={onChange}
+          onValueChange={field.onChange}
+          disabled={disabled}
         />
-      )}
-    />
+      </View>
+
+      {fieldState.error?.message ? (
+        <ThemedText style={styles.errorText}>
+          {String(fieldState.error?.message)}
+        </ThemedText>
+      ) : info ? (
+        <ThemedText style={styles.infoText}>{info}</ThemedText>
+      ) : null}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  labelContainer: {
+  container: { marginBottom: Spacing.md },
+  labelRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: Spacing.xs,
+  },
+  label: { fontSize: 16, fontWeight: "600" },
+  switchRow: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
   },
-  labelText: {},
-  infoButton: {
-    marginLeft: Spacing.md,
-  },
+  errorText: { marginTop: 4, fontSize: 12, color: "#ef4444" },
+  infoText: { marginTop: 4, fontSize: 12, opacity: 0.8 },
 });
+
+export default ControlledSwitch;

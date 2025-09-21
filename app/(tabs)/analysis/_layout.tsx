@@ -1,11 +1,15 @@
+import { AnalysisMachineProvider } from "@/src/features/analysis/AnalysisMachineProvider";
+import AnalysisStateRouter from "@/src/features/analysis/AnalysisStateRouter";
 import { Stack } from "expo-router";
-import React from "react";
 
 export default function AnalysisLayout() {
   return (
-    <Stack
-      screenOptions={{
-        headerShown: false,
-      }}></Stack>
+    <AnalysisMachineProvider>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}></Stack>
+      <AnalysisStateRouter />
+    </AnalysisMachineProvider>
   );
 }

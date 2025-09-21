@@ -1,5 +1,4 @@
 import { useRouter } from "expo-router";
-import React from "react";
 import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
 
 import { Padding } from "@/constants/Styles";
@@ -24,7 +23,7 @@ const getUsefulSectionsData = (router: AppRouter): UsefulSectionsProps => {
         label: "Espectrofotômetros",
         iconName: "camera-document",
         iconLibrary: "MaterialCommunityIcons",
-        onPress: () => console.log("AR Scan Pressionado"),
+        onPress: () => router.push("/(stack)/quick_guide"),
       },
       {
         id: "about",

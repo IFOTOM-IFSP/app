@@ -1,12 +1,12 @@
+import { quizData } from "@/data/index";
 import { QuizActiveScreen } from "@/src/components/quiz/QuizActiveScreen";
 import { QuizResultsScreen } from "@/src/components/quiz/QuizResultsScreen";
 import BackButton from "@/src/components/ui/BackButton";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { ThemedView } from "@/src/components/ui/ThemedView";
-import { quizData } from "@/data/index";
 import { useQuizActions } from "@/store/quizStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, ScrollView, StyleSheet } from "react-native";
 
 export default function QuizScreen() {

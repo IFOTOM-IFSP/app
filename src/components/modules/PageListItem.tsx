@@ -1,6 +1,3 @@
-import { Icon } from "@/src/components/ui/icon/Icon";
-import { IconContainer } from "@/src/components/ui/icon/IconContainer";
-import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -10,8 +7,10 @@ import {
   Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
+import { Icon } from "@/src/components/ui/icon/Icon";
+import { IconContainer } from "@/src/components/ui/icon/IconContainer";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 import { Link } from "expo-router";
-import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 type PageListItemProps = {
@@ -84,16 +83,17 @@ const styles = StyleSheet.create({
     padding: Padding.md,
     borderRadius: BorderRadius.lg,
     marginBottom: Margin.md,
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 0.4 },
     shadowOpacity: 0.06,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 1,
     width: "100%",
     minHeight: 80,
     alignItems: "center",
   },
   itemIconContainer: {
     marginRight: Margin.md,
+    borderRadius: 50,
   },
   itemNumberText: {
     fontSize: FontSize.lg,

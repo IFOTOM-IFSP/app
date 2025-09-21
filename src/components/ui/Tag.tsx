@@ -1,6 +1,5 @@
 import { BorderRadius, FontSize, Padding } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import React from "react";
 import { StyleSheet, TextStyle, View, ViewStyle } from "react-native";
 import { Icon, IconLibrary } from "./icon/Icon";
 import { ThemedText } from "./ThemedText";
@@ -9,7 +8,7 @@ type TagVariant = "primary" | "success" | "warning" | "error";
 
 interface TagProps {
   text: string;
-  variant: TagVariant;
+  variant?: TagVariant;
   iconName?: string;
   iconLibrary?: IconLibrary;
   size?: "sm" | "md";

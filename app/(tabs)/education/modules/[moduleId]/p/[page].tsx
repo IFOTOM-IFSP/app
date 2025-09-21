@@ -1,10 +1,10 @@
+import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
+import { useThemeValue } from "@/hooks/useThemeValue";
 import { ErrorState } from "@/src/components/common/ErrorState";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ContentBlockRenderer } from "@/src/components/modules/ContentBlockRenderer";
 import { ModulePageNavigation } from "@/src/components/modules/ModulePageNavigation";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { FontSize, FontWeight, Margin, Padding } from "@/constants/Styles";
-import { useThemeValue } from "@/hooks/useThemeValue";
 import {
   getModuleById,
   getModulePageById,
@@ -55,7 +55,7 @@ export default function ModuleContentPage(): React.ReactElement | null {
       <ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: Padding.lg }}>
+        contentContainerStyle={{ paddingBottom: Padding.xxxl + 80 }}>
         <View style={styles.header}>
           <ThemedText
             style={[styles.headerTitle, { color: textSecondaryColor }]}>

@@ -1,9 +1,9 @@
+import { Padding } from "@/constants/Styles";
+import { MODULES_DATA } from "@/data";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import AnimatedListItem from "@/src/components/modules/AnimatedListItem";
 import HeaderIndex from "@/src/components/modules/ModuleListHeader";
-import { Padding } from "@/constants/Styles";
-import { MODULES_DATA } from "@/data";
-import { default as React, useRef } from "react";
+import { useRef } from "react";
 import { Animated, StyleSheet } from "react-native";
 
 export default function ModuleListScreen() {
@@ -34,6 +34,6 @@ const styles = StyleSheet.create({
   flatListContent: {
     paddingHorizontal: Padding.md,
     paddingTop: Padding.sm,
-    paddingBottom: Padding.xl,
+    paddingBottom: Padding.xxxl + 30,
   },
 });

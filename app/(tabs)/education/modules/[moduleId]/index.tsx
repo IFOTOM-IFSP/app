@@ -1,13 +1,7 @@
 import { getModuleById } from "@/utils/module-helpers";
 import { Link, useLocalSearchParams } from "expo-router";
-import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-import TitleSection from "@/src/components/common/TitleSection";
-import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
-import { PageListItem } from "@/src/components/modules/PageListItem";
-import { Button } from "@/src/components/ui/Button";
-import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -16,6 +10,11 @@ import {
   Padding,
   Spacing,
 } from "@/constants/Styles";
+import TitleSection from "@/src/components/common/TitleSection";
+import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
+import { PageListItem } from "@/src/components/modules/PageListItem";
+import { Button } from "@/src/components/ui/Button";
+import { ThemedText } from "@/src/components/ui/ThemedText";
 
 export default function ModuleDetailScreen() {
   const { moduleId } = useLocalSearchParams<{ moduleId: string }>();
@@ -88,6 +87,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginTop: Margin.lg,
     gap: Spacing.md,
+    paddingBottom: 80,
   },
   startButton: {
     alignItems: "center",

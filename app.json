@@ -115,7 +115,8 @@
           "project": "react-native",
           "organization": "ifsp-campus-campinas"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "scheme": "myapp",
     "extra": {

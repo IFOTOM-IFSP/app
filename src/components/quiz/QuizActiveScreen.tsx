@@ -192,5 +192,6 @@ const styles = StyleSheet.create({
   footer: {
     padding: Padding.xl,
     borderTopWidth: 1,
+    marginBottom: 40,
   },
 });

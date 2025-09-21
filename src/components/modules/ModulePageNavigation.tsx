@@ -1,10 +1,9 @@
-import { Button } from "@/src/components/ui/Button";
 import { Padding, Spacing } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
 import { ModulePage } from "@/models";
+import { Button } from "@/src/components/ui/Button";
 import { AntDesign } from "@expo/vector-icons";
 import { Link, useRouter } from "expo-router";
-import React from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
 type ModulePageNavigationProps = {
@@ -66,14 +65,14 @@ export function ModulePageNavigation({
 const styles = StyleSheet.create({
   navigationContainer: {
     position: "absolute",
-    bottom: 0,
+    bottom: 10,
     left: 0,
     right: 0,
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: Padding.md,
     paddingTop: Padding.sm,
-    paddingBottom: Platform.OS === "ios" ? Padding.xl : Padding.md,
+    paddingBottom: Platform.OS === "ios" ? Padding.xl : Padding.xxxxl,
     backgroundColor: "transparent",
     gap: Spacing.sm,
   },

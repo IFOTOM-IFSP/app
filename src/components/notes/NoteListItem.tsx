@@ -2,207 +2,130 @@ import {
   BorderRadius,
   FontSize,
   FontWeight,
+  Margin,
   Padding,
-  Spacing,
 } from "@/constants/Styles";
 import { useThemeValue } from "@/hooks/useThemeValue";
-import { ThemedText } from "@/src/components/ui/ThemedText";
-import { Note } from "@/storage/notesStorage";
+import { Note } from "@/storage/notesStorage"; // Apenas o 'Note' é importado
 import { FlaskConical, ListChecks, Notebook } from "lucide-react-native";
-import React from "react";
+import { MotiView } from "moti";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { ChecklistItem } from "./ChecklistItemRow";
+import { ThemedText } from "../ui/ThemedText";
+
+// --- INÍCIO DA CORREÇÃO ---
+// Definimos a estrutura do bloco de conteúdo localmente, pois ela não é exportada.
+interface NoteContentBlock {
+  type: "text" | "checklist" | string; // Adicionamos outros tipos possíveis
+  value: any;
+}
+// --- FIM DA CORREÇÃO ---
 
 interface NoteListItemProps {
   item: Note;
   onPress: () => void;
-  variant?: "full" | "compact";
+  index: number;
 }
 
-const getNoteTypeDetails = (note: Note, colors: any) => {
-  if (note.type === "analysis") {
-    return {
-      icon: <FlaskConical size={14} color={colors.tagAnalysisText} />,
-      text: "Análise",
-      bgColor: colors.tagAnalysisBg,
-      textColor: colors.tagAnalysisText,
-    };
-  }
-  if (note.type === "task") {
-    return {
-      icon: <ListChecks size={14} color={colors.tagTaskText} />,
-      text: "Lista de Tarefas",
-      bgColor: colors.tagTaskBg,
-      textColor: colors.tagTaskText,
-    };
-  }
-  return {
-    icon: <Notebook size={14} color={colors.tagQuickText} />,
-    text: "Nota Rápida",
-    bgColor: colors.tagQuickBg,
-    textColor: colors.tagQuickText,
-  };
+const formatDate = (date: Date) => {
+  const now = new Date();
+  const diffSeconds = Math.round((now.getTime() - date.getTime()) / 1000);
+  const diffDays = Math.floor(diffSeconds / 86400);
+
+  if (diffDays === 0) return "Hoje";
+  if (diffDays === 1) return "Ontem";
+  return date.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+  });
 };
 
-function renderContentSummary(note: Note, textColor: string): React.ReactNode {
-  if (note.type === "task") {
-    try {
-      const items = JSON.parse(note.content || "[]") as ChecklistItem[];
-      if (!items || items.length === 0)
-        return (
-          <ThemedText style={{ color: textColor, fontStyle: "italic" }}>
-            Checklist vazio
-          </ThemedText>
-        );
-      const completed = items.filter((item) => item.isChecked).length;
-      return (
-        <ThemedText
-          style={{
-            color: textColor,
-          }}>{`${completed} de ${items.length} tarefas concluídas`}</ThemedText>
-      );
-    } catch {
-      return (
-        <ThemedText style={{ color: textColor, fontStyle: "italic" }}>
-          Conteúdo da tarefa inválido.
-        </ThemedText>
-      );
-    }
+const getContentPreview = (content: string) => {
+  try {
+    const parsedContent: NoteContentBlock[] = JSON.parse(content);
+    const textBlock = parsedContent.find((block) => block.type === "text");
+    return textBlock?.value || "Nenhum conteúdo de texto...";
+  } catch (error) {
+    return "Nota sem texto de preview.";
   }
-  return (
-    <ThemedText style={{ color: textColor }} numberOfLines={2}>
-      {note.content || "Nenhum conteúdo adicional"}
-    </ThemedText>
-  );
-}
+};
 
-export function NoteListItem({
-  item,
-  onPress,
-  variant = "full",
-}: NoteListItemProps) {
-  const colors = {
-    card: useThemeValue("card"),
-    textSecondary: useThemeValue("textSecondary"),
-    tagAnalysisBg: useThemeValue("primaryBackground"),
-    tagAnalysisText: useThemeValue("primary"),
-    tagQuickBg: useThemeValue("pinkBackground"),
-    tagQuickText: useThemeValue("pink"),
-    tagTaskBg: useThemeValue("secondaryBackground"),
-    tagTaskText: useThemeValue("secondary"),
+export function NoteListItem({ item, onPress, index }: NoteListItemProps) {
+  const cardColor = useThemeValue("card");
+  const textColor = useThemeValue("text");
+  const textSecondary = useThemeValue("textSecondary");
+
+  const getIcon = () => {
+    switch (item.type) {
+      case "analysis":
+        return <FlaskConical size={20} color={textSecondary} />;
+      case "task":
+        return <ListChecks size={20} color={textSecondary} />;
+      default:
+        return <Notebook size={20} color={textSecondary} />;
+    }
   };
-  const typeDetails = getNoteTypeDetails(item, colors);
-  const isCompact = variant === "compact";
+
+  const contentPreview = getContentPreview(item.content);
 
   return (
-    <TouchableOpacity
-      onPress={onPress}
-      style={[
-        styles.noteItem,
-        {
-          backgroundColor: isCompact ? "transparent" : colors.card,
-          padding: isCompact ? Padding.md : Padding.lg,
-        },
-      ]}>
-      <View style={styles.header}>
-        <ThemedText
-          style={[styles.noteTitle, isCompact && styles.noteTitleCompact]}
-          numberOfLines={1}>
-          {item.title}
-        </ThemedText>
-        <ThemedText style={[styles.noteDate, { color: colors.textSecondary }]}>
-          {new Date(item.updatedAt).toLocaleDateString("pt-BR", {
-            day: "2-digit",
-            month: "short",
-          })}
-        </ThemedText>
-      </View>
-
-      {isCompact ? (
-        <View style={{ alignItems: "flex-start" }}>
-          {/* <Tag
-            size="sm"
-            iconName={typeDetails.icon}
-            text={typeDetails.text}
-            backgroundColor={typeDetails.bgColor}
-            textColor={typeDetails.textColor}
-          /> */}
+    <MotiView
+      from={{ opacity: 0, translateY: 20 }}
+      animate={{ opacity: 1, translateY: 0 }}
+      transition={{ type: "timing", duration: 300, delay: index * 50 }}>
+      <TouchableOpacity
+        style={[styles.card, { backgroundColor: cardColor }]}
+        onPress={onPress}>
+        <View style={styles.iconContainer}>{getIcon()}</View>
+        <View style={styles.textContainer}>
+          <ThemedText
+            style={[styles.title, { color: textColor }]}
+            numberOfLines={1}>
+            {item.title || "Nota sem título"}
+          </ThemedText>
+          <ThemedText
+            style={[styles.preview, { color: textSecondary }]}
+            numberOfLines={1}>
+            {contentPreview}
+          </ThemedText>
         </View>
-      ) : (
-        <>
-          <View style={styles.noteContent}>
-            {renderContentSummary(item, colors.textSecondary)}
-          </View>
-          <View style={styles.noteFooter}>
-            <View style={styles.tagsContainer}>
-              {/* <Tag
-                icon={typeDetails.icon}
-                text={typeDetails.text}
-                backgroundColor={typeDetails.bgColor}
-                textColor={typeDetails.textColor}
-              /> */}
-              {/* {item.type === "analysis" && item.analysisName && (
-                // <Tag
-                //   text={item.analysisName}
-                //   // backgroundColor={colors.tagAnalysisBg}
-                //   // textColor={colors.tagAnalysisText}
-                // />
-              )} */}
-            </View>
-          </View>
-        </>
-      )}
-    </TouchableOpacity>
+        <ThemedText style={[styles.date, { color: textSecondary }]}>
+          {formatDate(new Date(item.updatedAt))}
+        </ThemedText>
+      </TouchableOpacity>
+    </MotiView>
   );
 }
-const styles = StyleSheet.create({
-  noteItemFull: {
-    padding: Padding.md,
-    borderRadius: BorderRadius.lg,
-    gap: Spacing.md,
-  },
-  noteItemCompact: {
-    padding: Padding.md,
-    borderBottomWidth: 1,
-    gap: Spacing.sm,
-    borderRadius: BorderRadius.lg,
-  },
-  noteContent: {
-    fontSize: FontSize.md,
-    minHeight: 38,
-    justifyContent: "center",
-    borderRadius: BorderRadius.lg,
-  },
-  noteFooter: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: Spacing.sm,
-  },
-  tagsContainer: {
-    flexDirection: "row",
-    gap: Spacing.sm,
-    flex: 1,
-    flexWrap: "wrap",
-  },
 
-  headerCompact: {
+const styles = StyleSheet.create({
+  card: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+    padding: Padding.md,
+    borderRadius: BorderRadius.lg,
+    elevation: 1,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    width: "100%",
   },
-  noteItem: { gap: Spacing.sm },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  iconContainer: {
+    marginRight: Margin.md,
+    opacity: 0.8,
   },
-  noteTitle: {
+  textContainer: {
+    flex: 1,
+  },
+  title: {
     fontSize: FontSize.lg,
-    fontWeight: FontWeight.bold,
-    flexShrink: 1,
-    marginRight: Spacing.sm,
+    fontWeight: FontWeight.medium,
   },
-  noteTitleCompact: { fontSize: FontSize.md, fontWeight: FontWeight.medium },
-  noteDate: { fontSize: FontSize.sm, fontWeight: "500" },
+  preview: {
+    fontSize: FontSize.md,
+    marginTop: 2,
+  },
+  date: {
+    fontSize: FontSize.sm,
+    marginLeft: Margin.sm,
+  },
 });
