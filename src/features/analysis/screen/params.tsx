@@ -5,13 +5,18 @@ import { ThemedInput } from "@/src/components/ui/ThemedInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useSettingsStore } from "@/src/store/settingsStore"; // <<< novo
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Switch, View } from "react-native";
 import { useAnalysisMachine } from "../AnalysisMachineProvider";
 
 export default function ParamsScreen() {
   const { state, send } = useAnalysisMachine();
   const tint = useThemeValue("tint");
+  useEffect(() => {
+    if (state.matches("CHOOSE_TYPE")) {
+      send({ type: "SELECT_TYPE", value: "quant" });
+    }
+  }, [state, send]);
 
   const learningMode = useSettingsStore((s) => s.learningMode);
   const setLearningMode = useSettingsStore((s) => s.setLearningMode);

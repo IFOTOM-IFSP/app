@@ -63,16 +63,16 @@ export const quantMachine = createMachine({
         onError: { actions: assign(({ event }) => ({ error: String((event as any).output ?? event) })) },
       },
       on: {
-        SUBMIT_PARAMS: {
-          target: 'PREFLIGHT',
-          actions: assign(({ event }) => ({
-            params: (event as any).params,
-            curve: (event as any).providedCurve ?? null,
-          })),
-        },
+      SUBMIT_PARAMS: {
+        target: 'DECIDE_CALIB_DEVICE', // <-- antes era 'PREFLIGHT'
+        actions: assign(({ event }) => ({
+          params: (event as any).params,
+          curve: (event as any).providedCurve ?? null,
+        })),
       },
     },
-
+    },  
+   
     PREFLIGHT: {
       invoke: {
         id: 'preflight',
@@ -83,7 +83,7 @@ export const quantMachine = createMachine({
           return res;
         }),
         input: ({ context }) => context,
-        onDone: { target: 'DECIDE_CALIB_DEVICE' },
+        onDone: { target: 'ACQ_DARK_NOISE' },
         onError: {
           target: 'PARAMS',
           actions: assign(({ event }) => ({ error: String((event as any).output ?? event) })),
@@ -94,7 +94,7 @@ export const quantMachine = createMachine({
     DECIDE_CALIB_DEVICE: {
       always: [
         { target: 'CALIB_DEVICE', guard: ({ context }) => !context.deviceProfile },
-        { target: 'ACQ_DARK_NOISE' },
+        { target: 'PREFLIGHT' },
       ],
     },
 

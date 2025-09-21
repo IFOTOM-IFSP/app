@@ -9,7 +9,10 @@ export function useSyncRouteWithState() {
   useEffect(() => {
     const m = state.value;
     if (m === "PARAMS" && !path.endsWith("/create/[analysisFormId]")) {
-      router.replace("/(tabs)/analysis/create/[analysisFormId]");
+      router.replace({
+        pathname: "/(tabs)/analysis/create/[analysisFormId]",
+        params: { analysisFormId: "id" },
+      });
     } else if (
       m === "PREFLIGHT" &&
       !path.endsWith("/(tabs)/analysis/create/preflight")

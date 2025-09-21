@@ -5,6 +5,7 @@ import { InfoModal } from "@/src/components/ui/InfoModal";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router"; // ★ novo
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAnalysisMachine } from "../AnalysisMachineProvider";
@@ -57,16 +58,36 @@ export default function AnalysisStart() {
   const backgroundColor = useThemeValue("card");
   const text = useThemeValue("text");
   const tint = useThemeValue("tint");
-  const { send } = useAnalysisMachine();
+  const { state, send } = useAnalysisMachine(); // ★ pegar state também
+  const router = useRouter(); // ★
+
   const openInfoModal = (index: number) => {
     setSelectedAnalysisIndex(index);
     setModalVisible(true);
   };
 
+  // ★ navegação centralizada
+  const goToParams = () => router.push("/analysis/params");
+
+  // ★ fluxo robusto: garante CHOOSE_TYPE → PARAMS antes de navegar
   const handleStartAnalysis = (analysisType: string) => {
-    if (analysisType === "quantitative") {
+    if (analysisType !== "quantitative") return;
+
+    if (state.matches("CHOOSE_TYPE")) {
+      // caminho feliz: estamos no estado certo
       send({ type: "SELECT_TYPE", value: "quant" });
+      goToParams();
+      return;
     }
+
+    if (state.matches("PARAMS")) {
+      // já está em PARAMS (ex.: retorno de back), só navegar
+      goToParams();
+      return;
+    }
+
+    send({ type: "SELECT_TYPE", value: "quant" });
+    goToParams();
   };
 
   const selectedAnalysisData = TYPES_ANALYSIS_DATA[selectedAnalysisIndex];
@@ -83,9 +104,11 @@ export default function AnalysisStart() {
         </View>
         <View style={{ width: 40 }} />
       </View>
+
       <ThemedText style={styles.instructions}>
         Para começar, escolha o que você quer fazer.
       </ThemedText>
+
       <View>
         <View style={styles.buttonContainer}>
           {TYPES_ANALYSIS_DATA.map((item, index) => (
@@ -94,9 +117,7 @@ export default function AnalysisStart() {
               style={[
                 styles.buttonRow,
                 !item.enabled && styles.disabledRow,
-                {
-                  backgroundColor,
-                },
+                { backgroundColor },
               ]}>
               <TouchableOpacity
                 style={[styles.button, !item.enabled && styles.buttonDisabled]}
