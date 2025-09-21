@@ -1,5 +1,4 @@
 import { Icon } from "@/src/components/ui/icon/Icon";
-import React from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   BorderRadius,

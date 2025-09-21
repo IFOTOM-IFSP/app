@@ -1,7 +1,7 @@
 import { Camera, CameraView, PermissionStatus } from "expo-camera";
 import * as Crypto from "expo-crypto";
 import { Info, Plus, X } from "lucide-react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -239,7 +239,8 @@ export default function CalibrateWavelengthScreen() {
       </View>
 
       <ThemedText style={[styles.instructions, { color: secondaryTextColor }]}>
-        Registre pelo menos dois pontos de referência capturando o feixe de lasers ou fontes com comprimentos de onda conhecidos.
+        Registre pelo menos dois pontos de referência capturando o feixe de
+        lasers ou fontes com comprimentos de onda conhecidos.
       </ThemedText>
 
       <InfoModal
@@ -305,7 +306,8 @@ export default function CalibrateWavelengthScreen() {
             </TouchableOpacity>
           }
           ListEmptyComponent={
-            <ThemedText style={[styles.emptyText, { color: secondaryTextColor }]}>
+            <ThemedText
+              style={[styles.emptyText, { color: secondaryTextColor }]}>
               Nenhum ponto adicionado.
             </ThemedText>
           }

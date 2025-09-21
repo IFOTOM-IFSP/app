@@ -5,7 +5,7 @@ import { Button } from "@/src/components/ui/Button";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "expo-router";
-import React, { JSX, useState } from "react";
+import { JSX, useState } from "react";
 import {
   Alert,
   KeyboardAvoidingView,
