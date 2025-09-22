@@ -7,49 +7,10 @@ import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { Padding } from "@/src/constants/Styles";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 
-import {
-  UsefulSections,
-  UsefulSectionsProps,
-} from "@/src/components/common/UsefulSections";
+import { Sections_Grid_DATA } from "@/data/SectionsGridData";
+import { SectionsGrid } from "@/src/components/common/SectionsGrid";
 import { useUserStore } from "@/src/store/userStore";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-type AppRouter = ReturnType<typeof useRouter>;
-const getUsefulSectionsData = (router: AppRouter): UsefulSectionsProps => {
-  return {
-    sections: [
-      {
-        id: "espectrofototometros",
-        label: "Espectrofotômetros",
-        iconName: "camera-document",
-        iconLibrary: "MaterialCommunityIcons",
-        onPress: () => router.push("/(stack)/quick_guide"),
-      },
-      {
-        id: "about",
-        label: "Guia rápido",
-        iconName: "running",
-        iconLibrary: "FontAwesome5",
-        onPress: () => router.push("/about"),
-      },
-      {
-        id: "doubts",
-        label: "Dúvidas",
-        iconName: "question",
-        iconLibrary: "SimpleLineIcons",
-        onPress: () => router.push("/doubts"),
-      },
-      {
-        id: "more",
-        label: "Mais",
-        iconName: "options",
-        iconLibrary: "SimpleLineIcons",
-        onPress: () => router.push("/options"),
-      },
-    ],
-    title: true,
-  };
-};
 
 export default function HomeScreen() {
   const userName = useUserStore((state) => state.name);
@@ -58,7 +19,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const backgroundColor = useThemeValue("background");
   const tintColor = useThemeValue("tint");
-  const usefulSectionsData = getUsefulSectionsData(router);
+  const items = Sections_Grid_DATA;
 
   // const {
   //   notes,
@@ -101,10 +62,7 @@ export default function HomeScreen() {
           href="/analysis"
           sharedTransitionTag="analysis-card-main"
         />
-        <UsefulSections
-          title={usefulSectionsData.title}
-          sections={usefulSectionsData.sections}
-        />
+        <SectionsGrid title sections={items} variant="home" />
         {/* <HistoryToggleList
           notes={notes}
           analyses={analyses}
