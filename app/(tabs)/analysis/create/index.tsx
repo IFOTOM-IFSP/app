@@ -1,3 +1,3 @@
-import StartAnalysisScreen from "@/src/features/analysis/screen/StartAnalysisScreen";
+import StartAnalysisScreen from "@/src/screens/analysis/StartAnalysisScreen";
 
 export default StartAnalysisScreen;

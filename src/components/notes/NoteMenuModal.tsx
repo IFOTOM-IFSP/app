@@ -1,4 +1,3 @@
-import { ThemedText } from "@/src/components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -9,16 +8,8 @@ import {
 } from "@/src/constants/Styles";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { BlurView } from "expo-blur";
-import { useRouter } from "expo-router";
-import {
-  FlaskConical,
-  ListChecks,
-  Notebook,
-  Plus,
-  X,
-} from "lucide-react-native";
+import { FlaskConical, ListChecks, Notebook } from "lucide-react-native";
 import { AnimatePresence, MotiView } from "moti";
-import { useState } from "react";
 import {
   Modal,
   Pressable,
@@ -26,8 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
+import { ThemedText } from "../ui/ThemedText";
 const templates = [
   {
     key: "quick",
@@ -49,7 +39,11 @@ const templates = [
   },
 ];
 
-const TemplateMenuModal = ({ isVisible, onClose, onSelect }: any) => {
+export default function TemplateMenuModal({
+  isVisible,
+  onClose,
+  onSelect,
+}: any) {
   const cardColor = useThemeValue("card");
   const textColor = useThemeValue("text");
   const textSecondary = useThemeValue("textSecondary");
@@ -107,76 +101,9 @@ const TemplateMenuModal = ({ isVisible, onClose, onSelect }: any) => {
       </View>
     </Modal>
   );
-};
-
-export function CreateNoteFAB() {
-  const router = useRouter();
-  const insets = useSafeAreaInsets();
-  const primaryColor = useThemeValue("primary");
-
-  const [isTemplateMenuVisible, setTemplateMenuVisible] = useState(false);
-
-  const handleSelectTemplate = (template: string) => {
-    setTemplateMenuVisible(false);
-    // Adiciona um pequeno delay para a animação do modal concluir
-    setTimeout(() => {
-      if (template === "analysis") {
-        // Lógica para selecionar análise pode ser adicionada aqui depois
-        router.push(`/notes/new?template=analysis`);
-      } else {
-        router.push(`/notes/new?template=${template}`);
-      }
-    }, 200);
-  };
-
-  return (
-    <>
-      <TemplateMenuModal
-        isVisible={isTemplateMenuVisible}
-        onClose={() => setTemplateMenuVisible(false)}
-        onSelect={handleSelectTemplate}
-      />
-
-      <TouchableOpacity
-        style={[
-          styles.fab,
-          { bottom: insets.bottom + Spacing.md, backgroundColor: primaryColor },
-        ]}
-        onPress={() => setTemplateMenuVisible(true)}>
-        <AnimatePresence>
-          <MotiView
-            key={isTemplateMenuVisible ? "close" : "add"}
-            from={{ rotate: "-180deg", scale: 0 }}
-            animate={{ rotate: "0deg", scale: 1 }}
-            exit={{ rotate: "180deg", scale: 0 }}>
-            {isTemplateMenuVisible ? (
-              <X size={28} color="white" />
-            ) : (
-              <Plus size={28} color="white" />
-            )}
-          </MotiView>
-        </AnimatePresence>
-      </TouchableOpacity>
-    </>
-  );
 }
 
 const styles = StyleSheet.create({
-  fab: {
-    position: "absolute",
-    right: Spacing.md,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    bottom: -100,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",

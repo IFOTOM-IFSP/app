@@ -3,7 +3,7 @@ import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { Button } from "@/src/components/ui/Button";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useAnalysisMachine } from "../AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
 type Step = { key: string; label: string };
 const STEPS: Step[] = [

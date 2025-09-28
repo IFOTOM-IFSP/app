@@ -1,2 +1,2 @@
-import PreflightScreen from "@/src/features/analysis/screen/preflight";
+import PreflightScreen from "@/src/screens/analysis/preflight";
 export default PreflightScreen;

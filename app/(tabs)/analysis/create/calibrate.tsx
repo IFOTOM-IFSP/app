@@ -1,3 +1,3 @@
-import WaveLengthPeakSetupScreen from "@/src/features/analysis/screen/waveLengthPeakSetup";
+import WaveLengthPeakSetupScreen from "@/src/screens/analysis/waveLengthPeakSetup";
 
 export default WaveLengthPeakSetupScreen;

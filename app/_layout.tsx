@@ -1,7 +1,6 @@
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { ThemedView } from "@/src/components/ui/ThemedView";
 import { FontSize, Padding } from "@/src/constants/Styles";
-import { useNotifications } from "@/src/hooks/useNotifications";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useSettingsStore } from "@/src/store/settingsStore";
 import { ThemeProvider } from "@/src/store/ThemeContext";
@@ -15,14 +14,14 @@ import { StyleSheet, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 
 Sentry.init({
-  dsn: "https://edcb99ad8ca7e66368e6d1f07687a130@o4509852568584192.ingest.de.sentry.io/4509852571074640",
-  sendDefaultPii: true,
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  sendDefaultPii: false,
   replaysSessionSampleRate: 0.1,
   replaysOnErrorSampleRate: 1,
   integrations: [
-    Sentry.mobileReplayIntegration(),
-    Sentry.feedbackIntegration(),
-  ],
+    Sentry.mobileReplayIntegration?.(),
+    Sentry.feedbackIntegration?.(),
+  ].filter(Boolean),
 });
 
 SplashScreen.preventAutoHideAsync().catch(console.warn);
@@ -32,7 +31,10 @@ function LoadingScreen() {
   const loaderAnimation = require("@/assets/images/loader_animation.json");
 
   return (
-    <ThemedView style={styles.loaderContainer}>
+    <ThemedView
+      style={styles.loaderContainer}
+      accessibilityRole="progressbar"
+      accessibilityLabel="Carregando">
       <View style={styles.loaderContainer2}>
         <ThemedText style={[styles.loaderText, { color: textColor }]}>
           Carregando
@@ -40,8 +42,8 @@ function LoadingScreen() {
         <LottieView
           style={styles.loaderAnimation}
           source={loaderAnimation}
-          autoPlay={true}
-          loop={true}
+          autoPlay
+          loop
         />
       </View>
     </ThemedView>
@@ -54,10 +56,11 @@ export default Sentry.wrap(function RootLayout() {
   const init = useUserStore((state) => state.actions.init);
   const router = useRouter();
   const pathname = usePathname();
+
+  const settingsHasHydratedNow = useSettingsStore.persist.hasHydrated();
   const [settingsHydrated, setSettingsHydrated] = useState(
-    useSettingsStore.persist.hasHydrated()
+    settingsHasHydratedNow
   );
-  useNotifications();
   useEffect(() => {
     init();
     const unsub = useSettingsStore.persist.onFinishHydration(() => {
@@ -65,7 +68,6 @@ export default Sentry.wrap(function RootLayout() {
     });
 
     return unsub;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -88,10 +90,17 @@ export default Sentry.wrap(function RootLayout() {
     SplashScreen.hideAsync().catch(console.warn);
   }, [isLoading, isFirstLaunch, pathname, router]);
 
+  useEffect(() => {
+    if (!isLoading && settingsHydrated && pathname) {
+      SplashScreen.hideAsync().catch(console.warn);
+    }
+  }, [isLoading, settingsHydrated, pathname]);
   return (
     <PaperProvider>
       <StatusBar translucent animated />
-      <ThemeProvider>{isLoading ? <LoadingScreen /> : <Slot />}</ThemeProvider>
+      <ThemeProvider>
+        {isLoading || !settingsHydrated ? <LoadingScreen /> : <Slot />}
+      </ThemeProvider>
     </PaperProvider>
   );
 });

@@ -15,12 +15,15 @@ import {
   View,
 } from "react-native";
 
-import { FormField } from "../../../components/form/FormInput";
-import { ScreenLayout } from "../../../components/layouts/ScreenLayout";
-import BackButton from "../../../components/ui/BackButton";
-import { Button } from "../../../components/ui/Button";
-import { InfoModal } from "../../../components/ui/InfoModal";
-import { ThemedText } from "../../../components/ui/ThemedText";
+import { CalibrationMeasurement } from "@/src/models/analysis";
+import { useAnalysisStore } from "@/src/store/deviceProfileStore";
+import { useProfileStore } from "@/src/store/profileLibraryStore.ts";
+import { FormField } from "../../components/form/FormInput";
+import { ScreenLayout } from "../../components/layouts/ScreenLayout";
+import BackButton from "../../components/ui/BackButton";
+import { Button } from "../../components/ui/Button";
+import { InfoModal } from "../../components/ui/InfoModal";
+import { ThemedText } from "../../components/ui/ThemedText";
 import {
   BorderRadius,
   FontSize,
@@ -28,12 +31,9 @@ import {
   Margin,
   Padding,
   Spacing,
-} from "../../../constants/Styles";
-import { useThemeValue } from "../../../hooks/useThemeValue";
-import { useAnalysisMachine } from "../AnalysisMachineProvider";
-import { useAnalysisStore } from "@/src/store/deviceProfileStore";
-import { useProfileStore } from "@/src/store/profileLibraryStore.ts";
-import { CalibrationMeasurement } from "@/src/models/analysis";
+} from "../../constants/Styles";
+import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
+import { useThemeValue } from "../../hooks/useThemeValue";
 
 // quantos frames/fotos capturar por ponto
 const CAPTURE_COUNT = 10;

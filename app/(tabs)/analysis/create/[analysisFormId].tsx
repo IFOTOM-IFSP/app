@@ -1,3 +1,3 @@
-import ParamsScreen from "@/src/features/analysis/screen/params";
+import ParamsScreen from "@/src/screens/analysis/params";
 
 export default ParamsScreen;

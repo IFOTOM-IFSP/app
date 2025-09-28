@@ -83,7 +83,6 @@ export default function GlossaryListScreen() {
         )}
         emptyMessage="Nenhum termo encontrado."
         contentContainerStyle={{
-          paddingHorizontal: Padding.md,
           paddingBottom: Padding.lg,
         }}
       />

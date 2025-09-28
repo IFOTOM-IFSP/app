@@ -9,6 +9,7 @@ export const sixthModule: Module = {
   iconName: 'flask-outline',
   iconColorName: 'blue',
   iconBackgroundColorName: 'blueBackground',
+  thumbnailUrl: require("@/assets/images/banner_mod_6.png"),
   nextModuleId: '7',
   pages: [
     {

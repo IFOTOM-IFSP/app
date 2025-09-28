@@ -1,10 +1,11 @@
 import { handleError } from '@/services/errorHandler';
 import {
-    getAllNotes,
-    getNoteById,
-    Note,
-    deleteNote as storageDeleteNote,
-    saveNote as storageSaveNote,
+  getAllNotes,
+  getNoteById,
+  deleteNote as storageDeleteNote,
+  saveNote as storageSaveNote,
+  type Note,
+  type SaveNoteInput,
 } from '@/src/storage/notesStorage';
 import { create } from 'zustand';
 
@@ -17,92 +18,86 @@ interface NotesState {
 interface NotesActions {
   init: () => Promise<void>;
   fetchNote: (id: number) => Promise<void>;
-  saveNote: (
-    note: Omit<Note, 'id' | 'createdAt' | 'updatedAt'> & { id?: number }
-  ) => Promise<Note>;
+  saveNote: (note: SaveNoteInput) => Promise<Note>;
   deleteNote: (id: number) => Promise<void>;
   clearCurrentNote: () => void;
 }
 
-export const useNotesStore = create<NotesState & { actions: NotesActions }>(
-  (set) => ({
+export const useNotesStore = create<NotesState & { actions: NotesActions }>((set) => ({
+  notes: [],
+  currentNote: null,
+  isLoading: false,
 
-    notes: [],
-    currentNote: null,
-    isLoading: false,
-
-    actions: {
-      init: async () => {
-        set({ isLoading: true });
-        try {
-          const notes = await getAllNotes();
-          set({ notes, isLoading: false });
-        } catch (error) {
-          handleError(error, 'notesStore:init');
-          set({ isLoading: false });
-        }
-      },
-
-      fetchNote: async (id: number) => {
-        set({ isLoading: true, currentNote: null });
-        try {
-          const note = await getNoteById(id);
-          set({ currentNote: note, isLoading: false });
-        } catch (error) {
-          handleError(error, 'notesStore:fetchNote', { noteId: id });
-          set({ isLoading: false });
-        }
-      },
-
-      saveNote: async (noteData) => {
-        set({ isLoading: true });
-        try {
-          const savedNote = await storageSaveNote(noteData);
-          set((state) => {
-            const noteExists = state.notes.find((n) => n.id === savedNote.id);
-            const updatedNotes = noteExists
-              ? state.notes.map((n) => (n.id === savedNote.id ? savedNote : n))
-              : [savedNote, ...state.notes];
-            return {
-              notes: updatedNotes,
-              currentNote: savedNote,
-              isLoading: false,
-            };
-          });
-          return savedNote;
-        } catch (error) {
-          handleError(error, 'notesStore:saveNote', { noteData });
-          set({ isLoading: false });
-          throw error;
-        }
-      },
-
-      deleteNote: async (id: number) => {
-        set({ isLoading: true });
-        try {
-          await storageDeleteNote(id);
-          set((state) => ({
-            notes: state.notes.filter((n) => n.id !== id),
-            currentNote:
-              state.currentNote?.id === id ? null : state.currentNote,
-            isLoading: false,
-          }));
-        } catch (error) {
-          handleError(error, 'notesStore:deleteNote', { noteId: id });
-          set({ isLoading: false });
-          throw error;
-        }
-      },
-
-      clearCurrentNote: () => set({ currentNote: null }),
+  actions: {
+    init: async () => {
+      set({ isLoading: true });
+      try {
+        const notes = await getAllNotes();
+        set({ notes, isLoading: false });
+      } catch (error) {
+        handleError(error, 'notesStore:init');
+        set({ isLoading: false });
+      }
     },
-  })
-);
 
-export const useNotesActions = () => useNotesStore((state) => state.actions);
-export const useNotes = () => useNotesStore((state) => state.notes);
-export const useCurrentNote = () => useNotesStore((state) => state.currentNote);
-export const useIsNotesLoading = () => useNotesStore((state) => state.isLoading);
+    fetchNote: async (id: number) => {
+      set({ isLoading: true, currentNote: null });
+      try {
+        const note = await getNoteById(id);
+        set({ currentNote: note, isLoading: false });
+      } catch (error) {
+        handleError(error, 'notesStore:fetchNote', { noteId: id });
+        set({ isLoading: false });
+      }
+    },
+
+    saveNote: async (noteData) => {
+      set({ isLoading: true });
+      try {
+        const savedNote = await storageSaveNote(noteData);
+        set((state) => {
+          const noteExists = state.notes.find((n) => n.id === savedNote.id);
+          const updatedNotes = noteExists
+            ? state.notes.map((n) => (n.id === savedNote.id ? savedNote : n))
+            : [savedNote, ...state.notes];
+          return {
+            notes: updatedNotes,
+            currentNote: savedNote,
+            isLoading: false,
+          };
+        });
+        return savedNote;
+      } catch (error) {
+        handleError(error, 'notesStore:saveNote', { noteData });
+        set({ isLoading: false });
+        throw error;
+      }
+    },
+
+    deleteNote: async (id: number) => {
+      set({ isLoading: true });
+      try {
+        await storageDeleteNote(id);
+        set((state) => ({
+          notes: state.notes.filter((n) => n.id !== id),
+          currentNote: state.currentNote?.id === id ? null : state.currentNote,
+          isLoading: false,
+        }));
+      } catch (error) {
+        handleError(error, 'notesStore:deleteNote', { noteId: id });
+        set({ isLoading: false });
+        throw error;
+      }
+    },
+
+    clearCurrentNote: () => set({ currentNote: null }),
+  },
+}));
+
+export const useNotesActions = () => useNotesStore((s) => s.actions);
+export const useNotes = () => useNotesStore((s) => s.notes);
+export const useCurrentNote = () => useNotesStore((s) => s.currentNote);
+export const useIsNotesLoading = () => useNotesStore((s) => s.isLoading);
 
 export const initializeNotesStore = (): void => {
   useNotesStore.getState().actions.init();

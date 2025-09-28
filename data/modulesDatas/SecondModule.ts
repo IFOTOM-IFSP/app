@@ -8,6 +8,7 @@ export const secondModule: Module = {
     iconName: 'bulb-outline',
     iconColorName: 'blue',
     iconBackgroundColorName: 'blueBackground',
+    thumbnailUrl: require("@/assets/images/banner_mod_2.png"),
     nextModuleId: '3',
     pages: [
         {

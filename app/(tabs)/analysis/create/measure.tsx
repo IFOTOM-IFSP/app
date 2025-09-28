@@ -1,3 +1,3 @@
-import MeasurementSampleScreen from "@/src/features/analysis/screen/measurementSample";
+import MeasurementSampleScreen from "@/src/screens/analysis/measurementSample";
 
 export default MeasurementSampleScreen;

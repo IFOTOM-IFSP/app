@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
   filterButton: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: 20,
-    borderWidth: 1,
+    borderRadius: 10,
+    borderWidth: 0.3,
     marginRight: 10,
     justifyContent: "center",
     alignItems: "center",

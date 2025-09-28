@@ -7,7 +7,7 @@ import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useSettingsStore } from "@/src/store/settingsStore"; // <<< novo
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Switch, View } from "react-native";
-import { useAnalysisMachine } from "../AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
 export default function ParamsScreen() {
   const { state, send } = useAnalysisMachine();

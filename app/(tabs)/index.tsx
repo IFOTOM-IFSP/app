@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { ActivityIndicator, ScrollView, StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 import { HomeHeader } from "@/src/components/home/HomeHeader";
 import { StartAnalysisCard } from "@/src/components/home/StartAnalysisCard";
@@ -9,7 +9,10 @@ import { useThemeValue } from "@/src/hooks/useThemeValue";
 
 import { Sections_Grid_DATA } from "@/data/SectionsGridData";
 import { SectionsGrid } from "@/src/components/common/SectionsGrid";
+import { RecentActivity } from "@/src/components/home/RecentActivity";
+import { useNotesStore } from "@/src/store/notesStore";
 import { useUserStore } from "@/src/store/userStore";
+import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen() {
@@ -21,21 +24,21 @@ export default function HomeScreen() {
   const tintColor = useThemeValue("tint");
   const items = Sections_Grid_DATA;
 
-  // const {
-  //   notes,
-  //   actions: noteActions,
-  //   isLoading: notesLoading,
-  // } = useNotesStore();
+  const {
+    notes,
+    actions: noteActions,
+    isLoading: notesLoading,
+  } = useNotesStore();
   // // const {
   // //   analyses,
   // //   actions: analysisActions,
   // //   isLoading: analysesLoading,
   // // } = useAnalysisStore();
 
-  // useEffect(() => {
-  //   noteActions.init();
-  //   analysisActions.fetchAllAnalyses();
-  // }, [analysisActions, noteActions]);
+  useEffect(() => {
+    noteActions.init();
+    //   analysisActions.fetchAllAnalyses();
+  }, [noteActions]);
 
   const handleSettingsPress = () => {
     router.push("/settings");
@@ -53,22 +56,15 @@ export default function HomeScreen() {
 
   return (
     <ScreenLayout>
-      <ScrollView
-        style={styles.container}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
         <HomeHeader userName={userName} onSettingsPress={handleSettingsPress} />
         <StartAnalysisCard
           href="/analysis"
           sharedTransitionTag="analysis-card-main"
         />
         <SectionsGrid title sections={items} variant="home" />
-        {/* <HistoryToggleList
-          notes={notes}
-          analyses={analyses}
-          isLoading={notesLoading || analysesLoading}
-        /> */}
-      </ScrollView>
+        <RecentActivity notes={notes} isLoading={notesLoading} />
+      </View>
     </ScreenLayout>
   );
 }

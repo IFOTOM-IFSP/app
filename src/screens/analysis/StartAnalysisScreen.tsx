@@ -8,7 +8,7 @@ import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router"; // ★ novo
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useAnalysisMachine } from "../AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
 const parseCiteText = (text: string) => {
   if (!text) return "";

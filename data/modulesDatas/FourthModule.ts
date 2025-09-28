@@ -8,6 +8,7 @@ export const fourthModule: Module = {
     "iconName": 'settings-outline',
     "iconColorName": 'pink',
     "iconBackgroundColorName": 'pinkBackground',
+    thumbnailUrl: require("@/assets/images/banner_mod_4.png"),
     "nextModuleId": '5',
     "pages": [
       {

@@ -57,16 +57,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: Padding.md,
-    paddingVertical: Padding.sm,
     borderRadius: BorderRadius.md,
-    borderWidth: 1,
     marginVertical: Margin.sm,
+    height: 50,
   },
   searchInput: {
+    alignItems: "center",
+    justifyContent: "center",
     flex: 1,
     marginLeft: Margin.sm,
     borderWidth: 0,
-    fontSize: FontSize.lg,
+    fontSize: FontSize.md,
   },
 });
 

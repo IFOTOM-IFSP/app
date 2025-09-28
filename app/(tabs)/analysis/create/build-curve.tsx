@@ -1,3 +1,3 @@
-import CurveBuilderScreen from "@/src/features/analysis/screen/curveBuilder";
+import CurveBuilderScreen from "@/src/screens/analysis/curveBuilder";
 
 export default CurveBuilderScreen;

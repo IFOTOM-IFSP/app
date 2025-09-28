@@ -1,3 +1,3 @@
-import AnalysisDashboardScreen from "@/src/features/analysis/screen/analysisDashboardScreen";
+import AnalysisDashboardScreen from "@/src/screens/analysis/analysisDashboardScreen";
 
 export default AnalysisDashboardScreen;

@@ -19,7 +19,7 @@ import { computeAStatsFromBursts } from "@/src/lib/quantCore";
 import { useCurveLibraryStore } from "@/src/store/curveLibraryStore.ts";
 import { useSettingsStore } from "@/src/store/settingsStore";
 import type { PixelToWavelength } from "@/types/api";
-import { useAnalysisMachine } from "../AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
 // Mesmo alvo usado no pipeline
 const TARGET_POINTS = 2048;

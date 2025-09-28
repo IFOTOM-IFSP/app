@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   },
   thumbnail: {
     width: "100%",
-    aspectRatio: 16 / 9,
+
     height: CARD_IMAGE_HEIGHT,
   },
   gradientPlaceholder: {

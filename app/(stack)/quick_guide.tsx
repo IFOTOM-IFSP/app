@@ -376,7 +376,9 @@ export default function QuickGuideScreen() {
         title="Guia de Projetos"
         subtitle="Construa seu próprio espectrofotômetro"
       />
-      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <ScrollView
+        contentContainerStyle={styles.scrollViewContent}
+        showsHorizontalScrollIndicator={false}>
         {quickGuideContent.map((step, index) => (
           <AccordionItem
             key={index}
@@ -398,21 +400,12 @@ export default function QuickGuideScreen() {
 
 // --- Estilos ---
 const styles = StyleSheet.create({
-  scrollViewContent: { padding: Padding.md },
+  scrollViewContent: {},
   guideCard: {
-    borderRadius: BorderRadius.lg,
+    borderRadius: BorderRadius.md,
     paddingHorizontal: Padding.lg,
     marginBottom: Margin.lg,
     overflow: "hidden",
-    ...Platform.select({
-      ios: {
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 4,
-      },
-      android: { elevation: 3 },
-    }),
   },
   header: {
     flexDirection: "row",

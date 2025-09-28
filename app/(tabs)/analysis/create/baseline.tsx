@@ -1,3 +1,3 @@
-import CaptureBaseScreen from "@/src/features/analysis/screen/captureBase";
+import CaptureBaseScreen from "@/src/screens/analysis/captureBase";
 
 export default CaptureBaseScreen;

@@ -2,7 +2,7 @@
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { View } from "react-native";
-import { useAnalysisMachine } from "../AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
 export default function PreflightScreen() {
   const { state } = useAnalysisMachine();

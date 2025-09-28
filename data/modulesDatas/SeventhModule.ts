@@ -9,6 +9,7 @@ export const seventhModule: Module = {
   iconName: 'analytics-outline',
   iconColorName: 'pink',
   iconBackgroundColorName: 'pinkBackground',
+  thumbnailUrl: require("@/assets/images/banner_mod_7.png"),
   nextModuleId: null,
   pages: [
     {

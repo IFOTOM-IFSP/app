@@ -14,6 +14,7 @@ export default function ModuleListScreen() {
       <HeaderIndex title="Módulos de Aprendizado" />
 
       <Animated.FlatList
+        showsVerticalScrollIndicator={false}
         data={MODULES_DATA}
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
@@ -32,7 +33,6 @@ export default function ModuleListScreen() {
 
 const styles = StyleSheet.create({
   flatListContent: {
-    paddingHorizontal: Padding.md,
     paddingTop: Padding.sm,
     paddingBottom: Padding.xxxl + 30,
   },

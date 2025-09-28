@@ -1,2 +1,2 @@
-import ResultsScreen from "@/src/features/analysis/screen/results";
+import ResultsScreen from "@/src/screens/analysis/results";
 export default ResultsScreen;

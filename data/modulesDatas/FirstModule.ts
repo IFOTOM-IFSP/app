@@ -9,6 +9,7 @@ export const firstModule: Module = {
   iconName: 'library-outline',
   iconColorName: 'primary',
   iconBackgroundColorName: 'primaryBackground',
+  thumbnailUrl: require("@/assets/images/banner_mod_1.png"),
   pages: [
     { 
       id: '1.1',

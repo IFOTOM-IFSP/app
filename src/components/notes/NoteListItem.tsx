@@ -5,92 +5,169 @@ import {
   Margin,
   Padding,
 } from "@/src/constants/Styles";
+import {
+  getChecklistFlexible,
+  pickText,
+  shareNotePdf,
+} from "@/src/features/notes/BuildPdfHtml";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
-import { Note } from "@/src/storage/notesStorage"; // Apenas o 'Note' é importado
-import { FlaskConical, ListChecks, Notebook } from "lucide-react-native";
+import { Note } from "@/src/storage/notesStorage";
+import { LinearGradient } from "expo-linear-gradient";
+import { FlaskConical, ListChecks, Zap } from "lucide-react-native";
 import { MotiView } from "moti";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "../ui/ThemedText";
 
-// --- INÍCIO DA CORREÇÃO ---
-// Definimos a estrutura do bloco de conteúdo localmente, pois ela não é exportada.
-interface NoteContentBlock {
-  type: "text" | "checklist" | string; // Adicionamos outros tipos possíveis
-  value: any;
-}
-// --- FIM DA CORREÇÃO ---
+const formatDate = (d: string | number | Date) => {
+  const date = new Date(d);
+  const now = new Date();
+  const diff = Math.floor((+now - +date) / 86400000);
+  if (diff === 0) return "Hoje";
+  if (diff === 1) return "Ontem";
+  return date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" });
+};
 
-interface NoteListItemProps {
+interface Props {
   item: Note;
   onPress: () => void;
   index: number;
 }
 
-const formatDate = (date: Date) => {
-  const now = new Date();
-  const diffSeconds = Math.round((now.getTime() - date.getTime()) / 1000);
-  const diffDays = Math.floor(diffSeconds / 86400);
+export function NoteMasonryCard({ item, onPress, index }: Props) {
+  const card = useThemeValue("card");
+  const text = useThemeValue("text");
+  const sub = useThemeValue("textSecondary");
+  const border = useThemeValue("border");
+  const primary = useThemeValue("primary") || "#A065C7"; // roxo
 
-  if (diffDays === 0) return "Hoje";
-  if (diffDays === 1) return "Ontem";
-  return date.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short",
-  });
-};
+  const { items, total, pct, blocks } = getChecklistFlexible(item.content);
+  const preview = pickText(blocks, item.content);
 
-const getContentPreview = (content: string) => {
-  try {
-    const parsedContent: NoteContentBlock[] = JSON.parse(content);
-    const textBlock = parsedContent.find((block) => block.type === "text");
-    return textBlock?.value || "Nenhum conteúdo de texto...";
-  } catch (error) {
-    return "Nota sem texto de preview.";
-  }
-};
+  const isTask = item.type === "task";
+  const isAnalysis = item.type === "analysis";
 
-export function NoteListItem({ item, onPress, index }: NoteListItemProps) {
-  const cardColor = useThemeValue("card");
-  const textColor = useThemeValue("text");
-  const textSecondary = useThemeValue("textSecondary");
+  const TypeIcon = isTask ? (
+    <ListChecks size={16} color={sub} />
+  ) : isAnalysis ? (
+    <FlaskConical size={16} color={sub} />
+  ) : (
+    <Zap size={16} color={sub} />
+  );
+  const typeLabel = isTask ? "Tarefa" : isAnalysis ? "Análise" : "Rápida";
 
-  const getIcon = () => {
-    switch (item.type) {
-      case "analysis":
-        return <FlaskConical size={20} color={textSecondary} />;
-      case "task":
-        return <ListChecks size={20} color={textSecondary} />;
-      default:
-        return <Notebook size={20} color={textSecondary} />;
-    }
+  const handleLongPress = () => {
+    const tasksArr = items.map(({ text, checked }) => ({
+      text,
+      checked: !!checked,
+    }));
+    shareNotePdf(item, blocks, tasksArr);
   };
-
-  const contentPreview = getContentPreview(item.content);
 
   return (
     <MotiView
-      from={{ opacity: 0, translateY: 20 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      transition={{ type: "timing", duration: 300, delay: index * 50 }}>
+      from={{ opacity: 0, translateY: 16, scale: 0.98 }}
+      animate={{ opacity: 1, translateY: 0, scale: 1 }}
+      transition={{ type: "timing", duration: 220, delay: index * 30 }}>
       <TouchableOpacity
-        style={[styles.card, { backgroundColor: cardColor }]}
-        onPress={onPress}>
-        <View style={styles.iconContainer}>{getIcon()}</View>
-        <View style={styles.textContainer}>
-          <ThemedText
-            style={[styles.title, { color: textColor }]}
-            numberOfLines={1}>
-            {item.title || "Nota sem título"}
-          </ThemedText>
-          <ThemedText
-            style={[styles.preview, { color: textSecondary }]}
-            numberOfLines={1}>
-            {contentPreview}
+        activeOpacity={0.9}
+        onPress={onPress}
+        onLongPress={handleLongPress}
+        delayLongPress={300}
+        style={[styles.card, { backgroundColor: card, borderColor: border }]}>
+        <LinearGradient
+          colors={[
+            "rgba(160,101,199,0.25)",
+            "rgba(160,101,199,0.10)",
+            "transparent",
+          ]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.accent}
+        />
+
+        <View style={styles.header}>
+          <View
+            style={[
+              styles.pill,
+              {
+                borderColor: "rgba(160,101,199,0.35)",
+                backgroundColor: "rgba(160,101,199,0.14)",
+              },
+            ]}>
+            {TypeIcon}
+            <ThemedText style={[styles.pillText, { color: sub }]}>
+              {typeLabel}
+            </ThemedText>
+          </View>
+          <ThemedText style={[styles.date, { color: sub }]}>
+            {formatDate(item.updatedAt)}
           </ThemedText>
         </View>
-        <ThemedText style={[styles.date, { color: textSecondary }]}>
-          {formatDate(new Date(item.updatedAt))}
+
+        <ThemedText style={[styles.title, { color: text }]} numberOfLines={2}>
+          {item.title || "Nota sem título"}
         </ThemedText>
+
+        {isTask && total > 0 ? (
+          <>
+            <View
+              style={[
+                styles.progressTrack,
+                { backgroundColor: "rgba(160,101,199,0.18)" },
+              ]}>
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${pct}%`, backgroundColor: primary },
+                ]}
+              />
+            </View>
+
+            <View style={{ marginTop: 10, gap: 8 }}>
+              {items.slice(0, 3).map((it, i) => (
+                <View key={i} style={styles.checkRow}>
+                  <View
+                    style={[
+                      styles.checkbox,
+                      {
+                        borderColor: "rgba(160,101,199,0.5)",
+                        backgroundColor: it.checked
+                          ? "rgba(160,101,199,0.16)"
+                          : "transparent",
+                      },
+                    ]}>
+                    {it.checked ? (
+                      <View
+                        style={[styles.dot, { backgroundColor: primary }]}
+                      />
+                    ) : null}
+                  </View>
+                  <ThemedText
+                    numberOfLines={1}
+                    style={{
+                      color: it.checked ? sub : text,
+                      textDecorationLine: it.checked ? "line-through" : "none",
+                      opacity: it.checked ? 0.7 : 1,
+                      fontSize: 13,
+                    }}>
+                    {it.text}
+                  </ThemedText>
+                </View>
+              ))}
+              {total > 3 && (
+                <ThemedText style={{ color: sub, fontSize: 12 }}>
+                  +{total - 3} tarefas
+                </ThemedText>
+              )}
+            </View>
+          </>
+        ) : !!preview ? (
+          <ThemedText
+            style={[styles.preview, { color: sub }]}
+            numberOfLines={isAnalysis ? 3 : 3}>
+            {preview}
+          </ThemedText>
+        ) : null}
       </TouchableOpacity>
     </MotiView>
   );
@@ -98,34 +175,73 @@ export function NoteListItem({ item, onPress, index }: NoteListItemProps) {
 
 const styles = StyleSheet.create({
   card: {
+    width: "100%",
+    borderRadius: BorderRadius.md,
+    padding: Padding.md,
+    borderWidth: 0.4,
+    overflow: "hidden",
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 0.4,
+  },
+  accent: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 60,
+    opacity: 0.45,
+  },
+  header: {
     flexDirection: "row",
     alignItems: "center",
-    padding: Padding.md,
-    borderRadius: BorderRadius.lg,
-    elevation: 1,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    width: "100%",
+    marginBottom: Margin.sm,
   },
-  iconContainer: {
-    marginRight: Margin.md,
-    opacity: 0.8,
+  pill: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 10,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1,
+    marginRight: 8,
   },
-  textContainer: {
-    flex: 1,
+  pillText: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  date: {
+    marginLeft: "auto",
+    fontSize: 12,
   },
   title: {
     fontSize: FontSize.lg,
-    fontWeight: FontWeight.medium,
+    fontWeight: FontWeight.semiBold,
+    marginBottom: 6,
   },
   preview: {
     fontSize: FontSize.md,
-    marginTop: 2,
+    lineHeight: 20,
   },
-  date: {
-    fontSize: FontSize.sm,
-    marginLeft: Margin.sm,
+  progressTrack: {
+    height: 6,
+    borderRadius: 3,
+    marginTop: 4,
   },
+  progressFill: {
+    height: 6,
+    borderRadius: 3,
+  },
+  checkRow: { flexDirection: "row", alignItems: "center", columnGap: 8 },
+  checkbox: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    borderWidth: 1.5,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  dot: { width: 10, height: 10, borderRadius: 5 },
 });

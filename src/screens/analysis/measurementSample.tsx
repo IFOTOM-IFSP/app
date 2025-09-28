@@ -9,7 +9,7 @@ import { Button } from "@/src/components/ui/Button";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useSettingsStore } from "@/src/store/settingsStore";
-import { useAnalysisMachine } from "../AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
 export default function MeasurementSampleScreen() {
   const router = useRouter();

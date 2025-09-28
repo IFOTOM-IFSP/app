@@ -65,7 +65,7 @@ import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useAnalysisMachine } from "../AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
 export default function AnalysisStart() {
   const [isModalVisible, setModalVisible] = useState(false);

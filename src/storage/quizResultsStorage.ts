@@ -25,7 +25,6 @@ async function getQuizDB(): Promise<SQLiteDatabase> {
         completedAt TEXT NOT NULL
       );
     `);
-    console.log("SQLite [quizStorage]: Tabela 'quiz_results' pronta.");
     return quizDbInstance;
   } catch (error) {
     handleError(error, 'quizStorage:getQuizDB');
@@ -43,7 +42,6 @@ export async function saveQuizResult(result: Omit<QuizResult, 'id'>): Promise<Qu
       [result.quizId, result.score, result.completedAt]
     );
     const newId = dbResult.lastInsertRowId;
-    console.log(`SQLite [quizStorage]: Resultado para o quizId '${result.quizId}' salvo com sucesso.`);
     return { ...result, id: newId };
   } catch (error) {
     handleError(error, 'quizStorage:saveQuizResult', { quizResult: result });
@@ -79,7 +77,6 @@ export async function deleteAllQuizResults(): Promise<void> {
   try {
     const db = await getQuizDB();
     await db.runAsync('DELETE FROM quiz_results;');
-    console.log("SQLite [quizStorage]: Todos os resultados de quizzes foram apagados.");
   } catch (error) {
     handleError(error, 'quizStorage:deleteAllQuizResults');
     throw error;

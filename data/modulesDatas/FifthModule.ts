@@ -8,6 +8,7 @@ export const fifthModule : Module = {
   iconName: 'file-tray-full-outline',
   iconColorName : 'warning',
   iconBackgroundColorName : 'warningBackground',
+  thumbnailUrl: require("@/assets/images/banner_mod_5.png"),
   nextModuleId : '6',
   pages : [
     {

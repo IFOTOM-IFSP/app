@@ -1,9 +1,9 @@
 import { handleError } from '@/services/errorHandler';
 import {
-    isFirstLaunch as checkFirstLaunch,
-    clearFirstLaunch,
-    getUserName,
-    saveUserName as saveNameToStorage,
+  isFirstLaunch as checkFirstLaunch,
+  clearFirstLaunch,
+  getUserName,
+  saveUserName as saveNameToStorage,
 } from '@/src/storage/userStorage';
 import { create } from 'zustand';
 
@@ -31,14 +31,12 @@ export const useUserStore = create<UserState & { actions: UserActions }>((set, g
               return;
             }
       try {
-        console.log("Zustand [userStore]: Inicializando... Buscando dados do DB.");
         const [name, firstLaunch] = await Promise.all([
           getUserName(),
           checkFirstLaunch(),
         ]);
         
         set({ name, isFirstLaunch: firstLaunch, isLoading: false });
-        console.log("Zustand [userStore]: Inicialização completa.");
       } catch (error) {
         handleError(error, 'userStore:init');
         set({ isLoading: false }); 
@@ -49,7 +47,6 @@ export const useUserStore = create<UserState & { actions: UserActions }>((set, g
       try {
         await saveNameToStorage(newName);
         set({ name: newName, isFirstLaunch: false });
-        console.log("Zustand [userStore]: Nome salvo na store e no DB.");
       } catch (error) {
         throw handleError(error, 'userStore:saveName', { userName: newName });
       }
@@ -59,7 +56,6 @@ export const useUserStore = create<UserState & { actions: UserActions }>((set, g
       try {
         await clearFirstLaunch(); 
         set({ name: null, isFirstLaunch: true });
-        console.log("Zustand [userStore]: Nome de usuário limpo na store e no DB.");
       } catch (error) {
         throw handleError(error, 'userStore:resetUser');
       }

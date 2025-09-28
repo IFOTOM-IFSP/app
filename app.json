@@ -4,11 +4,11 @@
     "slug": "iFOTOM",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.jpg",
+    "icon": "./assets/images/splash.png",
     "userInterfaceStyle": "automatic",
     "jsEngine": "hermes",
     "splash": {
-      "image": "./assets/images/splash_icon.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#A25CC7"
     },
@@ -30,6 +30,7 @@
         "android.permission.WRITE_EXTERNAL_STORAGE",
         "CAMERA"
       ],
+      "softwareKeyboardLayoutMode": "pan",
       "newArchEnabled": true,
       "package": "com.anonymous.iFOTOM"
     },
@@ -69,6 +70,12 @@
           }
         }
       ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ],
       "expo-router",
       [
         "expo-camera",
@@ -90,9 +97,9 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash_icon.png",
+          "image": "./assets/images/splash.png",
           "dark": {
-            "image": "./assets/images/splash_icon.png"
+            "image": "./assets/images/splash.png"
           },
           "imageWidth": 500,
           "imageHeight": 700

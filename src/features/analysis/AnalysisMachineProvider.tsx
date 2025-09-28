@@ -1,4 +1,3 @@
-// app/analysis/AnalysisMachineProvider.tsx
 import { quantMachine } from "@/src/lib/quantMachine";
 import { useMachine } from "@xstate/react";
 import React, { createContext, useContext } from "react";
