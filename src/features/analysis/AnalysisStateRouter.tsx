@@ -5,7 +5,8 @@ import { useEffect, useMemo } from "react";
 
 const norm = (p: string) => {
   const base = p.split("?")[0].split("#")[0];
-  return base.endsWith("/") && base !== "/" ? base.slice(0, -1) : base;
+  const trimmed = base.endsWith("/") && base !== "/" ? base.slice(0, -1) : base;
+  return trimmed.endsWith("/index") ? trimmed.slice(0, -6) : trimmed;
 };
 const inCreate = (p: string) =>
   p.startsWith("/(tabs)/analysis/create") || p.startsWith("/analysis/create");
@@ -21,7 +22,7 @@ export default function AnalysisStateRouter() {
   const target = useMemo(() => {
     if (!inCreate(path)) return null;
 
-    if (state.matches("CHOOSE_TYPE")) return "/(tabs)/analysis/create/index";
+    if (state.matches("CHOOSE_TYPE")) return "/(tabs)/analysis/create";
     if (state.matches("PARAMS")) return "/(tabs)/analysis/create/params";
     if (state.matches("PREFLIGHT") || state.matches("DECIDE_CALIB_DEVICE"))
       return "/(tabs)/analysis/create/preflight";
@@ -36,7 +37,7 @@ export default function AnalysisStateRouter() {
       state.matches("ACQ_SAMPLE") ||
       state.matches("ACQ_REF2")
     )
-      return "/(tabs)/analysis/create/acquire";
+      return "/(tabs)/analysis/create/measure";
     if (state.matches("PROCESSING")) return "/(tabs)/analysis/create/processing";
     if (
       state.matches("RESULTS") ||
