@@ -1,7 +1,7 @@
 // src/features/analysis/AnalysisStateRouter.tsx
 import { useAnalysisMachine } from "@/src/hooks/AnalysisMachineProvider";
 import { router, usePathname, useRootNavigationState } from "expo-router";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 const norm = (p: string) => {
   const base = p.split("?")[0].split("#")[0];
@@ -17,10 +17,12 @@ export default function AnalysisStateRouter() {
   const navigationState = useRootNavigationState();
 
   const isNavigationReady = Boolean(navigationState?.key);
-  const path = useMemo(() => norm(rawPath ?? "/"), [rawPath]);
+  const path = useMemo(() => rawPath ?? "/", [rawPath]);
+  const normalizedPath = useMemo(() => norm(path), [path]);
+  const lastReplacedPathRef = useRef(normalizedPath);
 
   const target = useMemo(() => {
-    if (!inCreate(path)) return null;
+    if (!inCreate(normalizedPath)) return null;
 
     if (state.matches("CHOOSE_TYPE")) return "/(tabs)/analysis/create";
     if (state.matches("PARAMS")) return "/(tabs)/analysis/create/params";
@@ -47,16 +49,22 @@ export default function AnalysisStateRouter() {
       return "/(tabs)/analysis/create/result";
 
     return null;
-  }, [path, state.value]);
+  }, [normalizedPath, state.value]);
+
+  useEffect(() => {
+    if (!isNavigationReady) return;
+    lastReplacedPathRef.current = normalizedPath;
+  }, [normalizedPath, isNavigationReady]);
 
   useEffect(() => {
     if (!isNavigationReady || !target) return;
 
     const to = norm(target);
-    if (to === path) return;
+    if (to === normalizedPath || lastReplacedPathRef.current === to) return;
 
+    lastReplacedPathRef.current = to;
     router.replace(to);
-  }, [target, path, isNavigationReady]);
+  }, [target, normalizedPath, isNavigationReady]);
 
   return null;
 }
