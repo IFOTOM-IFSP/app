@@ -5,7 +5,7 @@ import { AnalysisParams, Matrix, ROI } from "@/types/types";
 
 const DEFAULT_VECTOR_LENGTH = 1024;
 const SATURATION_THRESHOLD = 252;
-const SATURATION_FRACTION = 0.98; // ~98% do range útil
+const SATURATION_FRACTION = 0.98; 
 
 type NativeSpectrometerModule = {
   captureBurst: (options: Record<string, unknown>) => Promise<unknown>;

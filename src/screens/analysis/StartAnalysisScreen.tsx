@@ -6,7 +6,7 @@ import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router"; // ★ novo
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
@@ -51,43 +51,38 @@ const ModalContent = ({ item }: { item: AnalysisDataItem | undefined }) => {
     </>
   );
 };
-
 export default function AnalysisStart() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedAnalysisIndex, setSelectedAnalysisIndex] = useState(0);
   const backgroundColor = useThemeValue("card");
   const text = useThemeValue("text");
   const tint = useThemeValue("tint");
-  const { state, send } = useAnalysisMachine(); // ★ pegar state também
-  const router = useRouter(); // ★
+  const { state, send } = useAnalysisMachine();
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log("MACHINE STATE:", state.value);
+    console.log("analysisType:", state.context.analysisType);
+  }, [state.value]);
 
   const openInfoModal = (index: number) => {
     setSelectedAnalysisIndex(index);
     setModalVisible(true);
   };
 
-  // ★ navegação centralizada
-  const goToParams = () => router.push("/analysis/params");
-
-  // ★ fluxo robusto: garante CHOOSE_TYPE → PARAMS antes de navegar
   const handleStartAnalysis = (analysisType: string) => {
     if (analysisType !== "quantitative") return;
 
     if (state.matches("CHOOSE_TYPE")) {
-      // caminho feliz: estamos no estado certo
-      send({ type: "SELECT_TYPE", value: "quant" });
-      goToParams();
+      send({ type: "CHOOSE_TYPE", value: "quant" });
       return;
     }
 
     if (state.matches("PARAMS")) {
-      // já está em PARAMS (ex.: retorno de back), só navegar
-      goToParams();
       return;
     }
 
-    send({ type: "SELECT_TYPE", value: "quant" });
-    goToParams();
+    send({ type: "CHOOSE_TYPE", value: "quant" });
   };
 
   const selectedAnalysisData = TYPES_ANALYSIS_DATA[selectedAnalysisIndex];

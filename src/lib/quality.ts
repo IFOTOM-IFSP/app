@@ -33,13 +33,11 @@ export function validatePreflight(profile: DeviceProfile | null, roi?: ROI): Acc
     return { ok: false, issues };
   }
 
-  // ROI válida
   const r = roi ?? (profile.roi as ROI);
   if (!r || r.w <= 0 || r.h <= 0) {
     issues.push('ROI inválida (w/h ≤ 0). Refaça a calibração da ordem/fenda.');
   }
 
-  // RMSE_nm aceitável
   const rmse = (profile as any).rmse_nm as number | undefined;
   if (typeof rmse === 'number') {
     if (rmse > RMSE_NM_MAX) {
@@ -49,7 +47,6 @@ export function validatePreflight(profile: DeviceProfile | null, roi?: ROI): Acc
     suggestions.push('RMSE_λ desconhecido. Recomenda-se caracterizar com ao menos 2–3 lasers.');
   }
 
-  // Metadados de câmera
   if (!profile.camera_meta) {
     suggestions.push('Camera meta ausente (ISO/exposição/WB). Travar AE/AWB e definir exposição fixa.');
   }

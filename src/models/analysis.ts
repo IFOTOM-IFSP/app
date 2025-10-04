@@ -2,8 +2,8 @@ import type { QuantAnalyzeResponse } from '@/types/api';
 import type { AnalysisParams, DeviceProfile } from '@/types/types';
 
 export type AnalysisReport = {
-  id: string;                 // uuid/string
-  savedAt: string;            // ISO string (para o History sort)
+  id: string;                 
+  savedAt: string;            
   setupData: {
     name: string;
     substance?: string;
@@ -14,7 +14,6 @@ export type AnalysisReport = {
   deviceProfileSnapshot?: Partial<DeviceProfile>;
   results: QuantAnalyzeResponse;
 };
-
 
 export function toSavedAnalysis(report: AnalysisReport) {
   return {
@@ -29,7 +28,7 @@ export function toSavedAnalysis(report: AnalysisReport) {
 }
 
 export type CalibrationMeasurement = {
-  laserName: string;      // "Laser Verde", "LED 650nm", etc.
-  wavelengthNm: number;   // comprimento de onda conhecido (nm)
-  imageUris: string[];    // burst de imagens capturadas
+  laserName: string;      
+  wavelengthNm: number;   
+  imageUris: string[];    
 };

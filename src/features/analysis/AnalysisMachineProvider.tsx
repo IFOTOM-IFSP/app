@@ -1,25 +1,44 @@
-import { quantMachine } from "@/src/lib/quantMachine";
-import { useMachine } from "@xstate/react";
-import React, { createContext, useContext } from "react";
+import { quantMachine } from "@/src/machines/quantMachine";
+import { useActorRef, useSelector } from "@xstate/react";
+import { createContext, useContext, useEffect, useRef } from "react";
+import type { ActorRefFrom, SnapshotFrom } from "xstate";
 
-type Ctx = ReturnType<typeof useMachine<typeof quantMachine>>;
-const AnalysisCtx = createContext<Ctx | null>(null);
-
-export const AnalysisMachineProvider: React.FC<{
-  children: React.ReactNode;
-}> = ({ children }) => {
-  const service = useMachine(quantMachine);
-  return (
-    <AnalysisCtx.Provider value={service}>{children}</AnalysisCtx.Provider>
-  );
+type AnalysisCtx = {
+  actor: ActorRefFrom<typeof quantMachine>;
+  state: SnapshotFrom<typeof quantMachine>;
+  send: ActorRefFrom<typeof quantMachine>["send"];
 };
 
+const Ctx = createContext<AnalysisCtx | null>(null);
+
+export function AnalysisMachineProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const actor = useActorRef(quantMachine);
+
+  const state = useSelector(actor, (s) => s);
+
+  const { send } = actor;
+
+  const didResetRef = useRef(false);
+  useEffect(() => {
+    if (state.matches("PARAMS") && state.context.analysisType !== "quant") {
+      if (!didResetRef.current) {
+        didResetRef.current = true;
+        actor.send({ type: "RESET" });
+      }
+    } else {
+      didResetRef.current = false;
+    }
+  }, [actor, state]);
+
+  return <Ctx.Provider value={{ actor, state, send }}>{children}</Ctx.Provider>;
+}
+
 export function useAnalysisMachine() {
-  const ctx = useContext(AnalysisCtx);
-  if (!ctx)
-    throw new Error(
-      "useAnalysisMachine must be used inside AnalysisMachineProvider"
-    );
-  const [state, send, service] = ctx;
-  return { state, send, service };
+  const v = useContext(Ctx);
+  if (!v) throw new Error("AnalysisMachineProvider ausente");
+  return v;
 }

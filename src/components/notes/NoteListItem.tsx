@@ -234,7 +234,12 @@ const styles = StyleSheet.create({
     height: 6,
     borderRadius: 3,
   },
-  checkRow: { flexDirection: "row", alignItems: "center", columnGap: 8 },
+  checkRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    columnGap: 8,
+    paddingRight: 8,
+  },
   checkbox: {
     width: 18,
     height: 18,

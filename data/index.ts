@@ -1,5 +1,5 @@
-import { Module } from '@/src/models/contentSchema';
-import { Quiz } from '@/src/models/quizSchema';
+import { Module } from '@/src/models/content';
+import { Quiz } from '@/src/models/quiz';
 import { fifthModule } from './modulesDatas/FifthModule';
 import { firstModule } from './modulesDatas/FirstModule';
 import { fourthModule } from './modulesDatas/FourthModule';

@@ -1,17 +1,18 @@
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { FontWeight, Padding } from "@/src/constants/Styles";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
-import { router } from "expo-router";
 import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
-
-export default function CardMain() {
+interface CardMainProps {
+  onPress: () => void;
+}
+export default function CardMain({ onPress }: CardMainProps) {
   const cardColor = "rgba(170, 110, 211, 1)";
   const textWhite = useThemeValue("textWhite");
   return (
     <TouchableOpacity
       style={[styles.analysisStart, { backgroundColor: cardColor }]}
       activeOpacity={0.9}
-      onPress={() => router.push("/(tabs)/analysis/create")}>
+      onPress={onPress}>
       <View style={styles.textContainerCard}>
         <ThemedText style={[styles.titleCard, { color: textWhite }]}>
           Iniciar análise

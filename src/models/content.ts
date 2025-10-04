@@ -1,6 +1,6 @@
-import { ThemeColorName } from "@/src/constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { ImageSourcePropType } from "react-native";
+import { ThemeColors } from "../constants/Colors";
 
 export interface ContentBlock {
   type: 'text'| 'list' | 'image' | 'video' | 'code' | 'interactive' ; 
@@ -61,8 +61,8 @@ export interface Module {
   description: string;
   pages: ModulePage[];
   iconName: keyof typeof Ionicons.glyphMap; 
-  iconColorName: ThemeColorName;
-  iconBackgroundColorName: ThemeColorName;
+  iconColorName: ThemeColors;
+  iconBackgroundColorName: ThemeColors;
   nextModuleId?: string | null;
   estimatedTime?: string;
   prerequisites?: string[];

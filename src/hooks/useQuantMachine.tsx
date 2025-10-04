@@ -1,5 +1,5 @@
-import { quantMachine } from "@/src/lib/quantMachine";
 import { useMachine } from "@xstate/react";
+import { quantMachine } from "../machines/quantMachine";
 
 export function useQuantFlow() {
   const [state, send] = useMachine(quantMachine);

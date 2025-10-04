@@ -1,4 +1,3 @@
-// app/(tabs)/analysis/history/[id].tsx  (ou ajuste ao seu path)
 import { useAnalysisHistory } from "@/src/store/analysisHistoryStore";
 import { useLocalSearchParams } from "expo-router";
 import { useMemo } from "react";

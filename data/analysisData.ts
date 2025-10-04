@@ -1,5 +1,11 @@
-import { InfoCardData, TypesAnalysisData } from "@/src/models/analysis";
 
+export interface InfoCardData {
+    title: string;
+    subtitle: string;
+    largeNumber: string;
+    smallIcon: any;
+    route: string;
+}
 export const INFO_CARD_DATA: InfoCardData[] = [
   {
     title: "Minhas Análises",
@@ -27,9 +33,21 @@ export const INFO_CARD_DATA: InfoCardData[] = [
     subtitle: "Clique para converter unidades",
     largeNumber: "4",
     smallIcon: require("@/assets/images/math.png"),
-    route: "/unit-converter",
+    route: "/(stack)/unit_converter",
   },
 ];
+
+export interface TypesAnalysisData {
+    id: string;
+    title: string;
+    icon: string;
+    subtitle: string;
+    keyQuestion: string;
+    explanation: string;
+    howItWorks: string[];
+    useCases: string[];
+    enabled: boolean;
+}
 
 export const TYPES_ANALYSIS_DATA: TypesAnalysisData[] = [
     {

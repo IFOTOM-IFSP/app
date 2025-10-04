@@ -5,18 +5,31 @@ import { ThemedInput } from "@/src/components/ui/ThemedInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useSettingsStore } from "@/src/store/settingsStore"; // <<< novo
+import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Switch, View } from "react-native";
 import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
 
 export default function ParamsScreen() {
   const { state, send } = useAnalysisMachine();
+  const analysisType = state.context.analysisType;
   const tint = useThemeValue("tint");
+
+  // ✅ Guarda de rota – só fica aqui se a máquina disser que é PARAMS de quant
   useEffect(() => {
-    if (state.matches("CHOOSE_TYPE")) {
-      send({ type: "SELECT_TYPE", value: "quant" });
+    if (!state.matches("PARAMS") || analysisType !== "quant") {
+      router.replace("/(tabs)/analysis/create/index");
     }
-  }, [state, send]);
+  }, [state.value, analysisType]);
+
+  // Evita flash enquanto redireciona
+  if (!state.matches("PARAMS") || analysisType !== "quant") return null;
+
+  // (opcional) log para depurar
+  useEffect(() => {
+    console.log("MACHINE STATE:", state.value);
+    console.log("analysisType:", state.context.analysisType);
+  }, [state.value]);
 
   const learningMode = useSettingsStore((s) => s.learningMode);
   const setLearningMode = useSettingsStore((s) => s.setLearningMode);
@@ -34,21 +47,83 @@ export default function ParamsScreen() {
     [state.context.params]
   );
 
-  const [form, setForm] = useState(defaults);
+  const [form, setForm] = useState({
+    lambda_nm: defaults.lambda_nm,
+    window_nm: defaults.window_nm,
+    frames_per_burst: defaults.frames_per_burst,
+    build_curve: defaults.build_curve,
+    useLocalCore: defaults.useLocalCore,
+    name: defaults.name,
+    substance: defaults.substance,
+  });
 
   return (
     <ScreenLayout>
-      <ThemedText style={styles.title}>Parâmetros</ThemedText>
+      <ThemedText style={styles.title}>Parâmetros da Análise</ThemedText>
+
+      <View style={styles.twoCols}>
+        <ThemedInput
+          label="λ (nm)"
+          keyboardType="numeric"
+          value={String(form.lambda_nm)}
+          onChangeText={(t) =>
+            setForm((m) => ({
+              ...m,
+              lambda_nm: Number(t.replace(",", ".")) || 0,
+            }))
+          }
+        />
+        <ThemedInput
+          label="Janela (nm)"
+          keyboardType="numeric"
+          value={String(form.window_nm)}
+          onChangeText={(t) =>
+            setForm((m) => ({
+              ...m,
+              window_nm: Number(t.replace(",", ".")) || 0,
+            }))
+          }
+        />
+      </View>
+
+      <ThemedInput
+        label="Frames por burst"
+        keyboardType="numeric"
+        value={String(form.frames_per_burst)}
+        onChangeText={(t) =>
+          setForm((m) => ({
+            ...m,
+            frames_per_burst: Number(t.replace(",", ".")) || 0,
+          }))
+        }
+      />
+
+      <View style={styles.row}>
+        <ThemedText>Construir curva de calibração</ThemedText>
+        <Switch
+          value={form.build_curve}
+          onValueChange={(v) => setForm((m) => ({ ...m, build_curve: v }))}
+        />
+      </View>
+
+      <View style={styles.row}>
+        <ThemedText>Processamento local (prévia)</ThemedText>
+        <Switch
+          value={form.useLocalCore}
+          onValueChange={(v) => setForm((m) => ({ ...m, useLocalCore: v }))}
+        />
+      </View>
 
       {learningMode && (
         <View style={styles.helpBox}>
+          <ThemedText style={styles.bold}>Dicas</ThemedText>
+          <ThemedText>• λ: centralize no λmáx do analito.</ThemedText>
           <ThemedText>
-            • <ThemedText style={styles.bold}>λ de análise</ThemedText>: use o
-            λmax da espécie. Janela integra em [λ±Δ/2] para robustez.
+            • Janela: pequena o suficiente para focar no pico, grande o
+            suficiente para reduzir ruído (p.ex. 4–10 nm).
           </ThemedText>
           <ThemedText>
-            • <ThemedText style={styles.bold}>Frames por leitura</ThemedText>:
-            mais frames → menos ruído, porém maior tempo.
+            • Frames: mais frames → menos ruído, porém maior tempo.
           </ThemedText>
           <ThemedText>
             • <ThemedText style={styles.bold}>Processamento local</ThemedText>:
@@ -62,73 +137,13 @@ export default function ParamsScreen() {
         <Switch value={learningMode} onValueChange={setLearningMode} />
       </View>
 
-      <ThemedInput
-        label="Nome"
-        value={String(form.name)}
-        onChangeText={(v) => setForm((f) => ({ ...f, name: v }))}
-      />
-      <ThemedInput
-        label="Substância"
-        value={String(form.substance)}
-        onChangeText={(v) => setForm((f) => ({ ...f, substance: v }))}
-      />
-
-      <View style={styles.twoCols}>
-        <ThemedInput
-          label="λ (nm)"
-          keyboardType="numeric"
-          value={String(form.lambda_nm)}
-          onChangeText={(v) =>
-            setForm((f) => ({ ...f, lambda_nm: Number(v) || 0 }))
-          }
-        />
-        <ThemedInput
-          label="Janela Δ (nm)"
-          keyboardType="numeric"
-          value={String(form.window_nm)}
-          onChangeText={(v) =>
-            setForm((f) => ({ ...f, window_nm: Number(v) || 0 }))
-          }
-        />
-      </View>
-
-      <View style={styles.twoCols}>
-        <ThemedInput
-          label="Frames por leitura"
-          keyboardType="numeric"
-          value={String(form.frames_per_burst)}
-          onChangeText={(v) =>
-            setForm((f) => ({
-              ...f,
-              frames_per_burst: Math.max(1, Number(v) || 1),
-            }))
-          }
-        />
-        <View style={styles.switchBox}>
-          <ThemedText>Construir curva agora</ThemedText>
-          <Switch
-            value={!!form.build_curve}
-            onValueChange={(v) => setForm((f) => ({ ...f, build_curve: v }))}
-          />
-        </View>
-      </View>
-
-      <View style={styles.row}>
-        <ThemedText>Processamento local (prévia/offline)</ThemedText>
-        <Switch
-          value={!!form.useLocalCore}
-          onValueChange={(v) => setForm((f) => ({ ...f, useLocalCore: v }))}
-        />
-      </View>
-
       <Button
+        style={{ marginTop: 16, backgroundColor: tint }}
         title="Continuar"
         onPress={() => {
           send({
             type: "SUBMIT_PARAMS",
             params: {
-              name: form.name,
-              substance: form.substance,
               lambda_nm: form.lambda_nm,
               window_nm: form.window_nm,
               frames_per_burst: form.frames_per_burst,
@@ -149,12 +164,12 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: "700", marginBottom: 12 },
   helpBox: {
     borderWidth: 1,
-    borderColor: "#e5e7eb",
-    borderRadius: 10,
+    borderColor: "#E5E7EB",
+    borderRadius: 12,
     padding: 12,
-    marginBottom: 12,
+    marginTop: 12,
   },
-  bold: { fontWeight: "600" },
+  bold: { fontWeight: "700" },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
