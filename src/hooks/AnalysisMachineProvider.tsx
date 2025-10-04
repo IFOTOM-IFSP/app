@@ -1,12 +1,15 @@
 // src/features/analysis/AnalysisMachineProvider.tsx
 import { quantMachine } from "@/src/machines/quantMachine";
-import { useMachine } from "@xstate/react";
-import { createContext, useContext } from "react";
+import { useActor, useInterpret } from "@xstate/react";
+import { createContext, useContext, useMemo } from "react";
+import type { ActorRefFrom, StateFrom } from "xstate";
+
+type AnalysisActor = ActorRefFrom<typeof quantMachine>;
 
 type AnalysisCtx = {
-  state: ReturnType<typeof useMachine<typeof quantMachine>>[0];
-  send: ReturnType<typeof useMachine<typeof quantMachine>>[1];
-  actor: ReturnType<typeof useMachine<typeof quantMachine>>[2];
+  state: StateFrom<typeof quantMachine>;
+  send: AnalysisActor["send"];
+  actor: AnalysisActor;
 };
 
 const Ctx = createContext<AnalysisCtx | null>(null);
@@ -16,9 +19,12 @@ export function AnalysisMachineProvider({
 }: {
   children: React.ReactNode;
 }) {
-  // ❗️Somente cria a máquina e fornece o contexto — NADA de effects aqui.
-  const [state, send, actor] = useMachine(quantMachine);
-  return <Ctx.Provider value={{ state, send, actor }}>{children}</Ctx.Provider>;
+  const actor = useInterpret(quantMachine);
+  const [state, send] = useActor(actor);
+
+  const value = useMemo(() => ({ state, send, actor }), [state, send, actor]);
+
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
 export function useAnalysisMachine() {
