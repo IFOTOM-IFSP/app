@@ -5,7 +5,6 @@ import { ThemedInput } from "@/src/components/ui/ThemedInput";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useSettingsStore } from "@/src/store/settingsStore"; // <<< novo
-import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Switch, View } from "react-native";
 import { useAnalysisMachine } from "../../hooks/AnalysisMachineProvider";
@@ -14,13 +13,6 @@ export default function ParamsScreen() {
   const { state, send } = useAnalysisMachine();
   const analysisType = state.context.analysisType;
   const tint = useThemeValue("tint");
-
-  // ✅ Guarda de rota – só fica aqui se a máquina disser que é PARAMS de quant
-  useEffect(() => {
-    if (!state.matches("PARAMS") || analysisType !== "quant") {
-      router.replace("/(tabs)/analysis/create/index");
-    }
-  }, [state.value, analysisType]);
 
   // Evita flash enquanto redireciona
   if (!state.matches("PARAMS") || analysisType !== "quant") return null;
