@@ -2,8 +2,8 @@
 import type { QuantAnalyzeResponse } from '@/types/api';
 import type { AnalysisParams, Curve } from '@/types/types';
 import { useCallback, useMemo } from 'react';
-import { useAnalysisMachine } from '../features/analysis/AnalysisMachineProvider';
 import { buildSavedAnalysis, useAnalysisHistory } from '../store/analysisHistoryStore';
+import { useAnalysisMachine } from './AnalysisMachineProvider';
 
 type StartArgs = {
   params: AnalysisParams;

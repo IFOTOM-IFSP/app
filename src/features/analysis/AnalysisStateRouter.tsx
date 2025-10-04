@@ -1,69 +1,53 @@
+// src/features/analysis/AnalysisStateRouter.tsx
+import { useAnalysisMachine } from "@/src/hooks/AnalysisMachineProvider";
 import { router, usePathname } from "expo-router";
-import { useEffect, useRef } from "react";
-import { useAnalysisMachine } from "./AnalysisMachineProvider";
+import { useCallback, useEffect, useRef } from "react";
 
-function normalizePath(p: string) {
+const norm = (p: string) => {
   const base = p.split("?")[0].split("#")[0];
   return base.endsWith("/") && base !== "/" ? base.slice(0, -1) : base;
-}
-function inCreateFlow(path: string) {
-  const p = normalizePath(path);
-  return (
-    p.startsWith("/(tabs)/analysis/create") || p.startsWith("/analysis/create")
-  );
-}
+};
+const inCreate = (p: string) =>
+  p.startsWith("/(tabs)/analysis/create/index") ||
+  p.startsWith("/analysis/create/index");
 
-export function useSyncRouteWithState() {
+export default function AnalysisStateRouter() {
   const { state } = useAnalysisMachine();
   const path = usePathname();
 
-  const lastPathRef = useRef<string | null>(null);
-  const safeReplace = (to: string) => {
-    if (normalizePath(lastPathRef.current ?? "") === normalizePath(to)) return;
-    if (normalizePath(path) === normalizePath(to)) return;
-    lastPathRef.current = to;
-    router.replace(to);
-  };
-
-  const analysisType = state.context?.analysisType;
+  const lastRef = useRef(norm(path));
+  const safeReplace = useCallback(
+    (to: string) => {
+      const toN = norm(to),
+        pN = norm(path);
+      if (toN === pN || lastRef.current === toN) return;
+      lastRef.current = toN;
+      router.replace(toN);
+    },
+    [path]
+  );
 
   useEffect(() => {
-    if (!inCreateFlow(path)) return;
+    lastRef.current = norm(path);
+  }, [path]);
 
-    if (state.matches("CHOOSE_TYPE")) {
-      safeReplace("/(tabs)/analysis/create/index");
-      return;
-    }
+  useEffect(() => {
+    const p = norm(path);
+    if (!inCreate(p)) return;
 
-    if (state.matches("PARAMS")) {
-      if (analysisType === "quant") {
-        safeReplace("/(tabs)/analysis/create/params");
-      } else {
-        safeReplace("/(tabs)/analysis/create/index");
-      }
-      return;
-    }
+    if (state.matches("CHOOSE_TYPE"))
+      return safeReplace("/(tabs)/analysis/create/index");
+    if (state.matches("PARAMS"))
+      return safeReplace("/(tabs)/analysis/create/params");
+    if (state.matches("PREFLIGHT"))
+      return safeReplace("/(tabs)/analysis/create/preflight");
+    if (state.matches("ACQUIRE"))
+      return safeReplace("/(tabs)/analysis/create/acquire");
+    if (state.matches("PROCESSING"))
+      return safeReplace("/(tabs)/analysis/create/processing");
+    if (state.matches("RESULTS"))
+      return safeReplace("/(tabs)/analysis/create/result");
+  }, [state.value, path, safeReplace]);
 
-    if (
-      state.matches("ACQ_DARK_NOISE") ||
-      state.matches("ACQ_WHITE_NOISE") ||
-      state.matches("ACQ_REF1") ||
-      state.matches("CALIB_CURVE") ||
-      state.matches("ACQ_SAMPLE") ||
-      state.matches("ACQ_REF2")
-    ) {
-      safeReplace("/(tabs)/analysis/create/capture-base");
-      return;
-    }
-
-    if (state.matches("RESULTS")) {
-      safeReplace("/(tabs)/analysis/create/result");
-      return;
-    }
-  }, [state.value, analysisType, path]);
-}
-
-export default function AnalysisStateRouter() {
-  useSyncRouteWithState();
   return null;
 }

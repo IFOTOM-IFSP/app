@@ -32,7 +32,7 @@ import {
   Padding,
   Spacing,
 } from "../../constants/Styles";
-import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../hooks/AnalysisMachineProvider";
 import { useThemeValue } from "../../hooks/useThemeValue";
 
 // quantos frames/fotos capturar por ponto

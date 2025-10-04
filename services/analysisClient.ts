@@ -1,5 +1,5 @@
 // src/services/analysisClient.ts
-import { ENV } from "@/config/env";
+import { ENV } from "@/src/config/env";
 import type { QuantAnalyzeRequest, QuantAnalyzeResponse } from "@/types/api";
 import { ApiClient } from "./http";
 

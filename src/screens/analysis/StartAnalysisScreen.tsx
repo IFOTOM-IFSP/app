@@ -1,19 +1,17 @@
+// StartAnalysisScreen.tsx
 import { TYPES_ANALYSIS_DATA } from "@/data/analysisData";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import BackButton from "@/src/components/ui/BackButton";
 import { InfoModal } from "@/src/components/ui/InfoModal";
 import { ThemedText } from "@/src/components/ui/ThemedText";
+import { useAnalysisMachine } from "@/src/hooks/AnalysisMachineProvider";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router"; // ★ novo
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
+// ✅ use o caminho do seu Provider (ajuste se diferente)
 
-const parseCiteText = (text: string) => {
-  if (!text) return "";
-  return text.toString().replace("", "");
-};
+const parseCiteText = (text: string) => String(text ?? "");
 
 type AnalysisDataItem = {
   title: string;
@@ -25,7 +23,6 @@ type AnalysisDataItem = {
 
 const ModalContent = ({ item }: { item: AnalysisDataItem | undefined }) => {
   if (!item) return null;
-
   return (
     <>
       <ThemedText style={styles.modalKeyQuestion}>
@@ -36,33 +33,38 @@ const ModalContent = ({ item }: { item: AnalysisDataItem | undefined }) => {
       </ThemedText>
 
       <ThemedText style={styles.modalSectionHeader}>Como funciona?</ThemedText>
-      {item.howItWorks.map((step: string, index: number) => (
-        <ThemedText key={index} style={styles.modalListItem}>
+      {item.howItWorks.map((step, i) => (
+        <ThemedText key={i} style={styles.modalListItem}>
           • {parseCiteText(step)}
         </ThemedText>
       ))}
 
       <ThemedText style={styles.modalSectionHeader}>Casos de Uso</ThemedText>
-      {item.useCases.map((useCase: string, index: number) => (
-        <ThemedText key={index} style={styles.modalListItem}>
+      {item.useCases.map((useCase, i) => (
+        <ThemedText key={i} style={styles.modalListItem}>
           • {useCase}
         </ThemedText>
       ))}
     </>
   );
 };
+
 export default function AnalysisStart() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedAnalysisIndex, setSelectedAnalysisIndex] = useState(0);
+
   const backgroundColor = useThemeValue("card");
   const text = useThemeValue("text");
   const tint = useThemeValue("tint");
+
   const { state, send } = useAnalysisMachine();
-  const router = useRouter();
+
+  // Guarda contra disparo múltiplo (StrictMode monta efeitos 2x em dev)
+  const firedRef = useRef(false);
 
   useEffect(() => {
-    console.log("MACHINE STATE:", state.value);
-    console.log("analysisType:", state.context.analysisType);
+    // Reseta a guarda quando voltar ao estado inicial do fluxo
+    if (state.matches("CHOOSE_TYPE")) firedRef.current = false;
   }, [state.value]);
 
   const openInfoModal = (index: number) => {
@@ -70,22 +72,20 @@ export default function AnalysisStart() {
     setModalVisible(true);
   };
 
-  const handleStartAnalysis = (analysisType: string) => {
-    if (analysisType !== "quantitative") return;
+  const handleStartAnalysis = (analysisId: string) => {
+    // Mapeie seu item para o tipo da máquina (ex.: "quantitative" -> "quant")
+    if (analysisId !== "quantitative") return;
 
-    if (state.matches("CHOOSE_TYPE")) {
-      send({ type: "CHOOSE_TYPE", value: "quant" });
-      return;
-    }
-
-    if (state.matches("PARAMS")) {
-      return;
-    }
+    // Dispara apenas uma vez; navegação fica por conta do AnalysisStateRouter
+    if (firedRef.current) return;
+    firedRef.current = true;
 
     send({ type: "CHOOSE_TYPE", value: "quant" });
   };
 
-  const selectedAnalysisData = TYPES_ANALYSIS_DATA[selectedAnalysisIndex];
+  const selectedAnalysisData = TYPES_ANALYSIS_DATA[selectedAnalysisIndex] as
+    | AnalysisDataItem
+    | undefined;
 
   return (
     <ScreenLayout>
@@ -106,7 +106,7 @@ export default function AnalysisStart() {
 
       <View>
         <View style={styles.buttonContainer}>
-          {TYPES_ANALYSIS_DATA.map((item, index) => (
+          {TYPES_ANALYSIS_DATA.map((item) => (
             <View
               key={item.id}
               style={[
@@ -123,7 +123,7 @@ export default function AnalysisStart() {
                   <MaterialCommunityIcons
                     name={item.icon as any}
                     size={28}
-                    color={"white"}
+                    color="white"
                   />
                 </View>
                 <View>
@@ -143,9 +143,12 @@ export default function AnalysisStart() {
                   </ThemedText>
                 </View>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.infoIcon}
-                onPress={() => openInfoModal(index)}>
+                onPress={() =>
+                  openInfoModal(TYPES_ANALYSIS_DATA.indexOf(item))
+                }>
                 <Feather name="info" size={24} color="#6B7280" />
               </TouchableOpacity>
             </View>
@@ -157,9 +160,7 @@ export default function AnalysisStart() {
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
         title={selectedAnalysisData?.title || ""}
-        content={
-          <ModalContent item={selectedAnalysisData as AnalysisDataItem} />
-        }
+        content={<ModalContent item={selectedAnalysisData} />}
       />
 
       <View style={styles.imageContainer}>
@@ -223,6 +224,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 32,
     width: "90%",
+    alignSelf: "center",
   },
   buttonContainer: {
     width: "100%",

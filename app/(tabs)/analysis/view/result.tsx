@@ -4,7 +4,7 @@ import SpectrumPlot from "@/src/components/charts/SpectrumPlot";
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { Button } from "@/src/components/ui/Button";
 import { ThemedText } from "@/src/components/ui/ThemedText";
-import { useAnalysisMachine } from "@/src/features/analysis/AnalysisMachineProvider";
+import { useAnalysisMachine } from "@/src/hooks/AnalysisMachineProvider";
 import { buildActionMessages } from "@/src/lib/quality";
 import {
   buildSavedAnalysis,

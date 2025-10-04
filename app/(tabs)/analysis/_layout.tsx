@@ -1,4 +1,4 @@
-import { AnalysisMachineProvider } from "@/src/features/analysis/AnalysisMachineProvider";
+import { AnalysisMachineProvider } from "@/src/hooks/AnalysisMachineProvider";
 import { Stack } from "expo-router";
 
 export default function AnalysisLayout() {

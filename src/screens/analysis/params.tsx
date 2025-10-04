@@ -8,7 +8,7 @@ import { useSettingsStore } from "@/src/store/settingsStore"; // <<< novo
 import { router } from "expo-router";
 import { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Switch, View } from "react-native";
-import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../hooks/AnalysisMachineProvider";
 
 export default function ParamsScreen() {
   const { state, send } = useAnalysisMachine();

@@ -4,7 +4,7 @@ import { Button } from "@/src/components/ui/Button";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
-import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../hooks/AnalysisMachineProvider";
 
 export default function ResultsScreen() {
   const { state, send } = useAnalysisMachine();

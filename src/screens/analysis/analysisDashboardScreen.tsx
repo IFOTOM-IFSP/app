@@ -5,7 +5,7 @@ import CardMain from "@/src/components/analysis/dashboard/cardMain";
 import { InfoCard } from "@/src/components/analysis/dashboard/InfoCard";
 import { ThemedView } from "@/src/components/ui/ThemedView";
 import { Margin, Padding } from "@/src/constants/Styles";
-import { useAnalysisMachine } from "@/src/features/analysis/AnalysisMachineProvider";
+import { useAnalysisMachine } from "@/src/hooks/AnalysisMachineProvider";
 import { useThemeValue } from "@/src/hooks/useThemeValue";
 import { useUserName } from "@/src/store/userStore";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,10 +25,10 @@ export default function AnalysisPage() {
   };
 
   const startNewAnalysis = useCallback(() => {
-    router.replace("/(tabs)/analysis/create/index");
     setTimeout(() => {
       send({ type: "RESET" });
     }, 0);
+    router.replace("/(tabs)/analysis/create/index");
   }, [send, router]);
 
   return (

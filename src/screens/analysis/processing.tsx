@@ -2,7 +2,7 @@
 import { ScreenLayout } from "@/src/components/layouts/ScreenLayout";
 import { ThemedText } from "@/src/components/ui/ThemedText";
 import { ActivityIndicator } from "react-native";
-import { useAnalysisMachine } from "../../features/analysis/AnalysisMachineProvider";
+import { useAnalysisMachine } from "../../hooks/AnalysisMachineProvider";
 
 export default function ProcessingScreen() {
   const { state } = useAnalysisMachine();
