@@ -3,7 +3,8 @@ import { useAnalysisMachine } from "@/src/hooks/AnalysisMachineProvider";
 import { router, usePathname, useRootNavigationState } from "expo-router";
 import { useEffect, useMemo, useRef } from "react";
 
-const stripRouteGroups = (p: string) => p.replace(/\/\([^/]+\)/g, "");
+const stripRouteGroups = (p: string) =>
+  p.replace(/\/\([^/]+\)/g, "").replace(/\/{2,}/g, "/");
 
 const norm = (p: string) => {
   const base = p.split("?")[0].split("#")[0];
