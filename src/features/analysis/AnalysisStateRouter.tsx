@@ -1,7 +1,7 @@
 // src/features/analysis/AnalysisStateRouter.tsx
 import { useAnalysisMachine } from "@/src/hooks/AnalysisMachineProvider";
-import { router, usePathname } from "expo-router";
-import { useCallback, useEffect, useRef } from "react";
+import { router, usePathname, useRootNavigationState } from "expo-router";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 const norm = (p: string) => {
   const base = p.split("?")[0].split("#")[0];
@@ -13,25 +13,32 @@ const inCreate = (p: string) =>
 
 export default function AnalysisStateRouter() {
   const { state } = useAnalysisMachine();
-  const path = usePathname();
+  const rawPath = usePathname();
+  const navigationState = useRootNavigationState();
+
+  const isNavigationReady = Boolean(navigationState?.key);
+  const path = useMemo(() => rawPath ?? "/", [rawPath]);
 
   const lastRef = useRef(norm(path));
   const safeReplace = useCallback(
     (to: string) => {
+      if (!isNavigationReady) return;
       const toN = norm(to),
         pN = norm(path);
       if (toN === pN || lastRef.current === toN) return;
       lastRef.current = toN;
       router.replace(toN);
     },
-    [path]
+    [path, isNavigationReady]
   );
 
   useEffect(() => {
+    if (!isNavigationReady) return;
     lastRef.current = norm(path);
-  }, [path]);
+  }, [path, isNavigationReady]);
 
   useEffect(() => {
+    if (!isNavigationReady) return;
     const p = norm(path);
     if (!inCreate(p)) return;
 
@@ -47,7 +54,7 @@ export default function AnalysisStateRouter() {
       return safeReplace("/(tabs)/analysis/create/processing");
     if (state.matches("RESULTS"))
       return safeReplace("/(tabs)/analysis/create/result");
-  }, [state.value, path, safeReplace]);
+  }, [state.value, path, safeReplace, isNavigationReady]);
 
   return null;
 }
